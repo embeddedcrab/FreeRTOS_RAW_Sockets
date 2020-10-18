@@ -1,0 +1,815 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "xmc_eth_phy_ksz8081rnb.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.XMC_ETH_PHY_Reset,"ax",%progbits
+  19              	 .align 2
+  20              	 .global XMC_ETH_PHY_Reset
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	XMC_ETH_PHY_Reset:
+  25              	.LFB193:
+  26              	 .file 1 "../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c"
+   1:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /**
+   2:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * @file xmc_eth_phy_ksz8081rnb.c
+   3:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * @date 2015-12-15 
+   4:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *
+   5:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * @cond
+   6:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  **************************************************************************************************
+   7:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * XMClib v2.1.18 - XMC Peripheral Driver Library
+   8:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *
+   9:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * All rights reserved.                        
+  11:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *                                             
+  12:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * following conditions are met:   
+  14:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *                                                                              
+  15:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * disclaimer.                        
+  17:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * 
+  18:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * 
+  21:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * products derived from this software without specific prior written permission.                  
+  23:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *                                                                              
+  24:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *                                                                              
+  32:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  **************************************************************************************************
+  35:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *
+  36:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * Change History
+  37:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * --------------
+  38:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *
+  39:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * 2015-06-20:
+  40:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *     - Initial
+  41:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *
+  42:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * 2015-12-15:
+  43:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *     - Added Reset and exit power down
+  44:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *     - Reset function called in Init function
+  45:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *
+  46:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * @endcond
+  47:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  */
+  48:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+  49:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /*******************************************************************************
+  50:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * HEADER FILES
+  51:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *******************************************************************************/
+  52:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #if defined(XMC_ETH_PHY_KSZ8081RNB)
+  53:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #include <xmc_eth_phy.h>
+  54:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+  55:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /*******************************************************************************
+  56:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * MACROS
+  57:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *******************************************************************************/
+  58:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+  59:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Basic Registers */
+  60:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_BMCR                (0x00U)        /* Basic Mode Control Register       */
+  61:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_BMSR                (0x01U)        /* Basic Mode Status Register        */
+  62:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_PHYIDR1             (0x02U)        /* PHY Identifier 1                  */
+  63:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_PHYIDR2             (0x03U)        /* PHY Identifier 2                  */
+  64:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_ANAR                (0x04U)        /* Auto-Negotiation Advertisement    */
+  65:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_ANLPAR              (0x05U)        /* Auto-Neg. Link Partner Abitily    */
+  66:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_ANER                (0x06U)        /* Auto-Neg. Expansion Register      */
+  67:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_ANNPTR              (0x07U)        /* Auto-Neg. Next Page TX            */
+  68:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+  69:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Extended Registers */
+  70:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define REG_PHYCTRL1            (0x1eU)        /* PHY control 1 Register            */
+  71:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+  72:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Basic Mode Control Register */
+  73:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_RESET              (0x8000U)      /* Software Reset                    */
+  74:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_LOOPBACK           (0x4000U)      /* Loopback mode                     */
+  75:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_SPEED_SEL          (0x2000U)      /* Speed Select (1=100Mb/s)          */
+  76:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_ANEG_EN            (0x1000U)      /* Auto Negotiation Enable           */
+  77:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_POWER_DOWN         (0x0800U)      /* Power Down                        */
+  78:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_ISOLATE            (0x0400U)      /* Isolate Media interface           */
+  79:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_REST_ANEG          (0x0200U)      /* Restart Auto Negotiation          */
+  80:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_DUPLEX             (0x0100U)      /* Duplex Mode (1=Full duplex)       */
+  81:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMCR_COL_TEST           (0x0080U)      /* Collision Test                    */
+  82:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+  83:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Basic Mode Status Register */
+  84:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_100B_T4            (0x8000U)      /* 100BASE-T4 Capable                */
+  85:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_100B_TX_FD         (0x4000U)      /* 100BASE-TX Full Duplex Capable    */
+  86:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_100B_TX_HD         (0x2000U)      /* 100BASE-TX Half Duplex Capable    */
+  87:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_10B_T_FD           (0x1000U)      /* 10BASE-T Full Duplex Capable      */
+  88:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_10B_T_HD           (0x0800U)      /* 10BASE-T Half Duplex Capable      */
+  89:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_MF_PRE_SUP         (0x0040U)      /* Preamble suppression Capable      */
+  90:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_ANEG_COMPL         (0x0020U)      /* Auto Negotiation Complete         */
+  91:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_REM_FAULT          (0x0010U)      /* Remote Fault                      */
+  92:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_ANEG_ABIL          (0x0008U)      /* Auto Negotiation Ability          */
+  93:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_LINK_STAT          (0x0004U)      /* Link Status (1=established)       */
+  94:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_JABBER_DET         (0x0002U)      /* Jaber Detect                      */
+  95:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define BMSR_EXT_CAPAB          (0x0001U)      /* Extended Capability               */
+  96:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+  97:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* PHY control 1 Register */
+  98:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define PHYCTRL1_OPMODE_SPEED   (0x0003U)
+  99:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define PHYCTRL1_OPMODE_DUPLEX  (0x0004U)
+ 100:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 101:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* PHY Identifier Registers */
+ 102:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define PHY_ID1                 (0x0022U)      /* KSZ8031 Device Identifier MSB */
+ 103:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** #define PHY_ID2                 (0x1560U)      /* KSZ8031 Device Identifier LSB */
+ 104:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 105:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /*******************************************************************************
+ 106:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  * API IMPLEMENTATION
+ 107:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  *******************************************************************************/
+ 108:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 109:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****  /* Check if the device identifier is valid */
+ 110:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** static int32_t XMC_ETH_PHY_IsDeviceIdValid(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 111:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 112:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t phy_id1;
+ 113:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t phy_id2;
+ 114:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   XMC_ETH_PHY_STATUS_t status;
+ 115:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 116:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   /* Check Device Identification. */
+ 117:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   if ((XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_PHYIDR1, &phy_id1) == XMC_ETH_MAC_STATUS_OK) &&
+ 118:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       (XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_PHYIDR2, &phy_id2) == XMC_ETH_MAC_STATUS_OK))
+ 119:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   {
+ 120:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     if ((phy_id1 == PHY_ID1) && ((phy_id2 & (uint16_t)0xfff0) == PHY_ID2))
+ 121:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     {
+ 122:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       status = XMC_ETH_PHY_STATUS_OK;
+ 123:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     }
+ 124:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     else
+ 125:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     {
+ 126:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       status = XMC_ETH_PHY_STATUS_ERROR_DEVICE_ID;
+ 127:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     }
+ 128:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   }
+ 129:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   else
+ 130:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   {
+ 131:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     status = XMC_ETH_PHY_STATUS_ERROR_TIMEOUT;
+ 132:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   }
+ 133:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 134:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return (int32_t)status;
+ 135:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 136:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 137:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* PHY initialize */
+ 138:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** int32_t XMC_ETH_PHY_Init(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr, const XMC_ETH_PHY_CONFIG_t
+ 139:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 140:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   int32_t status;
+ 141:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t reg_bmcr;
+ 142:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 143:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   status = XMC_ETH_PHY_IsDeviceIdValid(eth_mac, phy_addr);
+ 144:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 145:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   if (status == (int32_t)XMC_ETH_PHY_STATUS_OK)
+ 146:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   {
+ 147:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     status = XMC_ETH_PHY_Reset(eth_mac, phy_addr);
+ 148:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     
+ 149:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     if (status == (int32_t)XMC_ETH_PHY_STATUS_OK)
+ 150:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     {
+ 151:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       reg_bmcr = 0U;
+ 152:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       if (config->speed == XMC_ETH_LINK_SPEED_100M)
+ 153:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 154:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****         reg_bmcr |= BMCR_SPEED_SEL;
+ 155:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 156:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 157:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       if (config->duplex == XMC_ETH_LINK_DUPLEX_FULL)
+ 158:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 159:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****         reg_bmcr |= BMCR_DUPLEX;
+ 160:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 161:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 162:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       if (config->enable_auto_negotiate == true)
+ 163:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 164:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****         reg_bmcr |= BMCR_ANEG_EN;
+ 165:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 166:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 167:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       if (config->enable_loop_back == true)
+ 168:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 169:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****         reg_bmcr |= BMCR_LOOPBACK;
+ 170:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 171:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 172:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       status = (int32_t)XMC_ETH_MAC_WritePhy(eth_mac, phy_addr, REG_BMCR, reg_bmcr);
+ 173:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     }
+ 174:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   }
+ 175:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 176:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return status;
+ 177:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 178:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 179:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Reset */
+ 180:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** int32_t XMC_ETH_PHY_Reset(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 181:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+  27              	 .loc 1 181 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 70B5     	 push {r4,r5,r6,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 16
+  35              	 .cfi_offset 4,-16
+  36              	 .cfi_offset 5,-12
+  37              	 .cfi_offset 6,-8
+  38              	 .cfi_offset 14,-4
+  39 0002 82B0     	 sub sp,sp,#8
+  40              	.LCFI1:
+  41              	 .cfi_def_cfa_offset 24
+  42 0004 0446     	 mov r4,r0
+  43 0006 0D46     	 mov r5,r1
+ 182:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   int32_t status;
+ 183:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t reg_bmcr;
+ 184:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 185:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   /* Reset PHY*/
+ 186:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   status = (int32_t)XMC_ETH_MAC_WritePhy(eth_mac, phy_addr, REG_BMCR, BMCR_RESET);
+  44              	 .loc 1 186 0
+  45 0008 0022     	 movs r2,#0
+  46 000a 4FF40043 	 mov r3,#32768
+  47 000e FFF7FEFF 	 bl XMC_ETH_MAC_WritePhy
+  48              	.LVL1:
+  49 0012 0346     	 mov r3,r0
+  50              	.LVL2:
+ 187:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   if (status == (int32_t)XMC_ETH_PHY_STATUS_OK)
+  51              	 .loc 1 187 0
+  52 0014 5BB9     	 cbnz r3,.L2
+ 188:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   {      
+ 189:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     /* Wait for the reset to complete */
+ 190:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     do 
+ 191:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     {
+ 192:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       status = XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_BMCR, &reg_bmcr);
+  53              	 .loc 1 192 0 discriminator 1
+  54 0016 0026     	 movs r6,#0
+  55              	.LVL3:
+  56              	.L4:
+  57 0018 2046     	 mov r0,r4
+  58 001a 2946     	 mov r1,r5
+  59 001c 3246     	 mov r2,r6
+  60 001e 0DF10603 	 add r3,sp,#6
+  61 0022 FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+  62              	.LVL4:
+ 193:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     } while ((reg_bmcr & BMCR_RESET) != 0);
+  63              	 .loc 1 193 0 discriminator 1
+  64 0026 BDF90630 	 ldrsh r3,[sp,#6]
+  65 002a 002B     	 cmp r3,#0
+  66 002c F4DB     	 blt .L4
+  67              	.LVL5:
+  68              	.L2:
+ 194:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   }
+ 195:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     
+ 196:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return status;
+ 197:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+  69              	 .loc 1 197 0
+  70 002e 02B0     	 add sp,sp,#8
+  71              	.LCFI2:
+  72              	 .cfi_def_cfa_offset 16
+  73              	 
+  74 0030 70BD     	 pop {r4,r5,r6,pc}
+  75              	 .cfi_endproc
+  76              	.LFE193:
+  78 0032 00BF     	 .section .text.XMC_ETH_PHY_Init,"ax",%progbits
+  79              	 .align 2
+  80              	 .global XMC_ETH_PHY_Init
+  81              	 .thumb
+  82              	 .thumb_func
+  84              	XMC_ETH_PHY_Init:
+  85              	.LFB192:
+ 139:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   int32_t status;
+  86              	 .loc 1 139 0
+  87              	 .cfi_startproc
+  88              	 
+  89              	 
+  90              	.LVL6:
+  91 0000 70B5     	 push {r4,r5,r6,lr}
+  92              	.LCFI3:
+  93              	 .cfi_def_cfa_offset 16
+  94              	 .cfi_offset 4,-16
+  95              	 .cfi_offset 5,-12
+  96              	 .cfi_offset 6,-8
+  97              	 .cfi_offset 14,-4
+  98 0002 82B0     	 sub sp,sp,#8
+  99              	.LCFI4:
+ 100              	 .cfi_def_cfa_offset 24
+ 101 0004 0646     	 mov r6,r0
+ 102 0006 0D46     	 mov r5,r1
+ 103 0008 1446     	 mov r4,r2
+ 104              	.LVL7:
+ 105              	.LBB4:
+ 106              	.LBB5:
+ 117:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       (XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_PHYIDR2, &phy_id2) == XMC_ETH_MAC_STATUS_OK))
+ 107              	 .loc 1 117 0
+ 108 000a 0222     	 movs r2,#2
+ 109              	.LVL8:
+ 110 000c 01AB     	 add r3,sp,#4
+ 111 000e FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 112              	.LVL9:
+ 113 0012 0028     	 cmp r0,#0
+ 114 0014 3AD1     	 bne .L16
+ 118:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   {
+ 115              	 .loc 1 118 0
+ 116 0016 3046     	 mov r0,r6
+ 117 0018 2946     	 mov r1,r5
+ 118 001a 0322     	 movs r2,#3
+ 119 001c 0DF10603 	 add r3,sp,#6
+ 120 0020 FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 121              	.LVL10:
+ 117:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       (XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_PHYIDR2, &phy_id2) == XMC_ETH_MAC_STATUS_OK))
+ 122              	 .loc 1 117 0
+ 123 0024 A0BB     	 cbnz r0,.L17
+ 120:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     {
+ 124              	 .loc 1 120 0
+ 125 0026 BDF80430 	 ldrh r3,[sp,#4]
+ 126 002a 222B     	 cmp r3,#34
+ 127 002c 32D1     	 bne .L18
+ 128 002e BDF80630 	 ldrh r3,[sp,#6]
+ 129 0032 23F00F03 	 bic r3,r3,#15
+ 130 0036 9BB2     	 uxth r3,r3
+ 131 0038 B3F5AB5F 	 cmp r3,#5472
+ 132 003c 1ED0     	 beq .L9
+ 126:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     }
+ 133              	 .loc 1 126 0
+ 134 003e 0323     	 movs r3,#3
+ 135 0040 29E0     	 b .L20
+ 136              	.LVL11:
+ 137              	.L14:
+ 138              	.LBE5:
+ 139              	.LBE4:
+ 152:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 140              	 .loc 1 152 0
+ 141 0042 6388     	 ldrh r3,[r4,#2]
+ 154:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 142              	 .loc 1 154 0
+ 143 0044 B3F5804F 	 cmp r3,#16384
+ 144 0048 14BF     	 ite ne
+ 145 004a 0023     	 movne r3,#0
+ 146 004c 4FF40053 	 moveq r3,#8192
+ 147              	.LVL12:
+ 157:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 148              	 .loc 1 157 0
+ 149 0050 A288     	 ldrh r2,[r4,#4]
+ 150 0052 B2F5006F 	 cmp r2,#2048
+ 159:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 151              	 .loc 1 159 0
+ 152 0056 04BF     	 itt eq
+ 153 0058 43F48073 	 orreq r3,r3,#256
+ 154              	.LVL13:
+ 155 005c 9BB2     	 uxtheq r3,r3
+ 156              	.LVL14:
+ 162:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 157              	 .loc 1 162 0
+ 158 005e A279     	 ldrb r2,[r4,#6]
+ 159 0060 0AB1     	 cbz r2,.L12
+ 164:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 160              	 .loc 1 164 0
+ 161 0062 43F48053 	 orr r3,r3,#4096
+ 162              	.LVL15:
+ 163              	.L12:
+ 167:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       {
+ 164              	 .loc 1 167 0
+ 165 0066 E279     	 ldrb r2,[r4,#7]
+ 166 0068 0AB1     	 cbz r2,.L13
+ 169:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****       }
+ 167              	 .loc 1 169 0
+ 168 006a 43F48043 	 orr r3,r3,#16384
+ 169              	.LVL16:
+ 170              	.L13:
+ 172:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     }
+ 171              	 .loc 1 172 0
+ 172 006e 3046     	 mov r0,r6
+ 173              	.LVL17:
+ 174 0070 2946     	 mov r1,r5
+ 175 0072 0022     	 movs r2,#0
+ 176 0074 FFF7FEFF 	 bl XMC_ETH_MAC_WritePhy
+ 177              	.LVL18:
+ 178 0078 0346     	 mov r3,r0
+ 179              	.LVL19:
+ 180 007a 0CE0     	 b .L20
+ 181              	.LVL20:
+ 182              	.L9:
+ 147:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     
+ 183              	 .loc 1 147 0
+ 184 007c 3046     	 mov r0,r6
+ 185 007e 2946     	 mov r1,r5
+ 186 0080 FFF7FEFF 	 bl XMC_ETH_PHY_Reset
+ 187              	.LVL21:
+ 149:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     {
+ 188              	 .loc 1 149 0
+ 189 0084 0346     	 mov r3,r0
+ 190 0086 0028     	 cmp r0,#0
+ 191 0088 DBD0     	 beq .L14
+ 192 008a 04E0     	 b .L20
+ 193              	.LVL22:
+ 194              	.L16:
+ 195              	.LBB7:
+ 196              	.LBB6:
+ 131:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   }
+ 197              	 .loc 1 131 0
+ 198 008c 0423     	 movs r3,#4
+ 199 008e 02E0     	 b .L20
+ 200              	.L17:
+ 201 0090 0423     	 movs r3,#4
+ 202 0092 00E0     	 b .L20
+ 203              	.L18:
+ 126:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     }
+ 204              	 .loc 1 126 0
+ 205 0094 0323     	 movs r3,#3
+ 206              	.LVL23:
+ 207              	.L20:
+ 208              	.LBE6:
+ 209              	.LBE7:
+ 177:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 210              	 .loc 1 177 0
+ 211 0096 1846     	 mov r0,r3
+ 212 0098 02B0     	 add sp,sp,#8
+ 213              	.LCFI5:
+ 214              	 .cfi_def_cfa_offset 16
+ 215              	 
+ 216 009a 70BD     	 pop {r4,r5,r6,pc}
+ 217              	 .cfi_endproc
+ 218              	.LFE192:
+ 220              	 .section .text.XMC_ETH_PHY_PowerDown,"ax",%progbits
+ 221              	 .align 2
+ 222              	 .global XMC_ETH_PHY_PowerDown
+ 223              	 .thumb
+ 224              	 .thumb_func
+ 226              	XMC_ETH_PHY_PowerDown:
+ 227              	.LFB194:
+ 198:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 199:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Initiate power down */
+ 200:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** int32_t XMC_ETH_PHY_PowerDown(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 201:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 228              	 .loc 1 201 0
+ 229              	 .cfi_startproc
+ 230              	 
+ 231              	 
+ 232              	.LVL24:
+ 233 0000 30B5     	 push {r4,r5,lr}
+ 234              	.LCFI6:
+ 235              	 .cfi_def_cfa_offset 12
+ 236              	 .cfi_offset 4,-12
+ 237              	 .cfi_offset 5,-8
+ 238              	 .cfi_offset 14,-4
+ 239 0002 83B0     	 sub sp,sp,#12
+ 240              	.LCFI7:
+ 241              	 .cfi_def_cfa_offset 24
+ 242 0004 0546     	 mov r5,r0
+ 243 0006 0C46     	 mov r4,r1
+ 202:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   int32_t status;
+ 203:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t reg_bmcr;
+ 204:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 205:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   status = XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_BMCR, &reg_bmcr);
+ 244              	 .loc 1 205 0
+ 245 0008 0022     	 movs r2,#0
+ 246 000a 0DF10603 	 add r3,sp,#6
+ 247 000e FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 248              	.LVL25:
+ 249 0012 0346     	 mov r3,r0
+ 250              	.LVL26:
+ 206:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   if (status == (int32_t)XMC_ETH_PHY_STATUS_OK)
+ 251              	 .loc 1 206 0
+ 252 0014 5BB9     	 cbnz r3,.L23
+ 207:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   {      
+ 208:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     reg_bmcr |= BMCR_POWER_DOWN;
+ 253              	 .loc 1 208 0
+ 254 0016 BDF80630 	 ldrh r3,[sp,#6]
+ 255 001a 43F40063 	 orr r3,r3,#2048
+ 256 001e 9BB2     	 uxth r3,r3
+ 257 0020 ADF80630 	 strh r3,[sp,#6]
+ 209:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     status = (int32_t)XMC_ETH_MAC_WritePhy(eth_mac, phy_addr, REG_BMCR, reg_bmcr);
+ 258              	 .loc 1 209 0
+ 259 0024 2846     	 mov r0,r5
+ 260              	.LVL27:
+ 261 0026 2146     	 mov r1,r4
+ 262 0028 0022     	 movs r2,#0
+ 263 002a FFF7FEFF 	 bl XMC_ETH_MAC_WritePhy
+ 264              	.LVL28:
+ 265              	.L23:
+ 210:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   }
+ 211:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return status;
+ 212:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 266              	 .loc 1 212 0
+ 267 002e 03B0     	 add sp,sp,#12
+ 268              	.LCFI8:
+ 269              	 .cfi_def_cfa_offset 12
+ 270              	 
+ 271 0030 30BD     	 pop {r4,r5,pc}
+ 272              	 .cfi_endproc
+ 273              	.LFE194:
+ 275 0032 00BF     	 .section .text.XMC_ETH_PHY_ExitPowerDown,"ax",%progbits
+ 276              	 .align 2
+ 277              	 .global XMC_ETH_PHY_ExitPowerDown
+ 278              	 .thumb
+ 279              	 .thumb_func
+ 281              	XMC_ETH_PHY_ExitPowerDown:
+ 282              	.LFB195:
+ 213:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 214:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Exit power down */
+ 215:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** int32_t XMC_ETH_PHY_ExitPowerDown(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 216:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 283              	 .loc 1 216 0
+ 284              	 .cfi_startproc
+ 285              	 
+ 286              	 
+ 287              	.LVL29:
+ 288 0000 30B5     	 push {r4,r5,lr}
+ 289              	.LCFI9:
+ 290              	 .cfi_def_cfa_offset 12
+ 291              	 .cfi_offset 4,-12
+ 292              	 .cfi_offset 5,-8
+ 293              	 .cfi_offset 14,-4
+ 294 0002 83B0     	 sub sp,sp,#12
+ 295              	.LCFI10:
+ 296              	 .cfi_def_cfa_offset 24
+ 297 0004 0546     	 mov r5,r0
+ 298 0006 0C46     	 mov r4,r1
+ 217:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   int32_t status;
+ 218:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t reg_bmcr;
+ 219:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 220:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   status = XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_BMCR, &reg_bmcr);  
+ 299              	 .loc 1 220 0
+ 300 0008 0022     	 movs r2,#0
+ 301 000a 0DF10603 	 add r3,sp,#6
+ 302 000e FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 303              	.LVL30:
+ 304 0012 0346     	 mov r3,r0
+ 305              	.LVL31:
+ 221:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   if (status == (int32_t)XMC_ETH_PHY_STATUS_OK)
+ 306              	 .loc 1 221 0
+ 307 0014 5BB9     	 cbnz r3,.L26
+ 222:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   {      
+ 223:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     reg_bmcr &= ~BMCR_POWER_DOWN;
+ 308              	 .loc 1 223 0
+ 309 0016 BDF80630 	 ldrh r3,[sp,#6]
+ 310 001a 23F40063 	 bic r3,r3,#2048
+ 311 001e 9BB2     	 uxth r3,r3
+ 312 0020 ADF80630 	 strh r3,[sp,#6]
+ 224:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****     status = (int32_t)XMC_ETH_MAC_WritePhy(eth_mac, phy_addr, REG_BMCR, reg_bmcr);
+ 313              	 .loc 1 224 0
+ 314 0024 2846     	 mov r0,r5
+ 315              	.LVL32:
+ 316 0026 2146     	 mov r1,r4
+ 317 0028 0022     	 movs r2,#0
+ 318 002a FFF7FEFF 	 bl XMC_ETH_MAC_WritePhy
+ 319              	.LVL33:
+ 320              	.L26:
+ 225:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   }
+ 226:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return status;
+ 227:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 321              	 .loc 1 227 0
+ 322 002e 03B0     	 add sp,sp,#12
+ 323              	.LCFI11:
+ 324              	 .cfi_def_cfa_offset 12
+ 325              	 
+ 326 0030 30BD     	 pop {r4,r5,pc}
+ 327              	 .cfi_endproc
+ 328              	.LFE195:
+ 330 0032 00BF     	 .section .text.XMC_ETH_PHY_GetLinkStatus,"ax",%progbits
+ 331              	 .align 2
+ 332              	 .global XMC_ETH_PHY_GetLinkStatus
+ 333              	 .thumb
+ 334              	 .thumb_func
+ 336              	XMC_ETH_PHY_GetLinkStatus:
+ 337              	.LFB196:
+ 228:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 229:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Get link status */
+ 230:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** XMC_ETH_LINK_STATUS_t XMC_ETH_PHY_GetLinkStatus(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 231:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 338              	 .loc 1 231 0
+ 339              	 .cfi_startproc
+ 340              	 
+ 341              	 
+ 342              	.LVL34:
+ 343 0000 00B5     	 push {lr}
+ 344              	.LCFI12:
+ 345              	 .cfi_def_cfa_offset 4
+ 346              	 .cfi_offset 14,-4
+ 347 0002 83B0     	 sub sp,sp,#12
+ 348              	.LCFI13:
+ 349              	 .cfi_def_cfa_offset 16
+ 232:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t val;
+ 233:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 234:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_BMSR, &val);
+ 350              	 .loc 1 234 0
+ 351 0004 0122     	 movs r2,#1
+ 352 0006 0DF10603 	 add r3,sp,#6
+ 353 000a FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 354              	.LVL35:
+ 235:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 236:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return (XMC_ETH_LINK_STATUS_t)((val & BMSR_LINK_STAT) ? XMC_ETH_LINK_STATUS_UP : XMC_ETH_LINK_STA
+ 355              	 .loc 1 236 0
+ 356 000e BDF80600 	 ldrh r0,[sp,#6]
+ 237:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 357              	 .loc 1 237 0
+ 358 0012 C0F38000 	 ubfx r0,r0,#2,#1
+ 359 0016 03B0     	 add sp,sp,#12
+ 360              	.LCFI14:
+ 361              	 .cfi_def_cfa_offset 4
+ 362              	 
+ 363 0018 5DF804FB 	 ldr pc,[sp],#4
+ 364              	 .cfi_endproc
+ 365              	.LFE196:
+ 367              	 .section .text.XMC_ETH_PHY_GetLinkSpeed,"ax",%progbits
+ 368              	 .align 2
+ 369              	 .global XMC_ETH_PHY_GetLinkSpeed
+ 370              	 .thumb
+ 371              	 .thumb_func
+ 373              	XMC_ETH_PHY_GetLinkSpeed:
+ 374              	.LFB197:
+ 238:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 239:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Get link speed */
+ 240:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** XMC_ETH_LINK_SPEED_t XMC_ETH_PHY_GetLinkSpeed(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 241:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 375              	 .loc 1 241 0
+ 376              	 .cfi_startproc
+ 377              	 
+ 378              	 
+ 379              	.LVL36:
+ 380 0000 00B5     	 push {lr}
+ 381              	.LCFI15:
+ 382              	 .cfi_def_cfa_offset 4
+ 383              	 .cfi_offset 14,-4
+ 384 0002 83B0     	 sub sp,sp,#12
+ 385              	.LCFI16:
+ 386              	 .cfi_def_cfa_offset 16
+ 242:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t val;
+ 243:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 244:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_PHYCTRL1, &val);
+ 387              	 .loc 1 244 0
+ 388 0004 1E22     	 movs r2,#30
+ 389 0006 0DF10603 	 add r3,sp,#6
+ 390 000a FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 391              	.LVL37:
+ 245:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 246:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return (XMC_ETH_LINK_SPEED_t)(((val & PHYCTRL1_OPMODE_SPEED) - 1U) ? XMC_ETH_LINK_SPEED_100M : XM
+ 392              	 .loc 1 246 0
+ 393 000e BDF80630 	 ldrh r3,[sp,#6]
+ 394 0012 03F00303 	 and r3,r3,#3
+ 395 0016 012B     	 cmp r3,#1
+ 247:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 396              	 .loc 1 247 0
+ 397 0018 14BF     	 ite ne
+ 398 001a 4FF48040 	 movne r0,#16384
+ 399 001e 0020     	 moveq r0,#0
+ 400 0020 03B0     	 add sp,sp,#12
+ 401              	.LCFI17:
+ 402              	 .cfi_def_cfa_offset 4
+ 403              	 
+ 404 0022 5DF804FB 	 ldr pc,[sp],#4
+ 405              	 .cfi_endproc
+ 406              	.LFE197:
+ 408 0026 00BF     	 .section .text.XMC_ETH_PHY_GetLinkDuplex,"ax",%progbits
+ 409              	 .align 2
+ 410              	 .global XMC_ETH_PHY_GetLinkDuplex
+ 411              	 .thumb
+ 412              	 .thumb_func
+ 414              	XMC_ETH_PHY_GetLinkDuplex:
+ 415              	.LFB198:
+ 248:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 249:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** /* Get link duplex settings */
+ 250:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** XMC_ETH_LINK_DUPLEX_t XMC_ETH_PHY_GetLinkDuplex(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 251:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 416              	 .loc 1 251 0
+ 417              	 .cfi_startproc
+ 418              	 
+ 419              	 
+ 420              	.LVL38:
+ 421 0000 00B5     	 push {lr}
+ 422              	.LCFI18:
+ 423              	 .cfi_def_cfa_offset 4
+ 424              	 .cfi_offset 14,-4
+ 425 0002 83B0     	 sub sp,sp,#12
+ 426              	.LCFI19:
+ 427              	 .cfi_def_cfa_offset 16
+ 252:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t val;
+ 253:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 254:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_PHYCTRL1, &val);
+ 428              	 .loc 1 254 0
+ 429 0004 1E22     	 movs r2,#30
+ 430 0006 0DF10603 	 add r3,sp,#6
+ 431 000a FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 432              	.LVL39:
+ 255:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 256:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return (XMC_ETH_LINK_DUPLEX_t)((val & PHYCTRL1_OPMODE_DUPLEX) ? XMC_ETH_LINK_DUPLEX_FULL : XMC_ET
+ 433              	 .loc 1 256 0
+ 434 000e BDF80630 	 ldrh r3,[sp,#6]
+ 435 0012 03F00403 	 and r3,r3,#4
+ 436 0016 9BB2     	 uxth r3,r3
+ 437 0018 002B     	 cmp r3,#0
+ 257:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 438              	 .loc 1 257 0
+ 439 001a 14BF     	 ite ne
+ 440 001c 4FF40060 	 movne r0,#2048
+ 441 0020 0020     	 moveq r0,#0
+ 442 0022 03B0     	 add sp,sp,#12
+ 443              	.LCFI20:
+ 444              	 .cfi_def_cfa_offset 4
+ 445              	 
+ 446 0024 5DF804FB 	 ldr pc,[sp],#4
+ 447              	 .cfi_endproc
+ 448              	.LFE198:
+ 450              	 .section .text.XMC_ETH_PHY_IsAutonegotiationCompleted,"ax",%progbits
+ 451              	 .align 2
+ 452              	 .global XMC_ETH_PHY_IsAutonegotiationCompleted
+ 453              	 .thumb
+ 454              	 .thumb_func
+ 456              	XMC_ETH_PHY_IsAutonegotiationCompleted:
+ 457              	.LFB199:
+ 258:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 259:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** bool XMC_ETH_PHY_IsAutonegotiationCompleted(XMC_ETH_MAC_t *const eth_mac, uint8_t phy_addr)
+ 260:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** {
+ 458              	 .loc 1 260 0
+ 459              	 .cfi_startproc
+ 460              	 
+ 461              	 
+ 462              	.LVL40:
+ 463 0000 00B5     	 push {lr}
+ 464              	.LCFI21:
+ 465              	 .cfi_def_cfa_offset 4
+ 466              	 .cfi_offset 14,-4
+ 467 0002 83B0     	 sub sp,sp,#12
+ 468              	.LCFI22:
+ 469              	 .cfi_def_cfa_offset 16
+ 261:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   uint16_t val;
+ 262:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** 
+ 263:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   XMC_ETH_MAC_ReadPhy(eth_mac, phy_addr, REG_BMSR, &val);
+ 470              	 .loc 1 263 0
+ 471 0004 0122     	 movs r2,#1
+ 472 0006 0DF10603 	 add r3,sp,#6
+ 473 000a FFF7FEFF 	 bl XMC_ETH_MAC_ReadPhy
+ 474              	.LVL41:
+ 264:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c ****   return ((val & BMSR_ANEG_COMPL) == BMSR_ANEG_COMPL);
+ 475              	 .loc 1 264 0
+ 476 000e BDF80600 	 ldrh r0,[sp,#6]
+ 265:../Libraries/XMCLib/src/xmc_eth_phy_ksz8081rnb.c **** }
+ 477              	 .loc 1 265 0
+ 478 0012 C0F34010 	 ubfx r0,r0,#5,#1
+ 479 0016 03B0     	 add sp,sp,#12
+ 480              	.LCFI23:
+ 481              	 .cfi_def_cfa_offset 4
+ 482              	 
+ 483 0018 5DF804FB 	 ldr pc,[sp],#4
+ 484              	 .cfi_endproc
+ 485              	.LFE199:
+ 487              	 .text
+ 488              	.Letext0:
+ 489              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 490              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 491              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+ 492              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_eth_mac.h"
+ 493              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_eth_phy.h"
+ 494              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_eth_phy_ksz8081rnb.c
+    {standard input}:19     .text.XMC_ETH_PHY_Reset:00000000 $t
+    {standard input}:24     .text.XMC_ETH_PHY_Reset:00000000 XMC_ETH_PHY_Reset
+    {standard input}:79     .text.XMC_ETH_PHY_Init:00000000 $t
+    {standard input}:84     .text.XMC_ETH_PHY_Init:00000000 XMC_ETH_PHY_Init
+    {standard input}:221    .text.XMC_ETH_PHY_PowerDown:00000000 $t
+    {standard input}:226    .text.XMC_ETH_PHY_PowerDown:00000000 XMC_ETH_PHY_PowerDown
+    {standard input}:276    .text.XMC_ETH_PHY_ExitPowerDown:00000000 $t
+    {standard input}:281    .text.XMC_ETH_PHY_ExitPowerDown:00000000 XMC_ETH_PHY_ExitPowerDown
+    {standard input}:331    .text.XMC_ETH_PHY_GetLinkStatus:00000000 $t
+    {standard input}:336    .text.XMC_ETH_PHY_GetLinkStatus:00000000 XMC_ETH_PHY_GetLinkStatus
+    {standard input}:368    .text.XMC_ETH_PHY_GetLinkSpeed:00000000 $t
+    {standard input}:373    .text.XMC_ETH_PHY_GetLinkSpeed:00000000 XMC_ETH_PHY_GetLinkSpeed
+    {standard input}:409    .text.XMC_ETH_PHY_GetLinkDuplex:00000000 $t
+    {standard input}:414    .text.XMC_ETH_PHY_GetLinkDuplex:00000000 XMC_ETH_PHY_GetLinkDuplex
+    {standard input}:451    .text.XMC_ETH_PHY_IsAutonegotiationCompleted:00000000 $t
+    {standard input}:456    .text.XMC_ETH_PHY_IsAutonegotiationCompleted:00000000 XMC_ETH_PHY_IsAutonegotiationCompleted
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc_eth_mac.h.114.b3c2c5df178f676f85b0b5c969c16bf0
+
+UNDEFINED SYMBOLS
+XMC_ETH_MAC_WritePhy
+XMC_ETH_MAC_ReadPhy

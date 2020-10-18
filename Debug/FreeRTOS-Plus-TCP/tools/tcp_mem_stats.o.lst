@@ -1,0 +1,68 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "tcp_mem_stats.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 tcp_mem_stats.c
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.35ee9e747940367bf2a634907d1c2382
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.stddef.h.39.fb88e218f22ad7a0ab38f3d93c6eb3e4
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.65.7c7009d79fb33c27bcf8e2214c76b343
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdarg.h.31.48e922dd0aaedfb616aafd8a7b7a4949
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+                           .group:00000000 wm4.FreeRTOSIPConfig.h.37.3f9c1db988571ff1f3dec4c7e54978d6
+                           .group:00000000 wm4.FreeRTOS_errno_TCP.h.27.708877b341d0e6bcb4ba112b2ad8082a
+                           .group:00000000 wm4.FreeRTOSIPConfigDefaults.h.41.f972b11d9b1eba5383080cfaef1fd740
+                           .group:00000000 wm4.IPTraceMacroDefaults.h.31.69642530b5a79c93e762c9b09ac0d1d5
+                           .group:00000000 wm4.FreeRTOS_IP.h.59.3f5e36f6612bd0c66747c6093da47335
+                           .group:00000000 wm4.FreeRTOS_IP.h.179.e5077063e624bc5d3f02542470d6ea94
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.timers.h.55.5dc360ab39e4b575b2753deeda01a480
+                           .group:00000000 wm4.FreeRTOS_Sockets.h.58.61d472da32c0e0f5bc49c368f15d0ac5
+                           .group:00000000 wm4.FreeRTOS_TCP_WIN.h.32.f3cfab69924f28284deb16cc1a30fb93
+                           .group:00000000 wm4.queue.h.29.00d24a7c91ec95dd2ba2931e7e83fbc4
+                           .group:00000000 wm4.semphr.h.38.96f44691bfa19eb833944d3a35b81e54
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.52.551f932b14473cea139893dda31b3fa0
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.328.b5788f8d626a4cf16b8282f9399f3f55
+
+NO UNDEFINED SYMBOLS

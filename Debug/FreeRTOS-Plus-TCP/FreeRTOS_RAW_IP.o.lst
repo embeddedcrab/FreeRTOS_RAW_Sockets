@@ -1,0 +1,755 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "FreeRTOS_RAW_IP.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.vProcessGeneratedRAWPacket,"ax",%progbits
+  19              	 .align 2
+  20              	 .global vProcessGeneratedRAWPacket
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	vProcessGeneratedRAWPacket:
+  25              	.LFB50:
+  26              	 .file 1 "../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c"
+   1:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /**************************************************************************************************
+   2:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * @file     FreeRTOS_RAW_IP.cpp
+   3:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * @brief    FreeRTOS RAW Sockets source file
+   4:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * @version
+   5:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * @date
+   6:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+   7:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * @cond
+   8:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  **************************************************************************************************
+   9:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * Copyright (c) 2020, Hemant Sharma - All Rights Reserved
+  10:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * All rights reserved.
+  11:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+  12:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * following conditions are met:
+  14:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+  15:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * disclaimer.
+  17:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+  18:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * disclaimer in the documentation and/or other materials provided with the distribution.
+  20:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+  21:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * products derived from this software without specific prior written permission.
+  23:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+  24:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN AN
+  30:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  31:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  **************************************************************************************************
+  32:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+  33:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * *************************** Change history ********************************
+  34:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  *
+  35:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * @endcond
+  36:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  */
+  37:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  38:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  39:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /******************************************************************************
+  40:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** * Includes
+  41:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** *******************************************************************************/
+  42:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  43:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /* Standard includes. */
+  44:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include <stdint.h>
+  45:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include <stdio.h>
+  46:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  47:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /* FreeRTOS includes. */
+  48:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "FreeRTOS.h"
+  49:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "task.h"
+  50:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "queue.h"
+  51:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "semphr.h"
+  52:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  53:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /* FreeRTOS+TCP includes. */
+  54:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "FreeRTOS_IP.h"
+  55:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "FreeRTOS_Sockets.h"
+  56:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "FreeRTOS_IP_Private.h"
+  57:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "FreeRTOS_UDP_IP.h"
+  58:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "FreeRTOS_ARP.h"
+  59:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "FreeRTOS_DHCP.h"
+  60:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "NetworkInterface.h"
+  61:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #include "NetworkBufferManagement.h"
+  62:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  63:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #if( ipconfigUSE_DNS == 1 )
+  64:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	#include "FreeRTOS_DNS.h"
+  65:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #endif
+  66:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  67:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  68:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /******************************************************************************
+  69:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** * Preprocessor Constants
+  70:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** *******************************************************************************/
+  71:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  72:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  73:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /******************************************************************************
+  74:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** * Configuration Constants
+  75:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** *******************************************************************************/
+  76:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  77:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  78:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /******************************************************************************
+  79:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** * Variables
+  80:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** *******************************************************************************/
+  81:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  82:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  83:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /******************************************************************************
+  84:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** * Function Declarations
+  85:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** *******************************************************************************/
+  86:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  87:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /*
+  88:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * This function process raw packets using IPPROTO_RAW
+  89:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  */
+  90:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** static void prvProcessRAWPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+  91:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  92:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /*
+  93:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * This function process raw packets using IPPROTO_UDP
+  94:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  */
+  95:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** static void prvProcessUDPPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+  96:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  97:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+  98:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /******************************************************************************
+  99:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** * Function Definitions
+ 100:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** *******************************************************************************/
+ 101:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 102:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** void vProcessGeneratedRAWPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
+ 103:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** {
+  27              	 .loc 1 103 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 F0B5     	 push {r4,r5,r6,r7,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 20
+  35              	 .cfi_offset 4,-20
+  36              	 .cfi_offset 5,-16
+  37              	 .cfi_offset 6,-12
+  38              	 .cfi_offset 7,-8
+  39              	 .cfi_offset 14,-4
+  40 0002 83B0     	 sub sp,sp,#12
+  41              	.LCFI1:
+  42              	 .cfi_def_cfa_offset 32
+  43 0004 0446     	 mov r4,r0
+ 104:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** const char *pxSrcAddrOffset = ( char *) ( &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddress
+  44              	 .loc 1 104 0
+  45 0006 8569     	 ldr r5,[r0,#24]
+  46              	.LVL1:
+ 105:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 106:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	/* Check protocol being used for RAW Sockets */
+ 107:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	switch( pxSrcAddrOffset[17] )
+  47              	 .loc 1 107 0
+  48 0008 EB7D     	 ldrb r3,[r5,#23]
+  49 000a 112B     	 cmp r3,#17
+  50 000c 31D0     	 beq .L3
+  51 000e FF2B     	 cmp r3,#255
+  52 0010 40F09B80 	 bne .L1
+  53              	.LVL2:
+  54              	.LBB14:
+  55              	.LBB15:
+ 108:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 109:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	case ipPROTOCOL_RAW:
+ 110:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		prvProcessRAWPacket( pxNetworkBuffer );
+ 111:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		break;
+ 112:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 113:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	case ipPROTOCOL_UDP:
+ 114:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		prvProcessUDPPacket( pxNetworkBuffer );
+ 115:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		break;
+ 116:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 117:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	default:
+ 118:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		/* TODO: Handle Error */
+ 119:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		break;
+ 120:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 121:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** }
+ 122:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /*-----------------------------------------------------------*/
+ 123:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 124:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** void prvProcessRAWPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
+ 125:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** {
+ 126:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** IPPacket_t *pxIPPacket = NULL;
+ 127:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** IPHeader_t *pxIPHeader = NULL;
+ 128:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** eARPLookupResult_t eReturned;
+ 129:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
+  56              	 .loc 1 129 0
+  57 0014 4369     	 ldr r3,[r0,#20]
+  58 0016 02A8     	 add r0,sp,#8
+  59              	.LVL3:
+  60 0018 40F8043D 	 str r3,[r0,#-4]!
+  61              	.LVL4:
+ 130:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** size_t uxPayloadSize;
+ 131:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 132:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	/* Map the IP Packet on start of frame */
+ 133:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	pxIPPacket = ipCAST_PTR_TO_TYPE_PTR(IPPacket_t, pxNetworkBuffer->pucEthernetBuffer);
+ 134:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	uxPayloadSize = pxNetworkBuffer->xDataLength - sizeof( IPPacket_t );
+  62              	 .loc 1 134 0
+  63 001c E669     	 ldr r6,[r4,#28]
+  64              	.LVL5:
+ 135:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 136:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	/* Determine the ARP cache status for the requested IP address. */
+ 137:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	eReturned = eARPGetCacheEntry( &( ulIPAddress ), &( pxIPPacket->xEthernetHeader.xDestinationAddres
+  65              	 .loc 1 137 0
+  66 001e 2946     	 mov r1,r5
+  67 0020 FFF7FEFF 	 bl eARPGetCacheEntry
+  68              	.LVL6:
+ 138:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 139:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	if( eReturned != eCantSendPacket )
+  69              	 .loc 1 139 0
+  70 0024 0228     	 cmp r0,#2
+  71 0026 00F08180 	 beq .L5
+ 140:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 141:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		if( eReturned == eARPCacheHit )
+  72              	 .loc 1 141 0
+  73 002a 0128     	 cmp r0,#1
+  74 002c 16D1     	 bne .L6
+  75              	.LVL7:
+ 142:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		{
+ 143:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			iptraceSENDING_RAW_PACKET( pxNetworkBuffer->ulIPAddress );
+ 144:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 145:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Create short cuts to the data within the packet. */
+ 146:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxIPHeader = &( pxIPPacket->xIPHeader );
+ 147:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 148:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Save options now, as they will be overwritten by memcpy */
+ 149:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/*
+ 150:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 * Offset the memcpy by the size of a MAC address to start at the packet's
+ 151:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 * Ethernet header 'source' MAC address; the preceding 'destination' should not be altered.
+ 152:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 */
+ 153:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* The Ethernet source address is at offset 6. */
+ 154:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Note: Overwrite the existing data including protocol as set in UDP structure,
+ 155:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 * reusing the existing one for now */
+ 156:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** //			char *pxIpSrcAddrOffset = ( char *) ( &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddres
+ 157:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** //			( void ) memcpy( ( void * ) pxIpSrcAddrOffset, ( const void * ) ( xDefaultPartRAWPacketHeader.
+ 158:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 159:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxIPHeader->usLength = ( uint16_t ) ( uxPayloadSize + sizeof( IPHeader_t ) );
+  76              	 .loc 1 159 0
+  77 002e 0E3E     	 subs r6,r6,#14
+  78              	.LVL8:
+  79 0030 B6B2     	 uxth r6,r6
+  80              	.LVL9:
+ 160:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 161:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxIPHeader->usLength = FreeRTOS_htons( pxIPHeader->usLength );
+  81              	 .loc 1 161 0
+  82 0032 330A     	 lsrs r3,r6,#8
+  83 0034 43EA0626 	 orr r6,r3,r6,lsl#8
+  84 0038 2E82     	 strh r6,[r5,#16]
+ 162:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxIPHeader->ulDestinationIPAddress = pxNetworkBuffer->ulIPAddress;
+  85              	 .loc 1 162 0
+  86 003a 6369     	 ldr r3,[r4,#20]
+  87 003c C5F81E30 	 str r3,[r5,#30]
+ 163:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 164:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+ 165:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 166:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usHeaderChecksum = 0U;
+  88              	 .loc 1 166 0
+  89 0040 0020     	 movs r0,#0
+  90              	.LVL10:
+  91 0042 2876     	 strb r0,[r5,#24]
+  92 0044 6876     	 strb r0,[r5,#25]
+ 167:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0U, ( uint8_t * ) &( pxIPHeader->ucVersionHe
+  93              	 .loc 1 167 0
+  94 0046 05F10E01 	 add r1,r5,#14
+  95              	.LVL11:
+  96 004a 1422     	 movs r2,#20
+  97 004c FFF7FEFF 	 bl usGenerateChecksum
+  98              	.LVL12:
+ 168:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
+  99              	 .loc 1 168 0
+ 100 0050 030A     	 lsrs r3,r0,#8
+ 101 0052 43EA0020 	 orr r0,r3,r0,lsl#8
+ 102 0056 C343     	 mvns r3,r0
+ 103 0058 2B83     	 strh r3,[r5,#24]
+ 104 005a 62E0     	 b .L7
+ 105              	.LVL13:
+ 106              	.L6:
+ 169:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 170:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#endif
+ 171:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		}
+ 172:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		else if( eReturned == eARPCacheMiss )
+ 107              	 .loc 1 172 0
+ 108 005c 0028     	 cmp r0,#0
+ 109 005e 65D1     	 bne .L5
+ 173:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		{
+ 174:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Add an entry to the ARP table with a null hardware address.
+ 175:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				This allows the ARP timer to know that an ARP reply is
+ 176:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				outstanding, and perform retransmissions if necessary. */
+ 177:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			vARPRefreshCacheEntry( NULL, ulIPAddress );
+ 110              	 .loc 1 177 0
+ 111 0060 0199     	 ldr r1,[sp,#4]
+ 112 0062 FFF7FEFF 	 bl vARPRefreshCacheEntry
+ 113              	.LVL14:
+ 178:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 179:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Generate an ARP for the required IP address. */
+ 180:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			iptracePACKET_DROPPED_TO_GENERATE_ARP( pxNetworkBuffer->ulIPAddress );
+ 181:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxNetworkBuffer->ulIPAddress = ulIPAddress;
+ 114              	 .loc 1 181 0
+ 115 0066 019B     	 ldr r3,[sp,#4]
+ 116 0068 6361     	 str r3,[r4,#20]
+ 182:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			vARPGenerateRequestPacket( pxNetworkBuffer );
+ 117              	 .loc 1 182 0
+ 118 006a 2046     	 mov r0,r4
+ 119 006c FFF7FEFF 	 bl vARPGenerateRequestPacket
+ 120              	.LVL15:
+ 121 0070 57E0     	 b .L7
+ 122              	.LVL16:
+ 123              	.L3:
+ 124              	.LBE15:
+ 125              	.LBE14:
+ 126              	.LBB17:
+ 127              	.LBB18:
+ 183:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		}
+ 184:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		else
+ 185:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		{
+ 186:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* The lookup indicated that an ARP request has already been
+ 187:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				sent out for the queried IP address. */
+ 188:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			eReturned = eCantSendPacket;
+ 189:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		}
+ 190:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 191:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 192:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	if( eReturned != eCantSendPacket )
+ 193:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 194:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		/* The network driver is responsible for freeing the network buffer
+ 195:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			after the packet has been sent. */
+ 196:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE );
+ 197:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 198:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	else
+ 199:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 200:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		/* The packet can't be sent (DHCP not completed?).  Just drop the
+ 201:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			packet. */
+ 202:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		vReleaseNetworkBufferAndDescriptor( pxNetworkBuffer );
+ 203:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 204:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** }
+ 205:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /*-----------------------------------------------------------*/
+ 206:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 207:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /*
+ 208:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * Note: This function is same as 'vProcessGeneratedUDPPacket' present in
+ 209:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * UDP_IP.c file currently. Has been made local so that Customizations can
+ 210:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  * easily be done without considering the effects on on other functions.
+ 211:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c ****  */
+ 212:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** void prvProcessUDPPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
+ 213:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** {
+ 214:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** UDPPacket_t *pxUDPPacket;
+ 215:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** IPHeader_t *pxIPHeader;
+ 216:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** eARPLookupResult_t eReturned;
+ 217:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
+ 128              	 .loc 1 217 0
+ 129 0072 4369     	 ldr r3,[r0,#20]
+ 130 0074 0193     	 str r3,[sp,#4]
+ 131              	.LVL17:
+ 218:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** size_t uxPayloadSize;
+ 219:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 220:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	/* Map the UDP packet onto the start of the frame. */
+ 221:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	pxUDPPacket = ipCAST_PTR_TO_TYPE_PTR( UDPPacket_t, pxNetworkBuffer->pucEthernetBuffer );
+ 222:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 223:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #if ipconfigSUPPORT_OUTGOING_PINGS == 1
+ 224:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
+ 225:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 226:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		uxPayloadSize = pxNetworkBuffer->xDataLength - sizeof( ICMPPacket_t );
+ 227:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 228:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	else
+ 229:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** #endif
+ 230:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 231:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		uxPayloadSize = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
+ 132              	 .loc 1 231 0
+ 133 0076 C669     	 ldr r6,[r0,#28]
+ 134 0078 2A3E     	 subs r6,r6,#42
+ 135              	.LVL18:
+ 232:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 233:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 234:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	/* Determine the ARP cache status for the requested IP address. */
+ 235:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	eReturned = eARPGetCacheEntry( &( ulIPAddress ), &( pxUDPPacket->xEthernetHeader.xDestinationAddre
+ 136              	 .loc 1 235 0
+ 137 007a 01A8     	 add r0,sp,#4
+ 138              	.LVL19:
+ 139 007c 2946     	 mov r1,r5
+ 140 007e FFF7FEFF 	 bl eARPGetCacheEntry
+ 141              	.LVL20:
+ 236:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 237:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	if( eReturned != eCantSendPacket )
+ 142              	 .loc 1 237 0
+ 143 0082 0228     	 cmp r0,#2
+ 144 0084 5ED0     	 beq .L10
+ 238:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 239:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		if( eReturned == eARPCacheHit )
+ 145              	 .loc 1 239 0
+ 146 0086 0128     	 cmp r0,#1
+ 147 0088 41D1     	 bne .L11
+ 148              	.LVL21:
+ 149              	.LBB19:
+ 240:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		{
+ 241:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+ 242:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				uint8_t ucSocketOptions;
+ 243:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#endif
+ 244:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			iptraceSENDING_RAW_PACKET( pxNetworkBuffer->ulIPAddress );
+ 245:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 246:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Create short cuts to the data within the packet. */
+ 247:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxIPHeader = &( pxUDPPacket->xIPHeader );
+ 248:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 249:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+ 250:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Is it possible that the packet is not actually a UDP packet
+ 251:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				after all, but an ICMP packet. */
+ 252:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			if( pxNetworkBuffer->usPort != ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
+ 150              	 .loc 1 252 0
+ 151 008a 238C     	 ldrh r3,[r4,#32]
+ 152 008c 002B     	 cmp r3,#0
+ 153 008e 51D0     	 beq .L12
+ 154              	.LVL22:
+ 155              	.LBB20:
+ 253:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#endif /* ipconfigSUPPORT_OUTGOING_PINGS */
+ 254:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 255:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				UDPHeader_t *pxUDPHeader;
+ 256:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 257:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxUDPHeader = &( pxUDPPacket->xUDPHeader );
+ 258:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 259:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxUDPHeader->usDestinationPort = pxNetworkBuffer->usPort;
+ 156              	 .loc 1 259 0
+ 157 0090 AB84     	 strh r3,[r5,#36]
+ 260:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxUDPHeader->usSourcePort = pxNetworkBuffer->usBoundPort;
+ 158              	 .loc 1 260 0
+ 159 0092 638C     	 ldrh r3,[r4,#34]
+ 160 0094 6B84     	 strh r3,[r5,#34]
+ 261:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxUDPHeader->usLength = ( uint16_t ) ( uxPayloadSize + sizeof( UDPHeader_t ) );
+ 161              	 .loc 1 261 0
+ 162 0096 B3B2     	 uxth r3,r6
+ 163 0098 03F10802 	 add r2,r3,#8
+ 164 009c 92B2     	 uxth r2,r2
+ 262:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxUDPHeader->usLength = FreeRTOS_htons( pxUDPHeader->usLength );
+ 165              	 .loc 1 262 0
+ 166 009e 110A     	 lsrs r1,r2,#8
+ 167 00a0 41EA0222 	 orr r2,r1,r2,lsl#8
+ 168 00a4 EA84     	 strh r2,[r5,#38]
+ 263:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxUDPHeader->usChecksum = 0U;
+ 169              	 .loc 1 263 0
+ 170 00a6 0022     	 movs r2,#0
+ 171 00a8 85F82820 	 strb r2,[r5,#40]
+ 172 00ac 85F82920 	 strb r2,[r5,#41]
+ 173              	.LBE20:
+ 264:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 265:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Save options now, as they will be overwritten by memcpy */
+ 266:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+ 267:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 268:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				ucSocketOptions = pxNetworkBuffer->pucEthernetBuffer[ ipSOCKET_OPTIONS_OFFSET ];
+ 174              	 .loc 1 268 0
+ 175 00b0 A269     	 ldr r2,[r4,#24]
+ 176 00b2 9779     	 ldrb r7,[r2,#6]
+ 177              	.LVL23:
+ 269:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 270:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#endif
+ 271:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/*
+ 272:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 * Offset the memcpy by the size of a MAC address to start at the packet's
+ 273:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 * Ethernet header 'source' MAC address; the preceding 'destination' should not be altered.
+ 274:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 */
+ 275:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* The Ethernet source address is at offset 6. */
+ 276:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Note: Overwrite the existing data including protocol as set in UDP structure,
+ 277:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			 * reusing the existing one for now */
+ 278:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** //			char *pxUdpSrcAddrOffset = ( char *) ( &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddre
+ 279:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** //			( void ) memcpy( ( void * ) pxUdpSrcAddrOffset, ( const void * ) ( xDefaultPartUDPPacketHeader
+ 280:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 281:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#if ipconfigSUPPORT_OUTGOING_PINGS == 1
+ 282:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
+ 178              	 .loc 1 282 0
+ 179 00b4 228C     	 ldrh r2,[r4,#32]
+ 180 00b6 22B9     	 cbnz r2,.L13
+ 181              	.LVL24:
+ 182              	.L18:
+ 283:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 284:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->ucProtocol = ipPROTOCOL_ICMP;
+ 183              	 .loc 1 284 0
+ 184 00b8 0123     	 movs r3,#1
+ 185 00ba EB75     	 strb r3,[r5,#23]
+ 285:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usLength = ( uint16_t ) ( uxPayloadSize + sizeof( IPHeader_t ) + sizeof( ICMPHeader
+ 186              	 .loc 1 285 0
+ 187 00bc 1C36     	 adds r6,r6,#28
+ 188              	.LVL25:
+ 189 00be 2E82     	 strh r6,[r5,#16]
+ 190 00c0 01E0     	 b .L14
+ 191              	.LVL26:
+ 192              	.L13:
+ 286:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 287:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			else
+ 288:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#endif /* ipconfigSUPPORT_OUTGOING_PINGS */
+ 289:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 290:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usLength = ( uint16_t ) ( uxPayloadSize + sizeof( IPHeader_t ) + sizeof( UDPHeader_
+ 193              	 .loc 1 290 0
+ 194 00c2 1C33     	 adds r3,r3,#28
+ 195 00c4 2B82     	 strh r3,[r5,#16]
+ 196              	.LVL27:
+ 197              	.L14:
+ 291:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 292:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 293:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxIPHeader->usLength = FreeRTOS_htons( pxIPHeader->usLength );
+ 198              	 .loc 1 293 0
+ 199 00c6 2A8A     	 ldrh r2,[r5,#16]
+ 200 00c8 130A     	 lsrs r3,r2,#8
+ 201 00ca 43EA0223 	 orr r3,r3,r2,lsl#8
+ 202 00ce 2B82     	 strh r3,[r5,#16]
+ 294:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxIPHeader->ulDestinationIPAddress = pxNetworkBuffer->ulIPAddress;
+ 203              	 .loc 1 294 0
+ 204 00d0 6369     	 ldr r3,[r4,#20]
+ 205 00d2 C5F81E30 	 str r3,[r5,#30]
+ 295:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 296:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#if( ipconfigUSE_LLMNR == 1 )
+ 297:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 298:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				/* LLMNR messages are typically used on a LAN and they're
+ 299:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				 * not supposed to cross routers */
+ 300:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				if( pxNetworkBuffer->ulIPAddress == ipLLMNR_IP_ADDR )
+ 301:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				{
+ 302:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 					pxIPHeader->ucTimeToLive = 0x01;
+ 303:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				}
+ 304:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 305:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#endif
+ 306:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 307:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+ 308:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 309:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usHeaderChecksum = 0U;
+ 206              	 .loc 1 309 0
+ 207 00d6 0020     	 movs r0,#0
+ 208              	.LVL28:
+ 209 00d8 2876     	 strb r0,[r5,#24]
+ 210 00da 6876     	 strb r0,[r5,#25]
+ 310:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0U, ( uint8_t * ) &( pxIPHeader->ucVersionHe
+ 211              	 .loc 1 310 0
+ 212 00dc 05F10E01 	 add r1,r5,#14
+ 213 00e0 1422     	 movs r2,#20
+ 214 00e2 FFF7FEFF 	 bl usGenerateChecksum
+ 215              	.LVL29:
+ 311:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
+ 216              	 .loc 1 311 0
+ 217 00e6 030A     	 lsrs r3,r0,#8
+ 218 00e8 43EA0020 	 orr r0,r3,r0,lsl#8
+ 219 00ec C043     	 mvns r0,r0
+ 220 00ee 2883     	 strh r0,[r5,#24]
+ 312:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 313:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				if( ( ucSocketOptions & ( uint8_t ) FREERTOS_SO_UDPCKSUM_OUT ) != 0U )
+ 221              	 .loc 1 313 0
+ 222 00f0 17F0020F 	 tst r7,#2
+ 223 00f4 05D0     	 beq .L15
+ 314:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				{
+ 315:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 					( void ) usGenerateProtocolChecksum( ( uint8_t * ) pxUDPPacket, pxNetworkBuffer->xDataLength, 
+ 224              	 .loc 1 315 0
+ 225 00f6 2846     	 mov r0,r5
+ 226 00f8 E169     	 ldr r1,[r4,#28]
+ 227 00fa 0122     	 movs r2,#1
+ 228 00fc FFF7FEFF 	 bl usGenerateProtocolChecksum
+ 229              	.LVL30:
+ 230 0100 1BE0     	 b .L16
+ 231              	.L15:
+ 316:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				}
+ 317:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				else
+ 318:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				{
+ 319:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 					pxUDPPacket->xUDPHeader.usChecksum = 0U;
+ 232              	 .loc 1 319 0
+ 233 0102 0023     	 movs r3,#0
+ 234 0104 85F82830 	 strb r3,[r5,#40]
+ 235 0108 85F82930 	 strb r3,[r5,#41]
+ 236 010c 15E0     	 b .L16
+ 237              	.LVL31:
+ 238              	.L11:
+ 239              	.LBE19:
+ 320:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				}
+ 321:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 322:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		#endif
+ 323:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		}
+ 324:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		else if( eReturned == eARPCacheMiss )
+ 240              	 .loc 1 324 0
+ 241 010e C8B9     	 cbnz r0,.L10
+ 325:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		{
+ 326:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Add an entry to the ARP table with a null hardware address.
+ 327:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				This allows the ARP timer to know that an ARP reply is
+ 328:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				outstanding, and perform retransmissions if necessary. */
+ 329:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			vARPRefreshCacheEntry( NULL, ulIPAddress );
+ 242              	 .loc 1 329 0
+ 243 0110 0199     	 ldr r1,[sp,#4]
+ 244 0112 FFF7FEFF 	 bl vARPRefreshCacheEntry
+ 245              	.LVL32:
+ 330:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 331:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* Generate an ARP for the required IP address. */
+ 332:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			iptracePACKET_DROPPED_TO_GENERATE_ARP( pxNetworkBuffer->ulIPAddress );
+ 333:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			pxNetworkBuffer->ulIPAddress = ulIPAddress;
+ 246              	 .loc 1 333 0
+ 247 0116 019B     	 ldr r3,[sp,#4]
+ 248 0118 6361     	 str r3,[r4,#20]
+ 334:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			vARPGenerateRequestPacket( pxNetworkBuffer );
+ 249              	 .loc 1 334 0
+ 250 011a 2046     	 mov r0,r4
+ 251 011c FFF7FEFF 	 bl vARPGenerateRequestPacket
+ 252              	.LVL33:
+ 253 0120 0BE0     	 b .L16
+ 254              	.LVL34:
+ 255              	.L7:
+ 256              	.LBE18:
+ 257              	.LBE17:
+ 258              	.LBB23:
+ 259              	.LBB16:
+ 196:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 260              	 .loc 1 196 0
+ 261 0122 2046     	 mov r0,r4
+ 262 0124 0121     	 movs r1,#1
+ 263 0126 FFF7FEFF 	 bl xNetworkInterfaceOutput
+ 264              	.LVL35:
+ 265 012a 0EE0     	 b .L1
+ 266              	.LVL36:
+ 267              	.L5:
+ 202:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 268              	 .loc 1 202 0
+ 269 012c 2046     	 mov r0,r4
+ 270 012e FFF7FEFF 	 bl vReleaseNetworkBufferAndDescriptor
+ 271              	.LVL37:
+ 272 0132 0AE0     	 b .L1
+ 273              	.LVL38:
+ 274              	.L12:
+ 275              	.LBE16:
+ 276              	.LBE23:
+ 277              	.LBB24:
+ 278              	.LBB22:
+ 279              	.LBB21:
+ 268:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 280              	 .loc 1 268 0
+ 281 0134 A369     	 ldr r3,[r4,#24]
+ 282 0136 9F79     	 ldrb r7,[r3,#6]
+ 283              	.LVL39:
+ 284 0138 BEE7     	 b .L18
+ 285              	.LVL40:
+ 286              	.L16:
+ 287              	.LBE21:
+ 335:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		}
+ 336:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		else
+ 337:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		{
+ 338:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			/* The lookup indicated that an ARP request has already been
+ 339:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				sent out for the queried IP address. */
+ 340:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			eReturned = eCantSendPacket;
+ 341:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		}
+ 342:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 343:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 344:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	if( eReturned != eCantSendPacket )
+ 345:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 346:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		/* The network driver is responsible for freeing the network buffer
+ 347:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			after the packet has been sent. */
+ 348:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 349:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		#if defined( ipconfigETHERNET_MINIMUM_PACKET_BYTES )
+ 350:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		{
+ 351:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			if( pxNetworkBuffer->xDataLength < ( size_t ) ipconfigETHERNET_MINIMUM_PACKET_BYTES )
+ 352:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			{
+ 353:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				BaseType_t xIndex;
+ 354:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 355:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				for( xIndex = ( BaseType_t ) pxNetworkBuffer->xDataLength; xIndex < ( BaseType_t ) ipconfigETHE
+ 356:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				{
+ 357:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 					pxNetworkBuffer->pucEthernetBuffer[ xIndex ] = 0U;
+ 358:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				}
+ 359:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 				pxNetworkBuffer->xDataLength = ( size_t ) ipconfigETHERNET_MINIMUM_PACKET_BYTES;
+ 360:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			}
+ 361:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		}
+ 362:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		#endif
+ 363:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 
+ 364:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE );
+ 288              	 .loc 1 364 0
+ 289 013a 2046     	 mov r0,r4
+ 290 013c 0121     	 movs r1,#1
+ 291 013e FFF7FEFF 	 bl xNetworkInterfaceOutput
+ 292              	.LVL41:
+ 293 0142 02E0     	 b .L1
+ 294              	.LVL42:
+ 295              	.L10:
+ 365:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	}
+ 366:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	else
+ 367:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 	{
+ 368:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		/* The packet can't be sent (DHCP not completed?).  Just drop the
+ 369:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 			packet. */
+ 370:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** 		vReleaseNetworkBufferAndDescriptor( pxNetworkBuffer );
+ 296              	 .loc 1 370 0
+ 297 0144 2046     	 mov r0,r4
+ 298 0146 FFF7FEFF 	 bl vReleaseNetworkBufferAndDescriptor
+ 299              	.LVL43:
+ 300              	.L1:
+ 301              	.LBE22:
+ 302              	.LBE24:
+ 121:../FreeRTOS-Plus-TCP/FreeRTOS_RAW_IP.c **** /*-----------------------------------------------------------*/
+ 303              	 .loc 1 121 0
+ 304 014a 03B0     	 add sp,sp,#12
+ 305              	.LCFI2:
+ 306              	 .cfi_def_cfa_offset 20
+ 307              	 
+ 308 014c F0BD     	 pop {r4,r5,r6,r7,pc}
+ 309              	 .cfi_endproc
+ 310              	.LFE50:
+ 312 014e 00BF     	 .text
+ 313              	.Letext0:
+ 314              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 315              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 316              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\lib\\gcc\\arm-none-eabi\\4.9.3\\include\\stddef.h"
+ 317              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 318              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/list.h"
+ 319              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP.h"
+ 320              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP_Private.h"
+ 321              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_ARP.h"
+ 322              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/NetworkInterface.h"
+ 323              	 .file 11 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/NetworkBufferManagement.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 FreeRTOS_RAW_IP.c
+    {standard input}:19     .text.vProcessGeneratedRAWPacket:00000000 $t
+    {standard input}:24     .text.vProcessGeneratedRAWPacket:00000000 vProcessGeneratedRAWPacket
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.stddef.h.39.fb88e218f22ad7a0ab38f3d93c6eb3e4
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.65.7c7009d79fb33c27bcf8e2214c76b343
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+                           .group:00000000 wm4.queue.h.66.45d4a3cf5de24cde7e732f8dad25383c
+                           .group:00000000 wm4.semphr.h.38.96f44691bfa19eb833944d3a35b81e54
+                           .group:00000000 wm4.FreeRTOSIPConfig.h.37.3f9c1db988571ff1f3dec4c7e54978d6
+                           .group:00000000 wm4.FreeRTOS_errno_TCP.h.27.708877b341d0e6bcb4ba112b2ad8082a
+                           .group:00000000 wm4.FreeRTOSIPConfigDefaults.h.41.f972b11d9b1eba5383080cfaef1fd740
+                           .group:00000000 wm4.IPTraceMacroDefaults.h.31.69642530b5a79c93e762c9b09ac0d1d5
+                           .group:00000000 wm4.FreeRTOS_IP.h.59.3f5e36f6612bd0c66747c6093da47335
+                           .group:00000000 wm4.FreeRTOS_IP.h.179.e5077063e624bc5d3f02542470d6ea94
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.timers.h.29.025d268d6baf57298309e7b498ee1cc7
+                           .group:00000000 wm4.FreeRTOS_Sockets.h.58.61d472da32c0e0f5bc49c368f15d0ac5
+                           .group:00000000 wm4.FreeRTOS_TCP_WIN.h.32.f3cfab69924f28284deb16cc1a30fb93
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.52.551f932b14473cea139893dda31b3fa0
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.328.b5788f8d626a4cf16b8282f9399f3f55
+                           .group:00000000 wm4.FreeRTOS_DNS.h.27.8432bc3440a9cfc56281e07613f9ce59
+
+UNDEFINED SYMBOLS
+eARPGetCacheEntry
+usGenerateChecksum
+vARPRefreshCacheEntry
+vARPGenerateRequestPacket
+usGenerateProtocolChecksum
+xNetworkInterfaceOutput
+vReleaseNetworkBufferAndDescriptor

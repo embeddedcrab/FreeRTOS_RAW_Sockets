@@ -1,0 +1,1320 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "dri_mem.cpp"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.memcmp,"ax",%progbits
+  19              	 .align 2
+  20              	 .global memcmp
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	memcmp:
+  25              	.LFB9:
+  26              	 .file 1 "../Driver/MEM/src/dri_mem.cpp"
+   1:../Driver/MEM/src/dri_mem.cpp **** /*****************************************************************************
+   2:../Driver/MEM/src/dri_mem.cpp **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../Driver/MEM/src/dri_mem.cpp **** *
+   4:../Driver/MEM/src/dri_mem.cpp **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../Driver/MEM/src/dri_mem.cpp **** *
+   6:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+   7:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+   8:../Driver/MEM/src/dri_mem.cpp **** * Title:		Memory source file
+   9:../Driver/MEM/src/dri_mem.cpp **** * Filename:		dri_mem.cpp
+  10:../Driver/MEM/src/dri_mem.cpp **** * Author:		HS
+  11:../Driver/MEM/src/dri_mem.cpp **** * Origin Date:	10/04/2019
+  12:../Driver/MEM/src/dri_mem.cpp **** * Version:		1.0.0
+  13:../Driver/MEM/src/dri_mem.cpp **** * Notes:
+  14:../Driver/MEM/src/dri_mem.cpp **** *
+  15:../Driver/MEM/src/dri_mem.cpp **** * Change History
+  16:../Driver/MEM/src/dri_mem.cpp **** * --------------
+  17:../Driver/MEM/src/dri_mem.cpp **** *
+  18:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  19:../Driver/MEM/src/dri_mem.cpp **** 
+  20:../Driver/MEM/src/dri_mem.cpp **** /** @file:	dri_mem.cpp
+  21:../Driver/MEM/src/dri_mem.cpp ****  *  @brief:	This source file contains memory operators functions definitions
+  22:../Driver/MEM/src/dri_mem.cpp ****  */
+  23:../Driver/MEM/src/dri_mem.cpp **** 
+  24:../Driver/MEM/src/dri_mem.cpp **** 
+  25:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+  26:../Driver/MEM/src/dri_mem.cpp **** * Includes
+  27:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  28:../Driver/MEM/src/dri_mem.cpp **** #include <dri_mem.h>
+  29:../Driver/MEM/src/dri_mem.cpp **** 
+  30:../Driver/MEM/src/dri_mem.cpp **** 
+  31:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+  32:../Driver/MEM/src/dri_mem.cpp **** * Preprocessor Constants
+  33:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  34:../Driver/MEM/src/dri_mem.cpp **** 
+  35:../Driver/MEM/src/dri_mem.cpp **** #define PREFER_SIZE_OVER_SPEED
+  36:../Driver/MEM/src/dri_mem.cpp **** 
+  37:../Driver/MEM/src/dri_mem.cpp **** 
+  38:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+  39:../Driver/MEM/src/dri_mem.cpp **** * Configuration Constants
+  40:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  41:../Driver/MEM/src/dri_mem.cpp **** 
+  42:../Driver/MEM/src/dri_mem.cpp **** 
+  43:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+  44:../Driver/MEM/src/dri_mem.cpp **** * Macros
+  45:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  46:../Driver/MEM/src/dri_mem.cpp **** 
+  47:../Driver/MEM/src/dri_mem.cpp **** /* Nonzero if either X or Y is not aligned on a "long" boundary.  */
+  48:../Driver/MEM/src/dri_mem.cpp **** #define UNALIGNED(X, Y) \
+  49:../Driver/MEM/src/dri_mem.cpp **** 	(((long)X & (sizeof (long) - 1)) | ((long)Y & (sizeof (long) - 1)))
+  50:../Driver/MEM/src/dri_mem.cpp **** 
+  51:../Driver/MEM/src/dri_mem.cpp **** /* How many bytes are copied each iteration of the 4X unrolled loop.  */
+  52:../Driver/MEM/src/dri_mem.cpp **** #define BIGBLOCKSIZE    (sizeof (long) << 2)
+  53:../Driver/MEM/src/dri_mem.cpp **** 
+  54:../Driver/MEM/src/dri_mem.cpp **** /* How many bytes are copied each iteration of the word copy loop.  */
+  55:../Driver/MEM/src/dri_mem.cpp **** #define LITTLEBLOCKSIZE (sizeof (long))
+  56:../Driver/MEM/src/dri_mem.cpp **** 
+  57:../Driver/MEM/src/dri_mem.cpp **** /* Threshhold for punting to the byte copier.  */
+  58:../Driver/MEM/src/dri_mem.cpp **** #define TOO_SMALL(LEN)  ((LEN) < BIGBLOCKSIZE)
+  59:../Driver/MEM/src/dri_mem.cpp **** 
+  60:../Driver/MEM/src/dri_mem.cpp **** 
+  61:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+  62:../Driver/MEM/src/dri_mem.cpp **** * Typedefs
+  63:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  64:../Driver/MEM/src/dri_mem.cpp **** 
+  65:../Driver/MEM/src/dri_mem.cpp **** 
+  66:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+  67:../Driver/MEM/src/dri_mem.cpp **** * Variables
+  68:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  69:../Driver/MEM/src/dri_mem.cpp **** 
+  70:../Driver/MEM/src/dri_mem.cpp **** 
+  71:../Driver/MEM/src/dri_mem.cpp **** /******************************************************************************
+  72:../Driver/MEM/src/dri_mem.cpp **** * Function Definitions
+  73:../Driver/MEM/src/dri_mem.cpp **** *******************************************************************************/
+  74:../Driver/MEM/src/dri_mem.cpp **** 
+  75:../Driver/MEM/src/dri_mem.cpp **** /**
+  76:../Driver/MEM/src/dri_mem.cpp ****  * @function
+  77:../Driver/MEM/src/dri_mem.cpp ****  *
+  78:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+  79:../Driver/MEM/src/dri_mem.cpp ****  *
+  80:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+  81:../Driver/MEM/src/dri_mem.cpp ****  *
+  82:../Driver/MEM/src/dri_mem.cpp ****  */
+  83:../Driver/MEM/src/dri_mem.cpp **** int memcmp( const void * p_arg_one, const void *p_arg_two, size_t size )
+  84:../Driver/MEM/src/dri_mem.cpp **** {
+  27              	 .loc 1 84 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+  32              	.LVL0:
+  33              	.LBB2:
+  85:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+  86:../Driver/MEM/src/dri_mem.cpp **** 	const unsigned char *p_arg_one_l = (unsigned char *)p_arg_one;
+  87:../Driver/MEM/src/dri_mem.cpp **** 	const unsigned char *p_arg_two_l = (unsigned char *)p_arg_two;
+  88:../Driver/MEM/src/dri_mem.cpp **** 	size_t size_l = 0;
+  89:../Driver/MEM/src/dri_mem.cpp **** 	int ret_l = 0;
+  90:../Driver/MEM/src/dri_mem.cpp **** 
+  91:../Driver/MEM/src/dri_mem.cpp **** 	/* Compare memory for differences */
+  92:../Driver/MEM/src/dri_mem.cpp **** 	for( size_l = 0; size_l < size; ++size_l )
+  34              	 .loc 1 92 0
+  35 0000 72B1     	 cbz r2,.L5
+  36              	.LBE2:
+  84:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+  37              	 .loc 1 84 0
+  38 0002 30B4     	 push {r4,r5}
+  39              	.LCFI0:
+  40              	 .cfi_def_cfa_offset 8
+  41              	 .cfi_offset 4,-8
+  42              	 .cfi_offset 5,-4
+  43 0004 0346     	 mov r3,r0
+  44 0006 0139     	 subs r1,r1,#1
+  45              	.LVL1:
+  46 0008 8218     	 adds r2,r0,r2
+  47              	.LVL2:
+  48              	.LBB3:
+  49              	 .loc 1 92 0
+  50 000a 0020     	 movs r0,#0
+  51              	.LVL3:
+  52              	.L4:
+  93:../Driver/MEM/src/dri_mem.cpp **** 	{
+  94:../Driver/MEM/src/dri_mem.cpp **** 		/* Values are not equal */
+  95:../Driver/MEM/src/dri_mem.cpp **** 		if( *(p_arg_one_l + size_l) != *(p_arg_two_l + size_l) )
+  53              	 .loc 1 95 0
+  54 000c 13F8015B 	 ldrb r5,[r3],#1
+  55              	.LVL4:
+  56 0010 11F8014F 	 ldrb r4,[r1,#1]!
+  57 0014 A542     	 cmp r5,r4
+  96:../Driver/MEM/src/dri_mem.cpp **** 		{
+  97:../Driver/MEM/src/dri_mem.cpp **** 			/* Check the greater or smaller between both */
+  98:../Driver/MEM/src/dri_mem.cpp **** 			ret_l = ( *(p_arg_one_l + size_l) - *(p_arg_two_l + size_l) );
+  58              	 .loc 1 98 0
+  59 0016 18BF     	 it ne
+  60 0018 281B     	 subne r0,r5,r4
+  61              	.LVL5:
+  92:../Driver/MEM/src/dri_mem.cpp **** 	{
+  62              	 .loc 1 92 0
+  63 001a 9342     	 cmp r3,r2
+  64 001c F6D1     	 bne .L4
+  65 001e 01E0     	 b .L2
+  66              	.LVL6:
+  67              	.L5:
+  68              	.LCFI1:
+  69              	 .cfi_def_cfa_offset 0
+  70              	 .cfi_restore 4
+  71              	 .cfi_restore 5
+  89:../Driver/MEM/src/dri_mem.cpp **** 
+  72              	 .loc 1 89 0
+  73 0020 0020     	 movs r0,#0
+  74              	.LVL7:
+  75 0022 7047     	 bx lr
+  76              	.LVL8:
+  77              	.L2:
+  78              	.LCFI2:
+  79              	 .cfi_def_cfa_offset 8
+  80              	 .cfi_offset 4,-8
+  81              	 .cfi_offset 5,-4
+  82              	.LBE3:
+  99:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 100:../Driver/MEM/src/dri_mem.cpp **** 		else/* Values are equal */
+ 101:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 102:../Driver/MEM/src/dri_mem.cpp **** 			/* Do not do anything */
+ 103:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 104:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 105:../Driver/MEM/src/dri_mem.cpp **** 
+ 106:../Driver/MEM/src/dri_mem.cpp **** 	/* Check for return value */
+ 107:../Driver/MEM/src/dri_mem.cpp **** 	return (ret_l != 0 ? ret_l : 0);
+ 108:../Driver/MEM/src/dri_mem.cpp **** }
+  83              	 .loc 1 108 0
+  84 0024 30BC     	 pop {r4,r5}
+  85              	.LCFI3:
+  86              	 .cfi_restore 5
+  87              	 .cfi_restore 4
+  88              	 .cfi_def_cfa_offset 0
+  89 0026 7047     	 bx lr
+  90              	 .cfi_endproc
+  91              	.LFE9:
+  93              	 .section .text.memcpy,"ax",%progbits
+  94              	 .align 2
+  95              	 .global memcpy
+  96              	 .thumb
+  97              	 .thumb_func
+  99              	memcpy:
+ 100              	.LFB10:
+ 109:../Driver/MEM/src/dri_mem.cpp **** 
+ 110:../Driver/MEM/src/dri_mem.cpp **** 
+ 111:../Driver/MEM/src/dri_mem.cpp **** /**
+ 112:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 113:../Driver/MEM/src/dri_mem.cpp ****  *
+ 114:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 115:../Driver/MEM/src/dri_mem.cpp ****  *
+ 116:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>	
+ 117:../Driver/MEM/src/dri_mem.cpp ****  *
+ 118:../Driver/MEM/src/dri_mem.cpp ****  */
+ 119:../Driver/MEM/src/dri_mem.cpp **** void *memcpy( void *__restrict p_dest, const void *__restrict p_src,
+ 120:../Driver/MEM/src/dri_mem.cpp **** 				size_t size )
+ 121:../Driver/MEM/src/dri_mem.cpp **** {
+ 101              	 .loc 1 121 0
+ 102              	 .cfi_startproc
+ 103              	 
+ 104              	 
+ 105              	 
+ 106              	.LBB4:
+ 122:../Driver/MEM/src/dri_mem.cpp **** #if defined(PREFER_SIZE_OVER_SPEED) || defined(__OPTIMIZE_SIZE__)
+ 123:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 124:../Driver/MEM/src/dri_mem.cpp **** 	char * p_dest_l = (char *) p_dest;
+ 125:../Driver/MEM/src/dri_mem.cpp **** 	const char * p_src_l = (const char *) p_src;
+ 126:../Driver/MEM/src/dri_mem.cpp **** 	size_t size_l = 0;
+ 127:../Driver/MEM/src/dri_mem.cpp **** 
+ 128:../Driver/MEM/src/dri_mem.cpp **** 	for( size_l = 0; size_l < size; ++size_l )
+ 107              	 .loc 1 128 0
+ 108 0000 52B1     	 cbz r2,.L15
+ 109              	.LBE4:
+ 121:../Driver/MEM/src/dri_mem.cpp **** #if defined(PREFER_SIZE_OVER_SPEED) || defined(__OPTIMIZE_SIZE__)
+ 110              	 .loc 1 121 0
+ 111 0002 10B4     	 push {r4}
+ 112              	.LCFI4:
+ 113              	 .cfi_def_cfa_offset 4
+ 114              	 .cfi_offset 4,-4
+ 115 0004 431E     	 subs r3,r0,#1
+ 116 0006 8A18     	 adds r2,r1,r2
+ 117              	.L11:
+ 118              	.LBB5:
+ 129:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 130:../Driver/MEM/src/dri_mem.cpp **** 		*p_dest_l++ = *p_src_l++;
+ 119              	 .loc 1 130 0 discriminator 3
+ 120 0008 11F8014B 	 ldrb r4,[r1],#1
+ 121 000c 03F8014F 	 strb r4,[r3,#1]!
+ 128:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 122              	 .loc 1 128 0 discriminator 3
+ 123 0010 9142     	 cmp r1,r2
+ 124 0012 F9D1     	 bne .L11
+ 125              	.LBE5:
+ 131:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 132:../Driver/MEM/src/dri_mem.cpp **** 
+ 133:../Driver/MEM/src/dri_mem.cpp **** 	return p_dest;
+ 134:../Driver/MEM/src/dri_mem.cpp **** #else
+ 135:../Driver/MEM/src/dri_mem.cpp ****     /* Taken from Newlib Source */
+ 136:../Driver/MEM/src/dri_mem.cpp **** 	char *dst = (char *)p_dest;
+ 137:../Driver/MEM/src/dri_mem.cpp **** 	const char *src = (const char *)p_src;
+ 138:../Driver/MEM/src/dri_mem.cpp **** 	long *aligned_dst;
+ 139:../Driver/MEM/src/dri_mem.cpp **** 	const long *aligned_src;
+ 140:../Driver/MEM/src/dri_mem.cpp **** 
+ 141:../Driver/MEM/src/dri_mem.cpp **** 	/* If the size is small, or either SRC or DST is unaligned,
+ 142:../Driver/MEM/src/dri_mem.cpp ****      then punt into the byte copy loop.  This should be rare.  */
+ 143:../Driver/MEM/src/dri_mem.cpp **** 	if (!TOO_SMALL(size) && !UNALIGNED (src, dst))
+ 144:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 145:../Driver/MEM/src/dri_mem.cpp **** 		aligned_dst = (long*)dst;
+ 146:../Driver/MEM/src/dri_mem.cpp **** 		aligned_src = (long*)src;
+ 147:../Driver/MEM/src/dri_mem.cpp **** 
+ 148:../Driver/MEM/src/dri_mem.cpp **** 		/* Copy 4X long words at a time if possible.  */
+ 149:../Driver/MEM/src/dri_mem.cpp **** 		while (size >= BIGBLOCKSIZE)
+ 150:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 151:../Driver/MEM/src/dri_mem.cpp **** 			*aligned_dst++ = *aligned_src++;
+ 152:../Driver/MEM/src/dri_mem.cpp **** 			*aligned_dst++ = *aligned_src++;
+ 153:../Driver/MEM/src/dri_mem.cpp **** 			*aligned_dst++ = *aligned_src++;
+ 154:../Driver/MEM/src/dri_mem.cpp **** 			*aligned_dst++ = *aligned_src++;
+ 155:../Driver/MEM/src/dri_mem.cpp **** 			size -= BIGBLOCKSIZE;
+ 156:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 157:../Driver/MEM/src/dri_mem.cpp **** 
+ 158:../Driver/MEM/src/dri_mem.cpp **** 		/* Copy one long word at a time if possible.  */
+ 159:../Driver/MEM/src/dri_mem.cpp **** 		while (size >= LITTLEBLOCKSIZE)
+ 160:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 161:../Driver/MEM/src/dri_mem.cpp **** 			*aligned_dst++ = *aligned_src++;
+ 162:../Driver/MEM/src/dri_mem.cpp **** 			size -= LITTLEBLOCKSIZE;
+ 163:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 164:../Driver/MEM/src/dri_mem.cpp **** 
+ 165:../Driver/MEM/src/dri_mem.cpp **** 		/* Pick up any residual with a byte copier.  */
+ 166:../Driver/MEM/src/dri_mem.cpp **** 		dst = (char*)aligned_dst;
+ 167:../Driver/MEM/src/dri_mem.cpp **** 		src = (char*)aligned_src;
+ 168:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 169:../Driver/MEM/src/dri_mem.cpp **** 
+ 170:../Driver/MEM/src/dri_mem.cpp **** 	while (size--)
+ 171:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 172:../Driver/MEM/src/dri_mem.cpp **** 		*dst++ = *src++;
+ 173:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 174:../Driver/MEM/src/dri_mem.cpp **** 
+ 175:../Driver/MEM/src/dri_mem.cpp **** 	/* Undefine macros */
+ 176:../Driver/MEM/src/dri_mem.cpp **** 	#undef UNALIGNED
+ 177:../Driver/MEM/src/dri_mem.cpp **** 	#undef BIGBLOCKSIZE
+ 178:../Driver/MEM/src/dri_mem.cpp **** 	#undef LITTLEBLOCKSIZE
+ 179:../Driver/MEM/src/dri_mem.cpp **** 	#undef TOO_SMALL
+ 180:../Driver/MEM/src/dri_mem.cpp **** 
+ 181:../Driver/MEM/src/dri_mem.cpp **** 	return p_dest;
+ 182:../Driver/MEM/src/dri_mem.cpp **** #endif /* not PREFER_SIZE_OVER_SPEED */
+ 183:../Driver/MEM/src/dri_mem.cpp **** }
+ 126              	 .loc 1 183 0
+ 127 0014 5DF8044B 	 ldr r4,[sp],#4
+ 128              	.LCFI5:
+ 129              	 .cfi_restore 4
+ 130              	 .cfi_def_cfa_offset 0
+ 131              	.L15:
+ 132 0018 7047     	 bx lr
+ 133              	 .cfi_endproc
+ 134              	.LFE10:
+ 136 001a 00BF     	 .section .text.memmove,"ax",%progbits
+ 137              	 .align 2
+ 138              	 .global memmove
+ 139              	 .thumb
+ 140              	 .thumb_func
+ 142              	memmove:
+ 143              	.LFB11:
+ 184:../Driver/MEM/src/dri_mem.cpp **** 
+ 185:../Driver/MEM/src/dri_mem.cpp **** 
+ 186:../Driver/MEM/src/dri_mem.cpp **** /**
+ 187:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 188:../Driver/MEM/src/dri_mem.cpp ****  *
+ 189:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 190:../Driver/MEM/src/dri_mem.cpp ****  *
+ 191:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 192:../Driver/MEM/src/dri_mem.cpp ****  *
+ 193:../Driver/MEM/src/dri_mem.cpp ****  */
+ 194:../Driver/MEM/src/dri_mem.cpp **** void *memmove( void *p_dest, const void *p_src, size_t length )
+ 195:../Driver/MEM/src/dri_mem.cpp **** {
+ 144              	 .loc 1 195 0
+ 145              	 .cfi_startproc
+ 146              	 
+ 147              	 
+ 148              	 
+ 149              	.LVL9:
+ 150 0000 10B4     	 push {r4}
+ 151              	.LCFI6:
+ 152              	 .cfi_def_cfa_offset 4
+ 153              	 .cfi_offset 4,-4
+ 154              	.LVL10:
+ 155              	.LBB6:
+ 196:../Driver/MEM/src/dri_mem.cpp **** #if defined(PREFER_SIZE_OVER_SPEED) || defined(__OPTIMIZE_SIZE__)
+ 197:../Driver/MEM/src/dri_mem.cpp ****   char *dst = (char *)p_dest;
+ 198:../Driver/MEM/src/dri_mem.cpp ****   const char *src = (const char *)p_src;
+ 199:../Driver/MEM/src/dri_mem.cpp **** 
+ 200:../Driver/MEM/src/dri_mem.cpp ****   if (src < dst && dst < src + length)
+ 156              	 .loc 1 200 0
+ 157 0002 8842     	 cmp r0,r1
+ 158 0004 01D8     	 bhi .L17
+ 159              	.L20:
+ 160              	.LVL11:
+ 201:../Driver/MEM/src/dri_mem.cpp ****     {
+ 202:../Driver/MEM/src/dri_mem.cpp ****       /* Have to copy backwards */
+ 203:../Driver/MEM/src/dri_mem.cpp ****       src += length;
+ 204:../Driver/MEM/src/dri_mem.cpp ****       dst += length;
+ 205:../Driver/MEM/src/dri_mem.cpp ****       while (length--)
+ 206:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 207:../Driver/MEM/src/dri_mem.cpp **** 	  *--dst = *--src;
+ 208:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 209:../Driver/MEM/src/dri_mem.cpp ****     }
+ 210:../Driver/MEM/src/dri_mem.cpp ****   else
+ 211:../Driver/MEM/src/dri_mem.cpp ****     {
+ 212:../Driver/MEM/src/dri_mem.cpp ****       while (length--)
+ 161              	 .loc 1 212 0
+ 162 0006 6AB9     	 cbnz r2,.L18
+ 163 0008 14E0     	 b .L19
+ 164              	.LVL12:
+ 165              	.L17:
+ 200:../Driver/MEM/src/dri_mem.cpp ****     {
+ 166              	 .loc 1 200 0 discriminator 1
+ 167 000a 8B18     	 adds r3,r1,r2
+ 168 000c 9842     	 cmp r0,r3
+ 169 000e FAD2     	 bcs .L20
+ 170              	.LVL13:
+ 204:../Driver/MEM/src/dri_mem.cpp ****       while (length--)
+ 171              	 .loc 1 204 0
+ 172 0010 8118     	 adds r1,r0,r2
+ 173              	.LVL14:
+ 205:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 174              	 .loc 1 205 0
+ 175 0012 7AB1     	 cbz r2,.L19
+ 176 0014 9A1A     	 subs r2,r3,r2
+ 177              	.LVL15:
+ 178              	.L21:
+ 207:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 179              	 .loc 1 207 0
+ 180 0016 13F8014D 	 ldrb r4,[r3,#-1]!
+ 181              	.LVL16:
+ 182 001a 01F8014D 	 strb r4,[r1,#-1]!
+ 183              	.LVL17:
+ 205:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 184              	 .loc 1 205 0
+ 185 001e 9342     	 cmp r3,r2
+ 186 0020 F9D1     	 bne .L21
+ 187 0022 07E0     	 b .L19
+ 188              	.LVL18:
+ 189              	.L18:
+ 190 0024 431E     	 subs r3,r0,#1
+ 191 0026 0A44     	 add r2,r2,r1
+ 192              	.LVL19:
+ 193              	.L22:
+ 213:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 214:../Driver/MEM/src/dri_mem.cpp **** 	  *dst++ = *src++;
+ 194              	 .loc 1 214 0
+ 195 0028 11F8014B 	 ldrb r4,[r1],#1
+ 196              	.LVL20:
+ 197 002c 03F8014F 	 strb r4,[r3,#1]!
+ 198              	.LVL21:
+ 212:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 199              	 .loc 1 212 0
+ 200 0030 9142     	 cmp r1,r2
+ 201 0032 F9D1     	 bne .L22
+ 202              	.LVL22:
+ 203              	.L19:
+ 204              	.LBE6:
+ 215:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 216:../Driver/MEM/src/dri_mem.cpp ****     }
+ 217:../Driver/MEM/src/dri_mem.cpp **** 
+ 218:../Driver/MEM/src/dri_mem.cpp ****   return p_dest;
+ 219:../Driver/MEM/src/dri_mem.cpp **** #else
+ 220:../Driver/MEM/src/dri_mem.cpp ****   char *dst = p_dest;
+ 221:../Driver/MEM/src/dri_mem.cpp ****   const char *src = p_src;
+ 222:../Driver/MEM/src/dri_mem.cpp ****   long *aligned_dst;
+ 223:../Driver/MEM/src/dri_mem.cpp ****   const long *aligned_src;
+ 224:../Driver/MEM/src/dri_mem.cpp **** 
+ 225:../Driver/MEM/src/dri_mem.cpp ****   if (src < dst && dst < src + length)
+ 226:../Driver/MEM/src/dri_mem.cpp ****     {
+ 227:../Driver/MEM/src/dri_mem.cpp ****       /* Destructive overlap...have to copy backwards */
+ 228:../Driver/MEM/src/dri_mem.cpp ****       src += length;
+ 229:../Driver/MEM/src/dri_mem.cpp ****       dst += length;
+ 230:../Driver/MEM/src/dri_mem.cpp ****       while (length--)
+ 231:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 232:../Driver/MEM/src/dri_mem.cpp **** 	  *--dst = *--src;
+ 233:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 234:../Driver/MEM/src/dri_mem.cpp ****     }
+ 235:../Driver/MEM/src/dri_mem.cpp ****   else
+ 236:../Driver/MEM/src/dri_mem.cpp ****     {
+ 237:../Driver/MEM/src/dri_mem.cpp ****       /* Use optimizing algorithm for a non-destructive copy to closely
+ 238:../Driver/MEM/src/dri_mem.cpp ****          match memcpy. If the size is small or either SRC or DST is unaligned,
+ 239:../Driver/MEM/src/dri_mem.cpp ****          then punt into the byte copy loop.  This should be rare.  */
+ 240:../Driver/MEM/src/dri_mem.cpp ****       if (!TOO_SMALL(length) && !UNALIGNED (src, dst))
+ 241:../Driver/MEM/src/dri_mem.cpp ****         {
+ 242:../Driver/MEM/src/dri_mem.cpp ****           aligned_dst = (long*)dst;
+ 243:../Driver/MEM/src/dri_mem.cpp ****           aligned_src = (long*)src;
+ 244:../Driver/MEM/src/dri_mem.cpp **** 
+ 245:../Driver/MEM/src/dri_mem.cpp ****           /* Copy 4X long words at a time if possible.  */
+ 246:../Driver/MEM/src/dri_mem.cpp ****           while (length >= BIGBLOCKSIZE)
+ 247:../Driver/MEM/src/dri_mem.cpp ****             {
+ 248:../Driver/MEM/src/dri_mem.cpp ****               *aligned_dst++ = *aligned_src++;
+ 249:../Driver/MEM/src/dri_mem.cpp ****               *aligned_dst++ = *aligned_src++;
+ 250:../Driver/MEM/src/dri_mem.cpp ****               *aligned_dst++ = *aligned_src++;
+ 251:../Driver/MEM/src/dri_mem.cpp ****               *aligned_dst++ = *aligned_src++;
+ 252:../Driver/MEM/src/dri_mem.cpp ****               length -= BIGBLOCKSIZE;
+ 253:../Driver/MEM/src/dri_mem.cpp ****             }
+ 254:../Driver/MEM/src/dri_mem.cpp **** 
+ 255:../Driver/MEM/src/dri_mem.cpp ****           /* Copy one long word at a time if possible.  */
+ 256:../Driver/MEM/src/dri_mem.cpp ****           while (length >= LITTLEBLOCKSIZE)
+ 257:../Driver/MEM/src/dri_mem.cpp ****             {
+ 258:../Driver/MEM/src/dri_mem.cpp ****               *aligned_dst++ = *aligned_src++;
+ 259:../Driver/MEM/src/dri_mem.cpp ****               length -= LITTLEBLOCKSIZE;
+ 260:../Driver/MEM/src/dri_mem.cpp ****             }
+ 261:../Driver/MEM/src/dri_mem.cpp **** 
+ 262:../Driver/MEM/src/dri_mem.cpp ****           /* Pick up any residual with a byte copier.  */
+ 263:../Driver/MEM/src/dri_mem.cpp ****           dst = (char*)aligned_dst;
+ 264:../Driver/MEM/src/dri_mem.cpp ****           src = (char*)aligned_src;
+ 265:../Driver/MEM/src/dri_mem.cpp ****         }
+ 266:../Driver/MEM/src/dri_mem.cpp **** 
+ 267:../Driver/MEM/src/dri_mem.cpp ****       while (length--)
+ 268:../Driver/MEM/src/dri_mem.cpp ****         {
+ 269:../Driver/MEM/src/dri_mem.cpp ****           *dst++ = *src++;
+ 270:../Driver/MEM/src/dri_mem.cpp ****         }
+ 271:../Driver/MEM/src/dri_mem.cpp ****     }
+ 272:../Driver/MEM/src/dri_mem.cpp **** 
+ 273:../Driver/MEM/src/dri_mem.cpp ****   return p_dest;
+ 274:../Driver/MEM/src/dri_mem.cpp **** #endif /* not PREFER_SIZE_OVER_SPEED */
+ 275:../Driver/MEM/src/dri_mem.cpp **** }
+ 205              	 .loc 1 275 0
+ 206 0034 5DF8044B 	 ldr r4,[sp],#4
+ 207              	.LCFI7:
+ 208              	 .cfi_restore 4
+ 209              	 .cfi_def_cfa_offset 0
+ 210 0038 7047     	 bx lr
+ 211              	 .cfi_endproc
+ 212              	.LFE11:
+ 214 003a 00BF     	 .section .text.memset,"ax",%progbits
+ 215              	 .align 2
+ 216              	 .global memset
+ 217              	 .thumb
+ 218              	 .thumb_func
+ 220              	memset:
+ 221              	.LFB12:
+ 276:../Driver/MEM/src/dri_mem.cpp **** 
+ 277:../Driver/MEM/src/dri_mem.cpp **** 
+ 278:../Driver/MEM/src/dri_mem.cpp **** /**
+ 279:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 280:../Driver/MEM/src/dri_mem.cpp ****  *
+ 281:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 282:../Driver/MEM/src/dri_mem.cpp ****  *
+ 283:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 284:../Driver/MEM/src/dri_mem.cpp ****  *
+ 285:../Driver/MEM/src/dri_mem.cpp ****  */
+ 286:../Driver/MEM/src/dri_mem.cpp **** void *memset( void * p_arg, int setval, size_t size )
+ 287:../Driver/MEM/src/dri_mem.cpp **** {
+ 222              	 .loc 1 287 0
+ 223              	 .cfi_startproc
+ 224              	 
+ 225              	 
+ 226              	 
+ 227              	.LVL23:
+ 228              	.LBB7:
+ 288:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 289:../Driver/MEM/src/dri_mem.cpp **** 	char * p_arg_l = (char *) p_arg;
+ 290:../Driver/MEM/src/dri_mem.cpp **** 
+ 291:../Driver/MEM/src/dri_mem.cpp **** 	/* Fill values in memory with setval */
+ 292:../Driver/MEM/src/dri_mem.cpp **** 	while( size-- )
+ 229              	 .loc 1 292 0
+ 230 0000 2AB1     	 cbz r2,.L27
+ 231 0002 8218     	 adds r2,r0,r2
+ 232              	.LVL24:
+ 233 0004 0346     	 mov r3,r0
+ 234              	.LVL25:
+ 235              	.L28:
+ 293:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 294:../Driver/MEM/src/dri_mem.cpp **** 		*p_arg_l++ = (char) setval;
+ 236              	 .loc 1 294 0
+ 237 0006 03F8011B 	 strb r1,[r3],#1
+ 238              	.LVL26:
+ 292:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 239              	 .loc 1 292 0
+ 240 000a 9342     	 cmp r3,r2
+ 241 000c FBD1     	 bne .L28
+ 242              	.LVL27:
+ 243              	.L27:
+ 244              	.LBE7:
+ 295:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 296:../Driver/MEM/src/dri_mem.cpp **** 
+ 297:../Driver/MEM/src/dri_mem.cpp **** 	/* Return starting memory address */
+ 298:../Driver/MEM/src/dri_mem.cpp **** 	return p_arg;
+ 299:../Driver/MEM/src/dri_mem.cpp **** }
+ 245              	 .loc 1 299 0
+ 246 000e 7047     	 bx lr
+ 247              	 .cfi_endproc
+ 248              	.LFE12:
+ 250              	 .section .text.malloc,"ax",%progbits
+ 251              	 .align 2
+ 252              	 .global malloc
+ 253              	 .thumb
+ 254              	 .thumb_func
+ 256              	malloc:
+ 257              	.LFB13:
+ 300:../Driver/MEM/src/dri_mem.cpp **** 
+ 301:../Driver/MEM/src/dri_mem.cpp **** 
+ 302:../Driver/MEM/src/dri_mem.cpp **** /**
+ 303:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 304:../Driver/MEM/src/dri_mem.cpp ****  *
+ 305:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 306:../Driver/MEM/src/dri_mem.cpp ****  *
+ 307:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 308:../Driver/MEM/src/dri_mem.cpp ****  *
+ 309:../Driver/MEM/src/dri_mem.cpp ****  */
+ 310:../Driver/MEM/src/dri_mem.cpp **** void *malloc( size_t size )
+ 311:../Driver/MEM/src/dri_mem.cpp **** {
+ 258              	 .loc 1 311 0
+ 259              	 .cfi_startproc
+ 260              	 
+ 261              	 
+ 262              	.LVL28:
+ 312:../Driver/MEM/src/dri_mem.cpp **** 	return ( 0 ==size ? NULL : pvPortMalloc( size ) );
+ 263              	 .loc 1 312 0
+ 264 0000 18B1     	 cbz r0,.L32
+ 311:../Driver/MEM/src/dri_mem.cpp **** 	return ( 0 ==size ? NULL : pvPortMalloc( size ) );
+ 265              	 .loc 1 311 0 discriminator 1
+ 266 0002 08B5     	 push {r3,lr}
+ 267              	.LCFI8:
+ 268              	 .cfi_def_cfa_offset 8
+ 269              	 .cfi_offset 3,-8
+ 270              	 .cfi_offset 14,-4
+ 271              	 .loc 1 312 0 discriminator 1
+ 272 0004 FFF7FEFF 	 bl pvPortMalloc
+ 273              	.LVL29:
+ 274 0008 08BD     	 pop {r3,pc}
+ 275              	.LVL30:
+ 276              	.L32:
+ 277              	.LCFI9:
+ 278              	 .cfi_def_cfa_offset 0
+ 279              	 .cfi_restore 3
+ 280              	 .cfi_restore 14
+ 281              	 .loc 1 312 0 is_stmt 0
+ 282 000a 0020     	 movs r0,#0
+ 283              	.LVL31:
+ 284 000c 7047     	 bx lr
+ 285              	 .cfi_endproc
+ 286              	.LFE13:
+ 288 000e 00BF     	 .section .text.free,"ax",%progbits
+ 289              	 .align 2
+ 290              	 .global free
+ 291              	 .thumb
+ 292              	 .thumb_func
+ 294              	free:
+ 295              	.LFB14:
+ 313:../Driver/MEM/src/dri_mem.cpp **** }
+ 314:../Driver/MEM/src/dri_mem.cpp **** 
+ 315:../Driver/MEM/src/dri_mem.cpp **** 
+ 316:../Driver/MEM/src/dri_mem.cpp **** /**
+ 317:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 318:../Driver/MEM/src/dri_mem.cpp ****  *
+ 319:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 320:../Driver/MEM/src/dri_mem.cpp ****  *
+ 321:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 322:../Driver/MEM/src/dri_mem.cpp ****  *
+ 323:../Driver/MEM/src/dri_mem.cpp ****  */
+ 324:../Driver/MEM/src/dri_mem.cpp **** void free( void * p_arg )
+ 325:../Driver/MEM/src/dri_mem.cpp **** {
+ 296              	 .loc 1 325 0 is_stmt 1
+ 297              	 .cfi_startproc
+ 298              	 
+ 299              	 
+ 300              	.LVL32:
+ 301 0000 08B5     	 push {r3,lr}
+ 302              	.LCFI10:
+ 303              	 .cfi_def_cfa_offset 8
+ 304              	 .cfi_offset 3,-8
+ 305              	 .cfi_offset 14,-4
+ 326:../Driver/MEM/src/dri_mem.cpp **** 	vPortFree( p_arg );
+ 306              	 .loc 1 326 0
+ 307 0002 FFF7FEFF 	 bl vPortFree
+ 308              	.LVL33:
+ 309 0006 08BD     	 pop {r3,pc}
+ 310              	 .cfi_endproc
+ 311              	.LFE14:
+ 313              	 .section .text.realloc,"ax",%progbits
+ 314              	 .align 2
+ 315              	 .global realloc
+ 316              	 .thumb
+ 317              	 .thumb_func
+ 319              	realloc:
+ 320              	.LFB15:
+ 327:../Driver/MEM/src/dri_mem.cpp **** }
+ 328:../Driver/MEM/src/dri_mem.cpp **** 
+ 329:../Driver/MEM/src/dri_mem.cpp **** 
+ 330:../Driver/MEM/src/dri_mem.cpp **** /**
+ 331:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 332:../Driver/MEM/src/dri_mem.cpp ****  *
+ 333:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 334:../Driver/MEM/src/dri_mem.cpp ****  *
+ 335:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 336:../Driver/MEM/src/dri_mem.cpp ****  *
+ 337:../Driver/MEM/src/dri_mem.cpp ****  */
+ 338:../Driver/MEM/src/dri_mem.cpp **** void *realloc( void * p_arg, size_t size )
+ 339:../Driver/MEM/src/dri_mem.cpp **** {
+ 321              	 .loc 1 339 0
+ 322              	 .cfi_startproc
+ 323              	 
+ 324              	 
+ 325              	 
+ 326              	.LVL34:
+ 340:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 341:../Driver/MEM/src/dri_mem.cpp ****     (void) p_arg;
+ 342:../Driver/MEM/src/dri_mem.cpp ****     (void) size;
+ 343:../Driver/MEM/src/dri_mem.cpp **** 
+ 344:../Driver/MEM/src/dri_mem.cpp ****     return NULL;
+ 345:../Driver/MEM/src/dri_mem.cpp **** }
+ 327              	 .loc 1 345 0
+ 328 0000 0020     	 movs r0,#0
+ 329              	.LVL35:
+ 330 0002 7047     	 bx lr
+ 331              	 .cfi_endproc
+ 332              	.LFE15:
+ 334              	 .section .text.calloc,"ax",%progbits
+ 335              	 .align 2
+ 336              	 .global calloc
+ 337              	 .thumb
+ 338              	 .thumb_func
+ 340              	calloc:
+ 341              	.LFB16:
+ 346:../Driver/MEM/src/dri_mem.cpp **** 
+ 347:../Driver/MEM/src/dri_mem.cpp **** 
+ 348:../Driver/MEM/src/dri_mem.cpp **** /**
+ 349:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 350:../Driver/MEM/src/dri_mem.cpp ****  *
+ 351:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 352:../Driver/MEM/src/dri_mem.cpp ****  *
+ 353:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 354:../Driver/MEM/src/dri_mem.cpp ****  *
+ 355:../Driver/MEM/src/dri_mem.cpp ****  */
+ 356:../Driver/MEM/src/dri_mem.cpp **** void *calloc( size_t nmemb , size_t size )
+ 357:../Driver/MEM/src/dri_mem.cpp **** {
+ 342              	 .loc 1 357 0
+ 343              	 .cfi_startproc
+ 344              	 
+ 345              	 
+ 346              	.LVL36:
+ 347              	.LBB8:
+ 358:../Driver/MEM/src/dri_mem.cpp **** 	/* Local Variables */
+ 359:../Driver/MEM/src/dri_mem.cpp **** 	void * p_mem = NULL;
+ 360:../Driver/MEM/src/dri_mem.cpp **** 	size_t length = 0;
+ 361:../Driver/MEM/src/dri_mem.cpp **** 
+ 362:../Driver/MEM/src/dri_mem.cpp **** 	/* Check for memory allocation */
+ 363:../Driver/MEM/src/dri_mem.cpp **** 	p_mem = (0 == nmemb || 0 ==size) ? NULL : pvPortMalloc( nmemb * size );
+ 348              	 .loc 1 363 0
+ 349 0000 88B1     	 cbz r0,.L41
+ 350              	.LBE8:
+ 357:../Driver/MEM/src/dri_mem.cpp **** 	/* Local Variables */
+ 351              	 .loc 1 357 0 discriminator 1
+ 352 0002 10B5     	 push {r4,lr}
+ 353              	.LCFI11:
+ 354              	 .cfi_def_cfa_offset 8
+ 355              	 .cfi_offset 4,-8
+ 356              	 .cfi_offset 14,-4
+ 357 0004 0446     	 mov r4,r0
+ 358              	.LBB12:
+ 359              	 .loc 1 363 0 discriminator 1
+ 360 0006 89B1     	 cbz r1,.L42
+ 361 0008 0846     	 mov r0,r1
+ 362              	.LVL37:
+ 363              	 .loc 1 363 0 is_stmt 0 discriminator 3
+ 364 000a 00FB04F0 	 mul r0,r0,r4
+ 365 000e FFF7FEFF 	 bl pvPortMalloc
+ 366              	.LVL38:
+ 367              	.LBB9:
+ 364:../Driver/MEM/src/dri_mem.cpp **** 
+ 365:../Driver/MEM/src/dri_mem.cpp **** 	/* Check memory validity and set it to Zero */
+ 366:../Driver/MEM/src/dri_mem.cpp **** 	if( p_mem != NULL )
+ 368              	 .loc 1 366 0 is_stmt 1 discriminator 3
+ 369 0012 0146     	 mov r1,r0
+ 370 0014 58B1     	 cbz r0,.L39
+ 371              	.LVL39:
+ 372 0016 2044     	 add r0,r0,r4
+ 373              	.LVL40:
+ 374              	.LBE9:
+ 363:../Driver/MEM/src/dri_mem.cpp **** 
+ 375              	 .loc 1 363 0
+ 376 0018 0B46     	 mov r3,r1
+ 377              	.LBB11:
+ 378              	.LBB10:
+ 367:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 368:../Driver/MEM/src/dri_mem.cpp **** 		char * p_mem_l = (char *) p_mem;
+ 369:../Driver/MEM/src/dri_mem.cpp **** 		for( length = 0; length < nmemb; ++length )
+ 370:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 371:../Driver/MEM/src/dri_mem.cpp **** 			*p_mem_l = 0;
+ 379              	 .loc 1 371 0
+ 380 001a 0022     	 movs r2,#0
+ 381              	.LVL41:
+ 382              	.L40:
+ 383              	 .loc 1 371 0 is_stmt 0 discriminator 3
+ 384 001c 03F8012B 	 strb r2,[r3],#1
+ 385              	.LVL42:
+ 369:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 386              	 .loc 1 369 0 is_stmt 1 discriminator 3
+ 387 0020 8342     	 cmp r3,r0
+ 388 0022 FBD1     	 bne .L40
+ 389 0024 03E0     	 b .L39
+ 390              	.LVL43:
+ 391              	.L41:
+ 392              	.LCFI12:
+ 393              	 .cfi_def_cfa_offset 0
+ 394              	 .cfi_restore 4
+ 395              	 .cfi_restore 14
+ 396              	.LBE10:
+ 397              	.LBE11:
+ 398 0026 0021     	 movs r1,#0
+ 399              	.LVL44:
+ 400              	.LBE12:
+ 372:../Driver/MEM/src/dri_mem.cpp **** 			++p_mem_l;
+ 373:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 374:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 375:../Driver/MEM/src/dri_mem.cpp **** 
+ 376:../Driver/MEM/src/dri_mem.cpp **** 	/* Return allocated memory */
+ 377:../Driver/MEM/src/dri_mem.cpp **** 	return p_mem;
+ 378:../Driver/MEM/src/dri_mem.cpp **** }
+ 401              	 .loc 1 378 0
+ 402 0028 0846     	 mov r0,r1
+ 403              	.LVL45:
+ 404 002a 7047     	 bx lr
+ 405              	.LVL46:
+ 406              	.L42:
+ 407              	.LCFI13:
+ 408              	 .cfi_def_cfa_offset 8
+ 409              	 .cfi_offset 4,-8
+ 410              	 .cfi_offset 14,-4
+ 411              	.LBB13:
+ 412 002c 0021     	 movs r1,#0
+ 413              	.LVL47:
+ 414              	.L39:
+ 415              	.LBE13:
+ 416 002e 0846     	 mov r0,r1
+ 417 0030 10BD     	 pop {r4,pc}
+ 418              	 .cfi_endproc
+ 419              	.LFE16:
+ 421 0032 00BF     	 .section .text.memalign,"ax",%progbits
+ 422              	 .align 2
+ 423              	 .global memalign
+ 424              	 .thumb
+ 425              	 .thumb_func
+ 427              	memalign:
+ 428              	.LFB17:
+ 379:../Driver/MEM/src/dri_mem.cpp **** 
+ 380:../Driver/MEM/src/dri_mem.cpp **** 
+ 381:../Driver/MEM/src/dri_mem.cpp **** /**
+ 382:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 383:../Driver/MEM/src/dri_mem.cpp ****  *
+ 384:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 385:../Driver/MEM/src/dri_mem.cpp ****  *
+ 386:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 387:../Driver/MEM/src/dri_mem.cpp ****  *
+ 388:../Driver/MEM/src/dri_mem.cpp ****  */
+ 389:../Driver/MEM/src/dri_mem.cpp **** void *memalign( size_t alignment, size_t size )
+ 390:../Driver/MEM/src/dri_mem.cpp **** {
+ 429              	 .loc 1 390 0
+ 430              	 .cfi_startproc
+ 431              	 
+ 432              	 
+ 433              	 
+ 434              	.LVL48:
+ 391:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 392:../Driver/MEM/src/dri_mem.cpp ****     (void) alignment;
+ 393:../Driver/MEM/src/dri_mem.cpp ****     (void) size;
+ 394:../Driver/MEM/src/dri_mem.cpp **** 
+ 395:../Driver/MEM/src/dri_mem.cpp ****     return NULL;
+ 396:../Driver/MEM/src/dri_mem.cpp **** }
+ 435              	 .loc 1 396 0
+ 436 0000 0020     	 movs r0,#0
+ 437              	.LVL49:
+ 438 0002 7047     	 bx lr
+ 439              	 .cfi_endproc
+ 440              	.LFE17:
+ 442              	 .section .text.strcmp,"ax",%progbits
+ 443              	 .align 2
+ 444              	 .global strcmp
+ 445              	 .thumb
+ 446              	 .thumb_func
+ 448              	strcmp:
+ 449              	.LFB18:
+ 397:../Driver/MEM/src/dri_mem.cpp **** 
+ 398:../Driver/MEM/src/dri_mem.cpp **** 
+ 399:../Driver/MEM/src/dri_mem.cpp **** /**
+ 400:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 401:../Driver/MEM/src/dri_mem.cpp ****  *
+ 402:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 403:../Driver/MEM/src/dri_mem.cpp ****  *
+ 404:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 405:../Driver/MEM/src/dri_mem.cpp ****  *
+ 406:../Driver/MEM/src/dri_mem.cpp ****  */
+ 407:../Driver/MEM/src/dri_mem.cpp **** int strcmp (const char *p_s1, const char *p_s2)
+ 408:../Driver/MEM/src/dri_mem.cpp **** {
+ 450              	 .loc 1 408 0
+ 451              	 .cfi_startproc
+ 452              	 
+ 453              	 
+ 454              	 
+ 455              	.LVL50:
+ 456              	.LBB14:
+ 409:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 410:../Driver/MEM/src/dri_mem.cpp **** 	const char *p_arg_one_l = (char *)p_s2;
+ 411:../Driver/MEM/src/dri_mem.cpp **** 	const char *p_arg_two_l = (char *)p_s2;
+ 412:../Driver/MEM/src/dri_mem.cpp **** 	size_t size_l = 0;
+ 413:../Driver/MEM/src/dri_mem.cpp **** 	int ret_l = 0;
+ 414:../Driver/MEM/src/dri_mem.cpp **** 
+ 415:../Driver/MEM/src/dri_mem.cpp **** 	/* Compare memory for differences */
+ 416:../Driver/MEM/src/dri_mem.cpp **** 	for( size_l = 0; (*p_arg_one_l != '\0' || *p_arg_two_l != '\0'); ++size_l )
+ 457              	 .loc 1 416 0
+ 458 0000 0B78     	 ldrb r3,[r1]
+ 459              	.LVL51:
+ 460              	.L47:
+ 461              	 .loc 1 416 0 is_stmt 0 discriminator 1
+ 462 0002 002B     	 cmp r3,#0
+ 463 0004 FDD1     	 bne .L47
+ 464              	.LBE14:
+ 417:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 418:../Driver/MEM/src/dri_mem.cpp **** 		/* Values are not equal */
+ 419:../Driver/MEM/src/dri_mem.cpp **** 		if( *(p_arg_one_l + size_l) != *(p_arg_two_l + size_l) )
+ 420:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 421:../Driver/MEM/src/dri_mem.cpp **** 			/* Check the greater or smaller between both */
+ 422:../Driver/MEM/src/dri_mem.cpp **** 			ret_l = ( *(p_arg_one_l + size_l) - *(p_arg_two_l + size_l) );
+ 423:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 424:../Driver/MEM/src/dri_mem.cpp **** 		else/* Values are equal */
+ 425:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 426:../Driver/MEM/src/dri_mem.cpp **** 			/* Do not do anything */
+ 427:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 428:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 429:../Driver/MEM/src/dri_mem.cpp **** 
+ 430:../Driver/MEM/src/dri_mem.cpp **** 	/* Check for return value */
+ 431:../Driver/MEM/src/dri_mem.cpp **** 	return (ret_l != 0 ? ret_l : 0);
+ 432:../Driver/MEM/src/dri_mem.cpp **** }
+ 465              	 .loc 1 432 0 is_stmt 1
+ 466 0006 0020     	 movs r0,#0
+ 467              	.LVL52:
+ 468 0008 7047     	 bx lr
+ 469              	 .cfi_endproc
+ 470              	.LFE18:
+ 472 000a 00BF     	 .section .text.strncmp,"ax",%progbits
+ 473              	 .align 2
+ 474              	 .global strncmp
+ 475              	 .thumb
+ 476              	 .thumb_func
+ 478              	strncmp:
+ 479              	.LFB19:
+ 433:../Driver/MEM/src/dri_mem.cpp **** 
+ 434:../Driver/MEM/src/dri_mem.cpp **** 
+ 435:../Driver/MEM/src/dri_mem.cpp **** /**
+ 436:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 437:../Driver/MEM/src/dri_mem.cpp ****  *
+ 438:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 439:../Driver/MEM/src/dri_mem.cpp ****  *
+ 440:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 441:../Driver/MEM/src/dri_mem.cpp ****  *
+ 442:../Driver/MEM/src/dri_mem.cpp ****  */
+ 443:../Driver/MEM/src/dri_mem.cpp **** int strncmp( const char *p_s1, const char *p_s2, size_t size )
+ 444:../Driver/MEM/src/dri_mem.cpp **** {
+ 480              	 .loc 1 444 0
+ 481              	 .cfi_startproc
+ 482              	 
+ 483              	 
+ 484              	 
+ 485              	.LVL53:
+ 486              	.LBB15:
+ 445:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 446:../Driver/MEM/src/dri_mem.cpp **** 	const char *p_arg_one_l = (char *)p_s1;
+ 447:../Driver/MEM/src/dri_mem.cpp **** 	const char *p_arg_two_l = (char *)p_s2;
+ 448:../Driver/MEM/src/dri_mem.cpp **** 	size_t size_l = 0;
+ 449:../Driver/MEM/src/dri_mem.cpp **** 	int ret_l = 0;
+ 450:../Driver/MEM/src/dri_mem.cpp **** 
+ 451:../Driver/MEM/src/dri_mem.cpp **** 	/* Compare memory for differences */
+ 452:../Driver/MEM/src/dri_mem.cpp **** 	for( size_l = 0; size_l < size; ++size_l )
+ 487              	 .loc 1 452 0
+ 488 0000 72B1     	 cbz r2,.L53
+ 489              	.LBE15:
+ 444:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 490              	 .loc 1 444 0
+ 491 0002 30B4     	 push {r4,r5}
+ 492              	.LCFI14:
+ 493              	 .cfi_def_cfa_offset 8
+ 494              	 .cfi_offset 4,-8
+ 495              	 .cfi_offset 5,-4
+ 496 0004 0346     	 mov r3,r0
+ 497 0006 0139     	 subs r1,r1,#1
+ 498              	.LVL54:
+ 499 0008 8218     	 adds r2,r0,r2
+ 500              	.LVL55:
+ 501              	.LBB16:
+ 502              	 .loc 1 452 0
+ 503 000a 0020     	 movs r0,#0
+ 504              	.LVL56:
+ 505              	.L52:
+ 453:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 454:../Driver/MEM/src/dri_mem.cpp **** 		/* Values are not equal */
+ 455:../Driver/MEM/src/dri_mem.cpp **** 		if( *(p_arg_one_l + size_l) != *(p_arg_two_l + size_l) )
+ 506              	 .loc 1 455 0
+ 507 000c 13F8015B 	 ldrb r5,[r3],#1
+ 508              	.LVL57:
+ 509 0010 11F8014F 	 ldrb r4,[r1,#1]!
+ 510 0014 A542     	 cmp r5,r4
+ 456:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 457:../Driver/MEM/src/dri_mem.cpp **** 			/* Check the greater or smaller between both */
+ 458:../Driver/MEM/src/dri_mem.cpp **** 			ret_l = ( *(p_arg_one_l + size_l) - *(p_arg_two_l + size_l) );
+ 511              	 .loc 1 458 0
+ 512 0016 18BF     	 it ne
+ 513 0018 281B     	 subne r0,r5,r4
+ 514              	.LVL58:
+ 452:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 515              	 .loc 1 452 0
+ 516 001a 9342     	 cmp r3,r2
+ 517 001c F6D1     	 bne .L52
+ 518 001e 01E0     	 b .L50
+ 519              	.LVL59:
+ 520              	.L53:
+ 521              	.LCFI15:
+ 522              	 .cfi_def_cfa_offset 0
+ 523              	 .cfi_restore 4
+ 524              	 .cfi_restore 5
+ 449:../Driver/MEM/src/dri_mem.cpp **** 
+ 525              	 .loc 1 449 0
+ 526 0020 0020     	 movs r0,#0
+ 527              	.LVL60:
+ 528 0022 7047     	 bx lr
+ 529              	.LVL61:
+ 530              	.L50:
+ 531              	.LCFI16:
+ 532              	 .cfi_def_cfa_offset 8
+ 533              	 .cfi_offset 4,-8
+ 534              	 .cfi_offset 5,-4
+ 535              	.LBE16:
+ 459:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 460:../Driver/MEM/src/dri_mem.cpp **** 		else/* Values are equal */
+ 461:../Driver/MEM/src/dri_mem.cpp **** 		{
+ 462:../Driver/MEM/src/dri_mem.cpp **** 			/* Do not do anything */
+ 463:../Driver/MEM/src/dri_mem.cpp **** 		}
+ 464:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 465:../Driver/MEM/src/dri_mem.cpp **** 
+ 466:../Driver/MEM/src/dri_mem.cpp **** 	/* Check for return value */
+ 467:../Driver/MEM/src/dri_mem.cpp **** 	return (ret_l != 0 ? ret_l : 0);
+ 468:../Driver/MEM/src/dri_mem.cpp **** }
+ 536              	 .loc 1 468 0
+ 537 0024 30BC     	 pop {r4,r5}
+ 538              	.LCFI17:
+ 539              	 .cfi_restore 5
+ 540              	 .cfi_restore 4
+ 541              	 .cfi_def_cfa_offset 0
+ 542 0026 7047     	 bx lr
+ 543              	 .cfi_endproc
+ 544              	.LFE19:
+ 546              	 .section .text.strcpy,"ax",%progbits
+ 547              	 .align 2
+ 548              	 .global strcpy
+ 549              	 .thumb
+ 550              	 .thumb_func
+ 552              	strcpy:
+ 553              	.LFB20:
+ 469:../Driver/MEM/src/dri_mem.cpp **** 
+ 470:../Driver/MEM/src/dri_mem.cpp **** 
+ 471:../Driver/MEM/src/dri_mem.cpp **** /**
+ 472:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 473:../Driver/MEM/src/dri_mem.cpp ****  *
+ 474:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 475:../Driver/MEM/src/dri_mem.cpp ****  *
+ 476:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 477:../Driver/MEM/src/dri_mem.cpp ****  *
+ 478:../Driver/MEM/src/dri_mem.cpp ****  */
+ 479:../Driver/MEM/src/dri_mem.cpp **** char * strcpy (char * p_dest, const char *p_src)
+ 480:../Driver/MEM/src/dri_mem.cpp **** {
+ 554              	 .loc 1 480 0
+ 555              	 .cfi_startproc
+ 556              	 
+ 557              	 
+ 558              	 
+ 559              	.LVL62:
+ 560              	.LBB17:
+ 481:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 482:../Driver/MEM/src/dri_mem.cpp **** 	char * p_dest_l = p_dest;
+ 483:../Driver/MEM/src/dri_mem.cpp **** 	const char * p_src_l = p_src;
+ 484:../Driver/MEM/src/dri_mem.cpp **** 
+ 485:../Driver/MEM/src/dri_mem.cpp **** 	/* Start copying data from src to dest */
+ 486:../Driver/MEM/src/dri_mem.cpp **** 	while( *p_src_l != '\0' )
+ 561              	 .loc 1 486 0
+ 562 0000 0B78     	 ldrb r3,[r1]
+ 563 0002 3BB1     	 cbz r3,.L60
+ 564 0004 0246     	 mov r2,r0
+ 565              	.LVL63:
+ 566              	.L59:
+ 487:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 488:../Driver/MEM/src/dri_mem.cpp **** 		*p_dest_l = *p_src_l;
+ 567              	 .loc 1 488 0
+ 568 0006 02F8013B 	 strb r3,[r2],#1
+ 569              	.LVL64:
+ 486:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 570              	 .loc 1 486 0
+ 571 000a 11F8013F 	 ldrb r3,[r1,#1]!
+ 572 000e 002B     	 cmp r3,#0
+ 573 0010 F9D1     	 bne .L59
+ 574 0012 00E0     	 b .L58
+ 575              	.LVL65:
+ 576              	.L60:
+ 482:../Driver/MEM/src/dri_mem.cpp **** 	const char * p_src_l = p_src;
+ 577              	 .loc 1 482 0
+ 578 0014 0246     	 mov r2,r0
+ 579              	.LVL66:
+ 580              	.L58:
+ 489:../Driver/MEM/src/dri_mem.cpp **** 		/* Increment both src and dest pointers */
+ 490:../Driver/MEM/src/dri_mem.cpp **** 		++p_src_l;
+ 491:../Driver/MEM/src/dri_mem.cpp **** 		++p_dest_l;
+ 492:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 493:../Driver/MEM/src/dri_mem.cpp **** 	/* We have reached Null termination */
+ 494:../Driver/MEM/src/dri_mem.cpp **** 	*p_dest_l = *p_src_l;
+ 581              	 .loc 1 494 0
+ 582 0016 0023     	 movs r3,#0
+ 583 0018 1370     	 strb r3,[r2]
+ 584              	.LBE17:
+ 495:../Driver/MEM/src/dri_mem.cpp **** 
+ 496:../Driver/MEM/src/dri_mem.cpp **** 	/* Return destination pointer */
+ 497:../Driver/MEM/src/dri_mem.cpp **** 	return p_dest;
+ 498:../Driver/MEM/src/dri_mem.cpp **** }
+ 585              	 .loc 1 498 0
+ 586 001a 7047     	 bx lr
+ 587              	 .cfi_endproc
+ 588              	.LFE20:
+ 590              	 .section .text.strncpy,"ax",%progbits
+ 591              	 .align 2
+ 592              	 .global strncpy
+ 593              	 .thumb
+ 594              	 .thumb_func
+ 596              	strncpy:
+ 597              	.LFB21:
+ 499:../Driver/MEM/src/dri_mem.cpp **** 
+ 500:../Driver/MEM/src/dri_mem.cpp **** 
+ 501:../Driver/MEM/src/dri_mem.cpp **** /**
+ 502:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 503:../Driver/MEM/src/dri_mem.cpp ****  *
+ 504:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 505:../Driver/MEM/src/dri_mem.cpp ****  *
+ 506:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 507:../Driver/MEM/src/dri_mem.cpp ****  *
+ 508:../Driver/MEM/src/dri_mem.cpp ****  */
+ 509:../Driver/MEM/src/dri_mem.cpp **** 
+ 510:../Driver/MEM/src/dri_mem.cpp **** char *strncpy(char *p_dest, const char *p_src, size_t n)
+ 511:../Driver/MEM/src/dri_mem.cpp **** {
+ 598              	 .loc 1 511 0
+ 599              	 .cfi_startproc
+ 600              	 
+ 601              	 
+ 602              	 
+ 603              	.LVL67:
+ 604              	.LBB18:
+ 512:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 513:../Driver/MEM/src/dri_mem.cpp **** 	char * p_dest_l = p_dest;
+ 514:../Driver/MEM/src/dri_mem.cpp **** 	const char * p_src_l = p_src;
+ 515:../Driver/MEM/src/dri_mem.cpp **** 	size_t n_l = 0;
+ 516:../Driver/MEM/src/dri_mem.cpp **** 
+ 517:../Driver/MEM/src/dri_mem.cpp **** 	/* Start copying data from src to dest */
+ 518:../Driver/MEM/src/dri_mem.cpp **** 	for( n_l = 0; (n_l < n) && (*p_src_l != '\0'); ++n_l )
+ 605              	 .loc 1 518 0
+ 606 0000 BAB1     	 cbz r2,.L74
+ 607              	.LBE18:
+ 511:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 608              	 .loc 1 511 0
+ 609 0002 70B4     	 push {r4,r5,r6}
+ 610              	.LCFI18:
+ 611              	 .cfi_def_cfa_offset 12
+ 612              	 .cfi_offset 4,-12
+ 613              	 .cfi_offset 5,-8
+ 614              	 .cfi_offset 6,-4
+ 615 0004 1546     	 mov r5,r2
+ 616              	.LBB19:
+ 617              	 .loc 1 518 0
+ 618 0006 0C78     	 ldrb r4,[r1]
+ 619 0008 5CB1     	 cbz r4,.L68
+ 620 000a 8618     	 adds r6,r0,r2
+ 621 000c 0346     	 mov r3,r0
+ 622              	.LVL68:
+ 623              	.L65:
+ 519:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 520:../Driver/MEM/src/dri_mem.cpp **** 		*p_dest_l = *p_src_l;
+ 624              	 .loc 1 520 0 discriminator 4
+ 625 000e 03F8014B 	 strb r4,[r3],#1
+ 626              	.LVL69:
+ 627 0012 1A1A     	 subs r2,r3,r0
+ 628              	.LVL70:
+ 518:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 629              	 .loc 1 518 0 discriminator 4
+ 630 0014 B342     	 cmp r3,r6
+ 631 0016 0BD0     	 beq .L67
+ 518:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 632              	 .loc 1 518 0 is_stmt 0 discriminator 3
+ 633 0018 11F8014F 	 ldrb r4,[r1,#1]!
+ 634 001c 002C     	 cmp r4,#0
+ 635 001e F6D1     	 bne .L65
+ 636 0020 01E0     	 b .L66
+ 637              	.LVL71:
+ 638              	.L68:
+ 513:../Driver/MEM/src/dri_mem.cpp **** 	const char * p_src_l = p_src;
+ 639              	 .loc 1 513 0 is_stmt 1
+ 640 0022 0346     	 mov r3,r0
+ 518:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 641              	 .loc 1 518 0
+ 642 0024 0022     	 movs r2,#0
+ 643              	.LVL72:
+ 644              	.L66:
+ 521:../Driver/MEM/src/dri_mem.cpp **** 		/* Increment both src and dest pointers */
+ 522:../Driver/MEM/src/dri_mem.cpp **** 		++p_src_l;
+ 523:../Driver/MEM/src/dri_mem.cpp **** 		++p_dest_l;
+ 524:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 525:../Driver/MEM/src/dri_mem.cpp **** 	for( ; n_l < n; ++n_l )
+ 645              	 .loc 1 525 0 discriminator 2
+ 646 0026 0132     	 adds r2,r2,#1
+ 647              	.LVL73:
+ 648 0028 9542     	 cmp r5,r2
+ 649 002a FCD8     	 bhi .L66
+ 650 002c 0022     	 movs r2,#0
+ 651              	.LVL74:
+ 652 002e 1A70     	 strb r2,[r3]
+ 653              	.L67:
+ 654              	.LBE19:
+ 526:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 527:../Driver/MEM/src/dri_mem.cpp **** 		*p_dest_l = '\0';
+ 528:../Driver/MEM/src/dri_mem.cpp **** 		++p_src_l;
+ 529:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 530:../Driver/MEM/src/dri_mem.cpp **** 
+ 531:../Driver/MEM/src/dri_mem.cpp **** 	/* Return destination pointer */
+ 532:../Driver/MEM/src/dri_mem.cpp **** 	return p_dest;
+ 533:../Driver/MEM/src/dri_mem.cpp **** }
+ 655              	 .loc 1 533 0
+ 656 0030 70BC     	 pop {r4,r5,r6}
+ 657              	.LCFI19:
+ 658              	 .cfi_restore 6
+ 659              	 .cfi_restore 5
+ 660              	 .cfi_restore 4
+ 661              	 .cfi_def_cfa_offset 0
+ 662              	.LVL75:
+ 663              	.L74:
+ 664 0032 7047     	 bx lr
+ 665              	 .cfi_endproc
+ 666              	.LFE21:
+ 668              	 .section .text.strlen,"ax",%progbits
+ 669              	 .align 2
+ 670              	 .global strlen
+ 671              	 .thumb
+ 672              	 .thumb_func
+ 674              	strlen:
+ 675              	.LFB22:
+ 534:../Driver/MEM/src/dri_mem.cpp **** 
+ 535:../Driver/MEM/src/dri_mem.cpp **** 
+ 536:../Driver/MEM/src/dri_mem.cpp **** /**
+ 537:../Driver/MEM/src/dri_mem.cpp ****  * @function
+ 538:../Driver/MEM/src/dri_mem.cpp ****  *
+ 539:../Driver/MEM/src/dri_mem.cpp ****  * @brief
+ 540:../Driver/MEM/src/dri_mem.cpp ****  *
+ 541:../Driver/MEM/src/dri_mem.cpp ****  * <i>Imp Note:</i>
+ 542:../Driver/MEM/src/dri_mem.cpp ****  *
+ 543:../Driver/MEM/src/dri_mem.cpp ****  */
+ 544:../Driver/MEM/src/dri_mem.cpp **** size_t strlen(const char * p_arg)
+ 545:../Driver/MEM/src/dri_mem.cpp **** {
+ 676              	 .loc 1 545 0
+ 677              	 .cfi_startproc
+ 678              	 
+ 679              	 
+ 680              	 
+ 681              	.LVL76:
+ 682 0000 0346     	 mov r3,r0
+ 683              	.LVL77:
+ 684              	.LBB20:
+ 546:../Driver/MEM/src/dri_mem.cpp **** 	/* Local variables */
+ 547:../Driver/MEM/src/dri_mem.cpp **** 	char * p_arg_l = (char *) p_arg;
+ 548:../Driver/MEM/src/dri_mem.cpp **** 	size_t length_l = 0;
+ 549:../Driver/MEM/src/dri_mem.cpp **** 
+ 550:../Driver/MEM/src/dri_mem.cpp **** 	/* Check for Null termination character */
+ 551:../Driver/MEM/src/dri_mem.cpp **** 	for( /* Already Initialized */; *p_arg_l != '\0'; ++p_arg_l )
+ 685              	 .loc 1 551 0
+ 686 0002 0278     	 ldrb r2,[r0]
+ 687 0004 32B1     	 cbz r2,.L78
+ 688 0006 0020     	 movs r0,#0
+ 689              	.LVL78:
+ 690              	.L77:
+ 552:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 553:../Driver/MEM/src/dri_mem.cpp **** 		length_l += 1;
+ 691              	 .loc 1 553 0 discriminator 2
+ 692 0008 0130     	 adds r0,r0,#1
+ 693              	.LVL79:
+ 551:../Driver/MEM/src/dri_mem.cpp **** 	{
+ 694              	 .loc 1 551 0 discriminator 2
+ 695 000a 13F8012F 	 ldrb r2,[r3,#1]!
+ 696              	.LVL80:
+ 697 000e 002A     	 cmp r2,#0
+ 698 0010 FAD1     	 bne .L77
+ 699 0012 7047     	 bx lr
+ 700              	.LVL81:
+ 701              	.L78:
+ 548:../Driver/MEM/src/dri_mem.cpp **** 
+ 702              	 .loc 1 548 0
+ 703 0014 0020     	 movs r0,#0
+ 704              	.LVL82:
+ 705              	.LBE20:
+ 554:../Driver/MEM/src/dri_mem.cpp **** 	}
+ 555:../Driver/MEM/src/dri_mem.cpp **** 
+ 556:../Driver/MEM/src/dri_mem.cpp **** 	/* Return length of string */
+ 557:../Driver/MEM/src/dri_mem.cpp **** 	return length_l;
+ 558:../Driver/MEM/src/dri_mem.cpp **** }
+ 706              	 .loc 1 558 0
+ 707 0016 7047     	 bx lr
+ 708              	 .cfi_endproc
+ 709              	.LFE22:
+ 711              	 .text
+ 712              	.Letext0:
+ 713              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\lib\\gcc\\arm-none-eabi\\4.9.3\\include\\stddef.h"
+ 714              	 .file 3 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/portable.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 dri_mem.cpp
+    {standard input}:19     .text.memcmp:00000000 $t
+    {standard input}:24     .text.memcmp:00000000 memcmp
+    {standard input}:94     .text.memcpy:00000000 $t
+    {standard input}:99     .text.memcpy:00000000 memcpy
+    {standard input}:137    .text.memmove:00000000 $t
+    {standard input}:142    .text.memmove:00000000 memmove
+    {standard input}:215    .text.memset:00000000 $t
+    {standard input}:220    .text.memset:00000000 memset
+    {standard input}:251    .text.malloc:00000000 $t
+    {standard input}:256    .text.malloc:00000000 malloc
+    {standard input}:289    .text.free:00000000 $t
+    {standard input}:294    .text.free:00000000 free
+    {standard input}:314    .text.realloc:00000000 $t
+    {standard input}:319    .text.realloc:00000000 realloc
+    {standard input}:335    .text.calloc:00000000 $t
+    {standard input}:340    .text.calloc:00000000 calloc
+    {standard input}:422    .text.memalign:00000000 $t
+    {standard input}:427    .text.memalign:00000000 memalign
+    {standard input}:443    .text.strcmp:00000000 $t
+    {standard input}:448    .text.strcmp:00000000 strcmp
+    {standard input}:473    .text.strncmp:00000000 $t
+    {standard input}:478    .text.strncmp:00000000 strncmp
+    {standard input}:547    .text.strcpy:00000000 $t
+    {standard input}:552    .text.strcpy:00000000 strcpy
+    {standard input}:591    .text.strncpy:00000000 $t
+    {standard input}:596    .text.strncpy:00000000 strncpy
+    {standard input}:669    .text.strlen:00000000 $t
+    {standard input}:674    .text.strlen:00000000 strlen
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.e7c5b1e8b8fe0dcc15cf6d98a7950411
+                           .group:00000000 wm4.stddef.h.39.499c3e455b0ee3cbd031c0eac4c946b3
+                           .group:00000000 wm4.stdint.h.4.659be5aa44c4ab4eb7c7cc2b24d8ceee
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+
+UNDEFINED SYMBOLS
+pvPortMalloc
+vPortFree

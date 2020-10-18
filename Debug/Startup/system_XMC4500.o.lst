@@ -1,0 +1,1331 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "system_XMC4500.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.SystemCoreClockUpdate,"ax",%progbits
+  19              	 .align 2
+  20              	 .global SystemCoreClockUpdate
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	SystemCoreClockUpdate:
+  25              	.LFB131:
+  26              	 .file 1 "../Startup/system_XMC4500.c"
+   1:../Startup/system_XMC4500.c **** /**************************************************************************//**
+   2:../Startup/system_XMC4500.c ****  * @file     system_XMC4500.c
+   3:../Startup/system_XMC4500.c ****  * @brief    CMSIS Cortex-M4 Device Peripheral Access Layer Header File
+   4:../Startup/system_XMC4500.c ****  *           for the Infineon XMC4500 Device Series
+   5:../Startup/system_XMC4500.c ****  * @version  V3.0.1 Alpha
+   6:../Startup/system_XMC4500.c ****  * @date     17. September 2012
+   7:../Startup/system_XMC4500.c ****  *
+   8:../Startup/system_XMC4500.c ****  * @note
+   9:../Startup/system_XMC4500.c ****  * Copyright (C) 2011 ARM Limited. All rights reserved.
+  10:../Startup/system_XMC4500.c ****  *
+  11:../Startup/system_XMC4500.c ****  * @par
+  12:../Startup/system_XMC4500.c ****  * ARM Limited (ARM) is supplying this software for use with Cortex-M 
+  13:../Startup/system_XMC4500.c ****  * processor based microcontrollers.  This file can be freely distributed 
+  14:../Startup/system_XMC4500.c ****  * within development tools that are supporting such ARM based processors. 
+  15:../Startup/system_XMC4500.c ****  *
+  16:../Startup/system_XMC4500.c ****  * @par
+  17:../Startup/system_XMC4500.c ****  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
+  18:../Startup/system_XMC4500.c ****  * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+  19:../Startup/system_XMC4500.c ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
+  20:../Startup/system_XMC4500.c ****  * ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
+  21:../Startup/system_XMC4500.c ****  * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+  22:../Startup/system_XMC4500.c ****  *
+  23:../Startup/system_XMC4500.c ****  ******************************************************************************/
+  24:../Startup/system_XMC4500.c **** 
+  25:../Startup/system_XMC4500.c **** #include "system_XMC4500.h"
+  26:../Startup/system_XMC4500.c **** #include <XMC4500.h>
+  27:../Startup/system_XMC4500.c **** 
+  28:../Startup/system_XMC4500.c **** /*----------------------------------------------------------------------------
+  29:../Startup/system_XMC4500.c ****   Clock Variable definitions
+  30:../Startup/system_XMC4500.c ****  *----------------------------------------------------------------------------*/
+  31:../Startup/system_XMC4500.c **** /*!< System Clock Frequency (Core Clock)*/
+  32:../Startup/system_XMC4500.c **** uint32_t SystemCoreClock;
+  33:../Startup/system_XMC4500.c **** 
+  34:../Startup/system_XMC4500.c **** /* clock definitions, do not modify! */
+  35:../Startup/system_XMC4500.c **** #define SCU_CLOCK_CRYSTAL              	1
+  36:../Startup/system_XMC4500.c **** #define SCU_CLOCK_BACK_UP_FACTORY		2
+  37:../Startup/system_XMC4500.c **** #define SCU_CLOCK_BACK_UP_AUTOMATIC	   	3
+  38:../Startup/system_XMC4500.c **** 
+  39:../Startup/system_XMC4500.c **** 
+  40:../Startup/system_XMC4500.c **** #define HIB_CLOCK_FOSI					1				 
+  41:../Startup/system_XMC4500.c **** #define HIB_CLOCK_OSCULP				2
+  42:../Startup/system_XMC4500.c **** 
+  43:../Startup/system_XMC4500.c **** 
+  44:../Startup/system_XMC4500.c **** 
+  45:../Startup/system_XMC4500.c **** 
+  46:../Startup/system_XMC4500.c **** /*
+  47:../Startup/system_XMC4500.c **** //-------- <<< Use Configuration Wizard in Context Menu >>> ------------------
+  48:../Startup/system_XMC4500.c **** */
+  49:../Startup/system_XMC4500.c **** 
+  50:../Startup/system_XMC4500.c **** 
+  51:../Startup/system_XMC4500.c **** 
+  52:../Startup/system_XMC4500.c **** /*--------------------- Watchdog Configuration -------------------------------
+  53:../Startup/system_XMC4500.c **** //
+  54:../Startup/system_XMC4500.c **** // <e> Watchdog Configuration
+  55:../Startup/system_XMC4500.c **** //     <o1.0> Disable Watchdog
+  56:../Startup/system_XMC4500.c **** //
+  57:../Startup/system_XMC4500.c **** // </e>
+  58:../Startup/system_XMC4500.c **** */
+  59:../Startup/system_XMC4500.c **** #define WDT_SETUP               1
+  60:../Startup/system_XMC4500.c **** #define WDTENB_nVal             0x00000001
+  61:../Startup/system_XMC4500.c **** 
+  62:../Startup/system_XMC4500.c **** /*--------------------- CLOCK Configuration -------------------------------
+  63:../Startup/system_XMC4500.c **** //
+  64:../Startup/system_XMC4500.c **** // <e> Main Clock Configuration
+  65:../Startup/system_XMC4500.c **** //     <o1.0..1> CPU clock divider
+  66:../Startup/system_XMC4500.c **** //                     <0=> fCPU = fSYS 
+  67:../Startup/system_XMC4500.c **** //                     <1=> fCPU = fSYS / 2
+  68:../Startup/system_XMC4500.c **** //     <o2.0..1>  Peripheral Bus clock divider
+  69:../Startup/system_XMC4500.c **** //                     <0=> fPB	= fCPU
+  70:../Startup/system_XMC4500.c **** //                     <1=> fPB	= fCPU / 2
+  71:../Startup/system_XMC4500.c **** //     <o3.0..1>  CCU Bus clock divider
+  72:../Startup/system_XMC4500.c **** //                     <0=> fCCU = fCPU
+  73:../Startup/system_XMC4500.c **** //                     <1=> fCCU = fCPU / 2
+  74:../Startup/system_XMC4500.c **** //
+  75:../Startup/system_XMC4500.c **** // </e>
+  76:../Startup/system_XMC4500.c **** // 
+  77:../Startup/system_XMC4500.c **** */
+  78:../Startup/system_XMC4500.c **** 
+  79:../Startup/system_XMC4500.c **** #define SCU_CLOCK_SETUP               1
+  80:../Startup/system_XMC4500.c **** #define	SCU_CPUCLKCR_DIV		0x00000000
+  81:../Startup/system_XMC4500.c **** #define	SCU_PBCLKCR_DIV		    0x00000000
+  82:../Startup/system_XMC4500.c **** #define	SCU_CCUCLKCR_DIV		0x00000000
+  83:../Startup/system_XMC4500.c **** /* not avalible in config wizzard*/
+  84:../Startup/system_XMC4500.c **** /*				
+  85:../Startup/system_XMC4500.c **** * mandatory clock parameters **************************************************				
+  86:../Startup/system_XMC4500.c **** *				
+  87:../Startup/system_XMC4500.c **** * source for clock generation				
+  88:../Startup/system_XMC4500.c **** * range: SCU_CLOCK_CRYSTAL (crystal or external clock at crystal input)				
+  89:../Startup/system_XMC4500.c **** *				
+  90:../Startup/system_XMC4500.c **** **************************************************************************************/				
+  91:../Startup/system_XMC4500.c **** // Selection of imput lock for PLL				
+  92:../Startup/system_XMC4500.c **** /*************************************************************************************/
+  93:../Startup/system_XMC4500.c **** #define	SCU_PLL_CLOCK_INPUT	SCU_CLOCK_CRYSTAL
+  94:../Startup/system_XMC4500.c **** //#define	SCU_PLL_CLOCK_INPUT	SCU_CLOCK_BACK_UP_FACTORY
+  95:../Startup/system_XMC4500.c **** //#define	SCU_PLL_CLOCK_INPUT	SCU_CLOCK_BACK_UP_AUTOMATIC
+  96:../Startup/system_XMC4500.c **** 
+  97:../Startup/system_XMC4500.c **** /*************************************************************************************/
+  98:../Startup/system_XMC4500.c **** // Standby clock selection for Backup clock source trimming
+  99:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 100:../Startup/system_XMC4500.c **** #define	SCU_STANDBY_CLOCK  HIB_CLOCK_OSCULP
+ 101:../Startup/system_XMC4500.c **** //#define	SCU_STANDBY_CLOCK  HIB_CLOCK_FOSI
+ 102:../Startup/system_XMC4500.c **** 
+ 103:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 104:../Startup/system_XMC4500.c **** // Global clock parameters
+ 105:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 106:../Startup/system_XMC4500.c **** #define CLOCK_FSYS							120000000
+ 107:../Startup/system_XMC4500.c **** #define	CLOCK_CRYSTAL_FREQUENCY				12000000
+ 108:../Startup/system_XMC4500.c **** #define	CLOCK_BACK_UP						24000000		
+ 109:../Startup/system_XMC4500.c **** 				
+ 110:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 111:../Startup/system_XMC4500.c **** /* OSC_HP setup parameters */				
+ 112:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 113:../Startup/system_XMC4500.c **** #define	SCU_OSC_HP_MODE	0xF0
+ 114:../Startup/system_XMC4500.c **** #define	SCU_OSCHPWDGDIV	2		
+ 115:../Startup/system_XMC4500.c **** 				
+ 116:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 117:../Startup/system_XMC4500.c **** /* MAIN PLL setup parameters */				
+ 118:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 119:../Startup/system_XMC4500.c **** //Divider settings for external crystal @ 12 MHz 
+ 120:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 121:../Startup/system_XMC4500.c **** #define 	SCU_PLL_K1DIV	1
+ 122:../Startup/system_XMC4500.c **** #define 	SCU_PLL_K2DIV	3
+ 123:../Startup/system_XMC4500.c **** #define 	SCU_PLL_PDIV	1
+ 124:../Startup/system_XMC4500.c **** #define 	SCU_PLL_NDIV	79
+ 125:../Startup/system_XMC4500.c **** 				
+ 126:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 127:../Startup/system_XMC4500.c **** //Divider settings for use of backup clock source trimmed
+ 128:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 129:../Startup/system_XMC4500.c **** //#define 	SCU_PLL_K1DIV	1		
+ 130:../Startup/system_XMC4500.c **** //#define 	SCU_PLL_K2DIV	3		
+ 131:../Startup/system_XMC4500.c **** //#define 	SCU_PLL_PDIV	3		
+ 132:../Startup/system_XMC4500.c **** //#define 	SCU_PLL_NDIV	79		
+ 133:../Startup/system_XMC4500.c **** /*************************************************************************************/
+ 134:../Startup/system_XMC4500.c **** 
+ 135:../Startup/system_XMC4500.c **** /*--------------------- USB CLOCK Configuration ---------------------------
+ 136:../Startup/system_XMC4500.c **** //
+ 137:../Startup/system_XMC4500.c **** // <e> USB Clock Configuration
+ 138:../Startup/system_XMC4500.c **** //
+ 139:../Startup/system_XMC4500.c **** // </e>
+ 140:../Startup/system_XMC4500.c **** // 
+ 141:../Startup/system_XMC4500.c **** */
+ 142:../Startup/system_XMC4500.c **** 
+ 143:../Startup/system_XMC4500.c **** #define SCU_USB_CLOCK_SETUP              1
+ 144:../Startup/system_XMC4500.c **** /* not avalible in config wizzard*/
+ 145:../Startup/system_XMC4500.c **** #define 	SCU_USBPLL_PDIV	0		
+ 146:../Startup/system_XMC4500.c **** #define 	SCU_USBPLL_NDIV	31		
+ 147:../Startup/system_XMC4500.c **** #define 	SCU_USBDIV	3		
+ 148:../Startup/system_XMC4500.c **** 
+ 149:../Startup/system_XMC4500.c **** /*--------------------- Flash Wait State Configuration -------------------------------
+ 150:../Startup/system_XMC4500.c **** //
+ 151:../Startup/system_XMC4500.c **** // <e> Flash Wait State Configuration
+ 152:../Startup/system_XMC4500.c **** //     <o1.0..3>   Flash Wait State
+ 153:../Startup/system_XMC4500.c **** //                     <0=> 3 WS
+ 154:../Startup/system_XMC4500.c **** //                     <1=> 4 WS
+ 155:../Startup/system_XMC4500.c **** //                     <2=> 5 WS     
+ 156:../Startup/system_XMC4500.c **** //										 <3=> 6 WS
+ 157:../Startup/system_XMC4500.c **** // </e>
+ 158:../Startup/system_XMC4500.c **** // 
+ 159:../Startup/system_XMC4500.c **** */
+ 160:../Startup/system_XMC4500.c **** 
+ 161:../Startup/system_XMC4500.c **** #define PMU_FLASH             1
+ 162:../Startup/system_XMC4500.c **** #define	PMU_FLASH_WS					0x00000000
+ 163:../Startup/system_XMC4500.c **** 
+ 164:../Startup/system_XMC4500.c **** 
+ 165:../Startup/system_XMC4500.c **** /*--------------------- CLOCKOUT Configuration -------------------------------
+ 166:../Startup/system_XMC4500.c **** //
+ 167:../Startup/system_XMC4500.c **** // <e> Clock OUT Configuration
+ 168:../Startup/system_XMC4500.c **** //     <o1.0..1>   Clockout Source Selection
+ 169:../Startup/system_XMC4500.c **** //                     <0=> System Clock
+ 170:../Startup/system_XMC4500.c **** //                     <2=> Divided value of USB PLL output
+ 171:../Startup/system_XMC4500.c **** //                     <3=> Divided value of PLL Clock
+ 172:../Startup/system_XMC4500.c **** //     <o2.0..4>   Clockout divider <1-10><#-1>
+ 173:../Startup/system_XMC4500.c **** //     <o3.0..1>   Clockout Pin Selection
+ 174:../Startup/system_XMC4500.c **** //                     <0=> P1.15
+ 175:../Startup/system_XMC4500.c **** //                     <1=> P0.8
+ 176:../Startup/system_XMC4500.c **** //                     
+ 177:../Startup/system_XMC4500.c **** //
+ 178:../Startup/system_XMC4500.c **** // </e>
+ 179:../Startup/system_XMC4500.c **** // 
+ 180:../Startup/system_XMC4500.c **** */
+ 181:../Startup/system_XMC4500.c **** 
+ 182:../Startup/system_XMC4500.c **** #define SCU_CLOCKOUT_SETUP               1
+ 183:../Startup/system_XMC4500.c **** #define	SCU_CLOCKOUT_SOURCE		0x00000003
+ 184:../Startup/system_XMC4500.c **** #define	SCU_CLOCKOUT_DIV		0x00000009/* 20 MHz */
+ 185:../Startup/system_XMC4500.c **** #define	SCU_CLOCKOUT_PIN		0x00000001
+ 186:../Startup/system_XMC4500.c **** 
+ 187:../Startup/system_XMC4500.c **** /*----------------------------------------------------------------------------
+ 188:../Startup/system_XMC4500.c ****   Clock Variable definitions
+ 189:../Startup/system_XMC4500.c ****  *----------------------------------------------------------------------------*/
+ 190:../Startup/system_XMC4500.c **** /*!< System Clock Frequency (Core Clock)*/
+ 191:../Startup/system_XMC4500.c **** #if SCU_CLOCK_SETUP
+ 192:../Startup/system_XMC4500.c **** uint32_t SystemCoreClock = CLOCK_FSYS;
+ 193:../Startup/system_XMC4500.c **** #else
+ 194:../Startup/system_XMC4500.c **** uint32_t SystemCoreClock = CLOCK_BACK_UP;
+ 195:../Startup/system_XMC4500.c **** #endif
+ 196:../Startup/system_XMC4500.c **** 
+ 197:../Startup/system_XMC4500.c **** /*----------------------------------------------------------------------------
+ 198:../Startup/system_XMC4500.c ****   static functions declarations
+ 199:../Startup/system_XMC4500.c ****  *----------------------------------------------------------------------------*/
+ 200:../Startup/system_XMC4500.c **** #if (SCU_CLOCK_SETUP == 1)
+ 201:../Startup/system_XMC4500.c **** static int SystemClockSetup(void);
+ 202:../Startup/system_XMC4500.c **** #endif
+ 203:../Startup/system_XMC4500.c **** 
+ 204:../Startup/system_XMC4500.c **** #if (SCU_USB_CLOCK_SETUP == 1)
+ 205:../Startup/system_XMC4500.c **** static int USBClockSetup(void);
+ 206:../Startup/system_XMC4500.c **** #endif
+ 207:../Startup/system_XMC4500.c **** 
+ 208:../Startup/system_XMC4500.c **** 
+ 209:../Startup/system_XMC4500.c **** /**
+ 210:../Startup/system_XMC4500.c ****   * @brief  Setup the microcontroller system.
+ 211:../Startup/system_XMC4500.c ****   *         Initialize the PLL and update the 
+ 212:../Startup/system_XMC4500.c ****   *         SystemCoreClock variable.
+ 213:../Startup/system_XMC4500.c ****   * @param  None
+ 214:../Startup/system_XMC4500.c ****   * @retval None
+ 215:../Startup/system_XMC4500.c ****   */
+ 216:../Startup/system_XMC4500.c **** void SystemInit(void)
+ 217:../Startup/system_XMC4500.c **** {
+ 218:../Startup/system_XMC4500.c **** int temp;
+ 219:../Startup/system_XMC4500.c **** 	
+ 220:../Startup/system_XMC4500.c **** #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+ 221:../Startup/system_XMC4500.c **** SCB->CPACR |= ((3UL << 10*2) |                 /* set CP10 Full Access */
+ 222:../Startup/system_XMC4500.c ****                (3UL << 11*2)  );               /* set CP11 Full Access */
+ 223:../Startup/system_XMC4500.c **** #endif
+ 224:../Startup/system_XMC4500.c **** 
+ 225:../Startup/system_XMC4500.c **** /* Enable unaligned memory access - SCB_CCR.UNALIGN_TRP = 0 */
+ 226:../Startup/system_XMC4500.c **** SCB->CCR &= ~(SCB_CCR_UNALIGN_TRP_Msk);
+ 227:../Startup/system_XMC4500.c **** 	
+ 228:../Startup/system_XMC4500.c **** /* Setup the WDT */
+ 229:../Startup/system_XMC4500.c **** #if WDT_SETUP
+ 230:../Startup/system_XMC4500.c **** 
+ 231:../Startup/system_XMC4500.c **** WDT->CTR &= ~WDTENB_nVal; 
+ 232:../Startup/system_XMC4500.c **** 
+ 233:../Startup/system_XMC4500.c **** #endif
+ 234:../Startup/system_XMC4500.c **** 
+ 235:../Startup/system_XMC4500.c **** /* Setup the Flash Wait State */
+ 236:../Startup/system_XMC4500.c **** #if PMU_FLASH
+ 237:../Startup/system_XMC4500.c **** temp = FLASH0->FCON; 
+ 238:../Startup/system_XMC4500.c **** temp &= ~FLASH_FCON_WSPFLASH_Msk;
+ 239:../Startup/system_XMC4500.c **** temp |= PMU_FLASH_WS+3;
+ 240:../Startup/system_XMC4500.c **** FLASH0->FCON = temp;
+ 241:../Startup/system_XMC4500.c **** #endif
+ 242:../Startup/system_XMC4500.c **** 
+ 243:../Startup/system_XMC4500.c **** 	
+ 244:../Startup/system_XMC4500.c **** /* Setup the clockout */
+ 245:../Startup/system_XMC4500.c **** #if SCU_CLOCKOUT_SETUP
+ 246:../Startup/system_XMC4500.c **** 
+ 247:../Startup/system_XMC4500.c **** SCU_CLK->EXTCLKCR	|= SCU_CLOCKOUT_SOURCE;
+ 248:../Startup/system_XMC4500.c **** /*set PLL div for clkout */
+ 249:../Startup/system_XMC4500.c **** SCU_CLK->EXTCLKCR	|= SCU_CLOCKOUT_DIV<<16;
+ 250:../Startup/system_XMC4500.c **** 
+ 251:../Startup/system_XMC4500.c **** if (SCU_CLOCKOUT_PIN) {
+ 252:../Startup/system_XMC4500.c **** 						PORT0->IOCR8 = 0x00000088;   /*P0.8 --> ALT1 select +  HWSEL */
+ 253:../Startup/system_XMC4500.c **** 					    PORT0->HWSEL &= (~PORT0_HWSEL_HW8_Msk);
+ 254:../Startup/system_XMC4500.c **** 					    //PORT0->PDR1 &= (~PORT0_PDR1_PD8_Msk);  /*set to strong driver */
+ 255:../Startup/system_XMC4500.c **** 						}
+ 256:../Startup/system_XMC4500.c **** else {
+ 257:../Startup/system_XMC4500.c **** 		PORT1->IOCR12 = 0x88000000;                    /*P1.15--> ALT1 select */
+ 258:../Startup/system_XMC4500.c **** 	    //PORT1->PDR1 &= (~PORT1_PDR1_PD15_Msk);  /*set to strong driver */
+ 259:../Startup/system_XMC4500.c **** 		}
+ 260:../Startup/system_XMC4500.c **** 
+ 261:../Startup/system_XMC4500.c **** #endif
+ 262:../Startup/system_XMC4500.c **** 
+ 263:../Startup/system_XMC4500.c **** 
+ 264:../Startup/system_XMC4500.c **** /* Setup the System clock */ 
+ 265:../Startup/system_XMC4500.c **** #if SCU_CLOCK_SETUP
+ 266:../Startup/system_XMC4500.c **** SystemClockSetup();
+ 267:../Startup/system_XMC4500.c **** #endif
+ 268:../Startup/system_XMC4500.c **** 
+ 269:../Startup/system_XMC4500.c **** /*----------------------------------------------------------------------------
+ 270:../Startup/system_XMC4500.c ****   Clock Variable definitions
+ 271:../Startup/system_XMC4500.c ****  *----------------------------------------------------------------------------*/
+ 272:../Startup/system_XMC4500.c **** SystemCoreClockUpdate();/*!< System Clock Frequency (Core Clock)*/
+ 273:../Startup/system_XMC4500.c **** 
+ 274:../Startup/system_XMC4500.c **** 
+ 275:../Startup/system_XMC4500.c **** /* Setup the USB PL */ 
+ 276:../Startup/system_XMC4500.c **** #if SCU_USB_CLOCK_SETUP
+ 277:../Startup/system_XMC4500.c **** USBClockSetup();
+ 278:../Startup/system_XMC4500.c **** #endif
+ 279:../Startup/system_XMC4500.c **** }
+ 280:../Startup/system_XMC4500.c **** 
+ 281:../Startup/system_XMC4500.c **** 
+ 282:../Startup/system_XMC4500.c **** /**
+ 283:../Startup/system_XMC4500.c ****   * @brief  Update SystemCoreClock according to Clock Register Values
+ 284:../Startup/system_XMC4500.c ****   * @note   -  
+ 285:../Startup/system_XMC4500.c ****   * @param  None
+ 286:../Startup/system_XMC4500.c ****   * @retval None
+ 287:../Startup/system_XMC4500.c ****   */
+ 288:../Startup/system_XMC4500.c **** void SystemCoreClockUpdate(void)
+ 289:../Startup/system_XMC4500.c **** {
+  27              	 .loc 1 289 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+ 290:../Startup/system_XMC4500.c **** unsigned int PDIV;
+ 291:../Startup/system_XMC4500.c **** unsigned int NDIV;
+ 292:../Startup/system_XMC4500.c **** unsigned int K2DIV;
+ 293:../Startup/system_XMC4500.c **** unsigned int long VCO;
+ 294:../Startup/system_XMC4500.c **** 
+ 295:../Startup/system_XMC4500.c **** 
+ 296:../Startup/system_XMC4500.c **** /*----------------------------------------------------------------------------
+ 297:../Startup/system_XMC4500.c ****   Clock Variable definitions
+ 298:../Startup/system_XMC4500.c ****  *----------------------------------------------------------------------------*/
+ 299:../Startup/system_XMC4500.c **** if (SCU_CLK->SYSCLKCR ==  0x00010000)
+  32              	 .loc 1 299 0
+  33 0000 194B     	 ldr r3,.L8
+  34 0002 DB68     	 ldr r3,[r3,#12]
+  35 0004 B3F5803F 	 cmp r3,#65536
+  36 0008 27D1     	 bne .L2
+ 300:../Startup/system_XMC4500.c **** {
+ 301:../Startup/system_XMC4500.c **** 	if (SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk){
+  37              	 .loc 1 301 0
+  38 000a 184B     	 ldr r3,.L8+4
+  39 000c 1B68     	 ldr r3,[r3]
+  40 000e 13F0040F 	 tst r3,#4
+  41 0012 28D0     	 beq .L7
+ 289:../Startup/system_XMC4500.c **** unsigned int PDIV;
+  42              	 .loc 1 289 0
+  43 0014 10B4     	 push {r4}
+  44              	.LCFI0:
+  45              	 .cfi_def_cfa_offset 4
+  46              	 .cfi_offset 4,-4
+ 302:../Startup/system_XMC4500.c **** 		/* check if PLL is locked */
+ 303:../Startup/system_XMC4500.c **** 		/* read back divider settings */
+ 304:../Startup/system_XMC4500.c **** 		 PDIV = ((SCU_PLL->PLLCON1 & SCU_PLL_PLLCON1_PDIV_Msk)>>24)+1;
+  47              	 .loc 1 304 0
+  48 0016 1548     	 ldr r0,.L8+4
+  49 0018 8168     	 ldr r1,[r0,#8]
+  50 001a C1F30361 	 ubfx r1,r1,#24,#4
+  51 001e 4C1C     	 adds r4,r1,#1
+ 305:../Startup/system_XMC4500.c **** 		 NDIV = ((SCU_PLL->PLLCON1 & SCU_PLL_PLLCON1_NDIV_Msk)>>8)+1;
+  52              	 .loc 1 305 0
+  53 0020 8368     	 ldr r3,[r0,#8]
+  54 0022 C3F30623 	 ubfx r3,r3,#8,#7
+  55 0026 0133     	 adds r3,r3,#1
+ 306:../Startup/system_XMC4500.c **** 		 K2DIV  = ((SCU_PLL->PLLCON1 & SCU_PLL_PLLCON1_K2DIV_Msk)>>16)+1;
+  56              	 .loc 1 306 0
+  57 0028 8268     	 ldr r2,[r0,#8]
+  58 002a C2F30642 	 ubfx r2,r2,#16,#7
+  59 002e 0132     	 adds r2,r2,#1
+ 307:../Startup/system_XMC4500.c **** 
+ 308:../Startup/system_XMC4500.c **** 		if(SCU_PLL->PLLCON2 & SCU_PLL_PLLCON2_PINSEL_Msk){
+  60              	 .loc 1 308 0
+  61 0030 C168     	 ldr r1,[r0,#12]
+  62 0032 11F0010F 	 tst r1,#1
+ 309:../Startup/system_XMC4500.c **** 		/* the selected clock is the Backup clock fofi */
+ 310:../Startup/system_XMC4500.c **** 		VCO = (CLOCK_BACK_UP/PDIV)*NDIV;
+ 311:../Startup/system_XMC4500.c **** 		SystemCoreClock = VCO/K2DIV;
+ 312:../Startup/system_XMC4500.c **** 		/* in case the sysclock div is used */
+ 313:../Startup/system_XMC4500.c **** 		SystemCoreClock = SystemCoreClock/((SCU_CLK->SYSCLKCR & SCU_CLK_SYSCLKCR_SYSDIV_Msk)+1);
+  63              	 .loc 1 313 0
+  64 0036 0C49     	 ldr r1,.L8
+  65 0038 C868     	 ldr r0,[r1,#12]
+ 310:../Startup/system_XMC4500.c **** 		SystemCoreClock = VCO/K2DIV;
+  66              	 .loc 1 310 0
+  67 003a 14BF     	 ite ne
+  68 003c 0C49     	 ldrne r1,.L8+8
+ 314:../Startup/system_XMC4500.c **** 		
+ 315:../Startup/system_XMC4500.c **** 		}
+ 316:../Startup/system_XMC4500.c **** 		else
+ 317:../Startup/system_XMC4500.c **** 		{
+ 318:../Startup/system_XMC4500.c **** 		/* the selected clock is the PLL external oscillator */		
+ 319:../Startup/system_XMC4500.c **** 		VCO = (CLOCK_CRYSTAL_FREQUENCY/PDIV)*NDIV;
+  69              	 .loc 1 319 0
+  70 003e 0D49     	 ldreq r1,.L8+12
+  71 0040 B1FBF4F1 	 udiv r1,r1,r4
+  72 0044 03FB01F3 	 mul r3,r3,r1
+ 320:../Startup/system_XMC4500.c **** 		SystemCoreClock = VCO/K2DIV;
+  73              	 .loc 1 320 0
+  74 0048 B3FBF2F2 	 udiv r2,r3,r2
+ 321:../Startup/system_XMC4500.c **** 		/* in case the sysclock div is used */
+ 322:../Startup/system_XMC4500.c **** 		SystemCoreClock = SystemCoreClock/((SCU_CLK->SYSCLKCR & SCU_CLK_SYSCLKCR_SYSDIV_Msk)+1);
+  75              	 .loc 1 322 0
+  76 004c C3B2     	 uxtb r3,r0
+  77 004e 0133     	 adds r3,r3,#1
+  78 0050 B2FBF3F2 	 udiv r2,r2,r3
+  79 0054 084B     	 ldr r3,.L8+16
+  80 0056 1A60     	 str r2,[r3]
+  81 0058 03E0     	 b .L1
+  82              	.L2:
+  83              	.LCFI1:
+  84              	 .cfi_def_cfa_offset 0
+  85              	 .cfi_restore 4
+ 323:../Startup/system_XMC4500.c **** 		} 
+ 324:../Startup/system_XMC4500.c **** 	
+ 325:../Startup/system_XMC4500.c **** 	
+ 326:../Startup/system_XMC4500.c **** 	}
+ 327:../Startup/system_XMC4500.c **** }
+ 328:../Startup/system_XMC4500.c **** else
+ 329:../Startup/system_XMC4500.c **** {
+ 330:../Startup/system_XMC4500.c **** SystemCoreClock = CLOCK_BACK_UP;
+  86              	 .loc 1 330 0
+  87 005a 054A     	 ldr r2,.L8+8
+  88 005c 064B     	 ldr r3,.L8+16
+  89 005e 1A60     	 str r2,[r3]
+  90 0060 7047     	 bx lr
+  91              	.L1:
+  92              	.LCFI2:
+  93              	 .cfi_def_cfa_offset 4
+  94              	 .cfi_offset 4,-4
+ 331:../Startup/system_XMC4500.c **** }
+ 332:../Startup/system_XMC4500.c **** 
+ 333:../Startup/system_XMC4500.c **** 
+ 334:../Startup/system_XMC4500.c **** }
+  95              	 .loc 1 334 0
+  96 0062 5DF8044B 	 ldr r4,[sp],#4
+  97              	.LCFI3:
+  98              	 .cfi_restore 4
+  99              	 .cfi_def_cfa_offset 0
+ 100              	.L7:
+ 101 0066 7047     	 bx lr
+ 102              	.L9:
+ 103              	 .align 2
+ 104              	.L8:
+ 105 0068 00460050 	 .word 1342195200
+ 106 006c 10470050 	 .word 1342195472
+ 107 0070 00366E01 	 .word 24000000
+ 108 0074 001BB700 	 .word 12000000
+ 109 0078 00000000 	 .word .LANCHOR0
+ 110              	 .cfi_endproc
+ 111              	.LFE131:
+ 113              	 .section .text.SystemInit,"ax",%progbits
+ 114              	 .align 2
+ 115              	 .global SystemInit
+ 116              	 .thumb
+ 117              	 .thumb_func
+ 119              	SystemInit:
+ 120              	.LFB130:
+ 217:../Startup/system_XMC4500.c **** int temp;
+ 121              	 .loc 1 217 0
+ 122              	 .cfi_startproc
+ 123              	 
+ 124              	 
+ 125 0000 08B5     	 push {r3,lr}
+ 126              	.LCFI4:
+ 127              	 .cfi_def_cfa_offset 8
+ 128              	 .cfi_offset 3,-8
+ 129              	 .cfi_offset 14,-4
+ 221:../Startup/system_XMC4500.c ****                (3UL << 11*2)  );               /* set CP11 Full Access */
+ 130              	 .loc 1 221 0
+ 131 0002 A44B     	 ldr r3,.L37
+ 132 0004 D3F88820 	 ldr r2,[r3,#136]
+ 133 0008 42F47002 	 orr r2,r2,#15728640
+ 134 000c C3F88820 	 str r2,[r3,#136]
+ 226:../Startup/system_XMC4500.c **** 	
+ 135              	 .loc 1 226 0
+ 136 0010 5A69     	 ldr r2,[r3,#20]
+ 137 0012 22F00802 	 bic r2,r2,#8
+ 138 0016 5A61     	 str r2,[r3,#20]
+ 231:../Startup/system_XMC4500.c **** 
+ 139              	 .loc 1 231 0
+ 140 0018 9F4A     	 ldr r2,.L37+4
+ 141 001a 5368     	 ldr r3,[r2,#4]
+ 142 001c 23F00103 	 bic r3,r3,#1
+ 143 0020 5360     	 str r3,[r2,#4]
+ 237:../Startup/system_XMC4500.c **** temp &= ~FLASH_FCON_WSPFLASH_Msk;
+ 144              	 .loc 1 237 0
+ 145 0022 9E49     	 ldr r1,.L37+8
+ 146 0024 41F21402 	 movw r2,#4116
+ 147 0028 8B58     	 ldr r3,[r1,r2]
+ 148              	.LVL0:
+ 238:../Startup/system_XMC4500.c **** temp |= PMU_FLASH_WS+3;
+ 149              	 .loc 1 238 0
+ 150 002a 23F00F03 	 bic r3,r3,#15
+ 151              	.LVL1:
+ 239:../Startup/system_XMC4500.c **** FLASH0->FCON = temp;
+ 152              	 .loc 1 239 0
+ 153 002e 43F00303 	 orr r3,r3,#3
+ 154              	.LVL2:
+ 240:../Startup/system_XMC4500.c **** #endif
+ 155              	 .loc 1 240 0
+ 156 0032 8B50     	 str r3,[r1,r2]
+ 247:../Startup/system_XMC4500.c **** /*set PLL div for clkout */
+ 157              	 .loc 1 247 0
+ 158 0034 9A4B     	 ldr r3,.L37+12
+ 159              	.LVL3:
+ 160 0036 9A6A     	 ldr r2,[r3,#40]
+ 161              	.LVL4:
+ 162 0038 42F00302 	 orr r2,r2,#3
+ 163 003c 9A62     	 str r2,[r3,#40]
+ 164              	.LVL5:
+ 249:../Startup/system_XMC4500.c **** 
+ 165              	 .loc 1 249 0
+ 166 003e 9A6A     	 ldr r2,[r3,#40]
+ 167 0040 42F41022 	 orr r2,r2,#589824
+ 168 0044 9A62     	 str r2,[r3,#40]
+ 252:../Startup/system_XMC4500.c **** 					    PORT0->HWSEL &= (~PORT0_HWSEL_HW8_Msk);
+ 169              	 .loc 1 252 0
+ 170 0046 974B     	 ldr r3,.L37+16
+ 171 0048 8822     	 movs r2,#136
+ 172 004a 9A61     	 str r2,[r3,#24]
+ 253:../Startup/system_XMC4500.c **** 					    //PORT0->PDR1 &= (~PORT0_PDR1_PD8_Msk);  /*set to strong driver */
+ 173              	 .loc 1 253 0
+ 174 004c 5A6F     	 ldr r2,[r3,#116]
+ 175 004e 22F44032 	 bic r2,r2,#196608
+ 176 0052 5A67     	 str r2,[r3,#116]
+ 177              	.LBB8:
+ 178              	.LBB9:
+ 179              	.LBB10:
+ 335:../Startup/system_XMC4500.c **** 
+ 336:../Startup/system_XMC4500.c **** 
+ 337:../Startup/system_XMC4500.c **** /**
+ 338:../Startup/system_XMC4500.c ****   * @brief  -
+ 339:../Startup/system_XMC4500.c ****   * @note   -  
+ 340:../Startup/system_XMC4500.c ****   * @param  None
+ 341:../Startup/system_XMC4500.c ****   * @retval None
+ 342:../Startup/system_XMC4500.c ****   */
+ 343:../Startup/system_XMC4500.c **** #if (SCU_CLOCK_SETUP == 1)
+ 344:../Startup/system_XMC4500.c **** static int SystemClockSetup(void)
+ 345:../Startup/system_XMC4500.c **** {
+ 346:../Startup/system_XMC4500.c **** int temp;
+ 347:../Startup/system_XMC4500.c **** unsigned int long VCO;
+ 348:../Startup/system_XMC4500.c **** int stepping_K2DIV;	
+ 349:../Startup/system_XMC4500.c **** 
+ 350:../Startup/system_XMC4500.c **** /* this weak function enables DAVE3 clock App usage */	
+ 351:../Startup/system_XMC4500.c **** if(AllowPLLInitByStartup()){
+ 180              	 .loc 1 351 0
+ 181 0054 FFF7FEFF 	 bl AllowPLLInitByStartup
+ 182              	.LVL6:
+ 183 0058 0028     	 cmp r0,#0
+ 184 005a 00F0D480 	 beq .L11
+ 352:../Startup/system_XMC4500.c **** 	
+ 353:../Startup/system_XMC4500.c **** /* check if PLL is switched on */
+ 354:../Startup/system_XMC4500.c **** if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)) != 0){
+ 185              	 .loc 1 354 0
+ 186 005e 924B     	 ldr r3,.L37+20
+ 187 0060 5A68     	 ldr r2,[r3,#4]
+ 188 0062 924B     	 ldr r3,.L37+24
+ 189 0064 1340     	 ands r3,r3,r2
+ 190 0066 33B1     	 cbz r3,.L12
+ 355:../Startup/system_XMC4500.c **** /* enable PLL first */
+ 356:../Startup/system_XMC4500.c ****   SCU_PLL->PLLCON0 &= ~(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk);
+ 191              	 .loc 1 356 0
+ 192 0068 8F4A     	 ldr r2,.L37+20
+ 193 006a 5368     	 ldr r3,[r2,#4]
+ 194 006c 23F48033 	 bic r3,r3,#65536
+ 195 0070 23F00203 	 bic r3,r3,#2
+ 196 0074 5360     	 str r3,[r2,#4]
+ 197              	.L12:
+ 357:../Startup/system_XMC4500.c **** 
+ 358:../Startup/system_XMC4500.c **** }
+ 359:../Startup/system_XMC4500.c **** 
+ 360:../Startup/system_XMC4500.c **** /* Enable OSC_HP if not already on*/
+ 361:../Startup/system_XMC4500.c ****   if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_CRYSTAL)
+ 362:../Startup/system_XMC4500.c ****   {
+ 363:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 364:../Startup/system_XMC4500.c **** 	/*   Use external crystal for PLL clock input                                                     
+ 365:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 366:../Startup/system_XMC4500.c **** 
+ 367:../Startup/system_XMC4500.c ****    if (SCU_OSC->OSCHPCTRL & SCU_OSC_OSCHPCTRL_MODE_Msk){
+ 198              	 .loc 1 367 0
+ 199 0076 8E4B     	 ldr r3,.L37+28
+ 200 0078 5B68     	 ldr r3,[r3,#4]
+ 201 007a 13F0300F 	 tst r3,#48
+ 202 007e 31D0     	 beq .L13
+ 368:../Startup/system_XMC4500.c **** 	   SCU_OSC->OSCHPCTRL &= ~(SCU_OSC_HP_MODE);	 /*enable the OSC_HP*/
+ 203              	 .loc 1 368 0
+ 204 0080 8B4B     	 ldr r3,.L37+28
+ 205 0082 5A68     	 ldr r2,[r3,#4]
+ 206 0084 22F0F002 	 bic r2,r2,#240
+ 207 0088 5A60     	 str r2,[r3,#4]
+ 369:../Startup/system_XMC4500.c **** 	   /* setup OSC WDG devider */
+ 370:../Startup/system_XMC4500.c **** 	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);         
+ 208              	 .loc 1 370 0
+ 209 008a 5A68     	 ldr r2,[r3,#4]
+ 210 008c 42F40032 	 orr r2,r2,#131072
+ 211 0090 5A60     	 str r2,[r3,#4]
+ 371:../Startup/system_XMC4500.c **** 	   /* select external OSC as PLL input */
+ 372:../Startup/system_XMC4500.c **** 	   SCU_PLL->PLLCON2 &= ~SCU_PLL_PLLCON2_PINSEL_Msk;
+ 212              	 .loc 1 372 0
+ 213 0092 1033     	 adds r3,r3,#16
+ 214 0094 DA68     	 ldr r2,[r3,#12]
+ 215 0096 22F00102 	 bic r2,r2,#1
+ 216 009a DA60     	 str r2,[r3,#12]
+ 373:../Startup/system_XMC4500.c **** 	   /* restart OSC Watchdog */
+ 374:../Startup/system_XMC4500.c **** 	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCRES_Msk;  
+ 217              	 .loc 1 374 0
+ 218 009c 5A68     	 ldr r2,[r3,#4]
+ 219 009e 22F40032 	 bic r2,r2,#131072
+ 220 00a2 5A60     	 str r2,[r3,#4]
+ 375:../Startup/system_XMC4500.c **** 
+ 376:../Startup/system_XMC4500.c ****        /* Timeout for wait loop ~150ms */
+ 377:../Startup/system_XMC4500.c **** 	   /********************************/
+ 378:../Startup/system_XMC4500.c **** 	   SysTick->LOAD  = ((5000000+100) & SysTick_LOAD_RELOAD_Msk) - 1;/* set reload register */
+ 221              	 .loc 1 378 0
+ 222 00a4 834B     	 ldr r3,.L37+32
+ 223 00a6 844A     	 ldr r2,.L37+36
+ 224 00a8 5A60     	 str r2,[r3,#4]
+ 379:../Startup/system_XMC4500.c **** 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value *
+ 225              	 .loc 1 379 0
+ 226 00aa 0022     	 movs r2,#0
+ 227 00ac 9A60     	 str r2,[r3,#8]
+ 380:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+ 228              	 .loc 1 380 0
+ 229 00ae 0522     	 movs r2,#5
+ 230 00b0 1A60     	 str r2,[r3]
+ 381:../Startup/system_XMC4500.c **** 	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick T
+ 382:../Startup/system_XMC4500.c **** 	   do 
+ 383:../Startup/system_XMC4500.c **** 	   {
+ 384:../Startup/system_XMC4500.c ****        ;/* wait for ~150ms  */
+ 385:../Startup/system_XMC4500.c **** 	   }while((((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_P
+ 231              	 .loc 1 385 0
+ 232 00b2 7D4A     	 ldr r2,.L37+20
+ 233 00b4 1946     	 mov r1,r3
+ 234              	.L15:
+ 235 00b6 1368     	 ldr r3,[r2]
+ 236 00b8 03F46073 	 and r3,r3,#896
+ 237 00bc B3F5607F 	 cmp r3,#896
+ 238 00c0 03D0     	 beq .L14
+ 239 00c2 8B68     	 ldr r3,[r1,#8]
+ 240 00c4 B3F5FA7F 	 cmp r3,#500
+ 241 00c8 F5D2     	 bcs .L15
+ 242              	.L14:
+ 386:../Startup/system_XMC4500.c **** 
+ 387:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
+ 243              	 .loc 1 387 0
+ 244 00ca 7A4A     	 ldr r2,.L37+32
+ 245 00cc 1368     	 ldr r3,[r2]
+ 246 00ce 23F00103 	 bic r3,r3,#1
+ 247 00d2 1360     	 str r3,[r2]
+ 388:../Startup/system_XMC4500.c **** 	   if (((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLST
+ 248              	 .loc 1 388 0
+ 249 00d4 744B     	 ldr r3,.L37+20
+ 250 00d6 1B68     	 ldr r3,[r3]
+ 251 00d8 03F46073 	 and r3,r3,#896
+ 252 00dc B3F5607F 	 cmp r3,#896
+ 253 00e0 40F09180 	 bne .L11
+ 254              	.L13:
+ 389:../Startup/system_XMC4500.c **** 	   return(0);/* Return Error */
+ 390:../Startup/system_XMC4500.c **** 
+ 391:../Startup/system_XMC4500.c ****     }
+ 392:../Startup/system_XMC4500.c ****   }
+ 393:../Startup/system_XMC4500.c ****   else if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_FACTORY)
+ 394:../Startup/system_XMC4500.c **** 	{
+ 395:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 396:../Startup/system_XMC4500.c **** 	/*   Use factory trimming Back-up clock for PLL clock input                                       
+ 397:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 398:../Startup/system_XMC4500.c **** 		/* PLL Back up clock selected */
+ 399:../Startup/system_XMC4500.c **** 		SCU_PLL->PLLCON2 |= SCU_PLL_PLLCON2_PINSEL_Msk;
+ 400:../Startup/system_XMC4500.c **** 			
+ 401:../Startup/system_XMC4500.c **** 	}
+ 402:../Startup/system_XMC4500.c ****   else if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC)
+ 403:../Startup/system_XMC4500.c ****   {
+ 404:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 405:../Startup/system_XMC4500.c **** 	/*   Use automatic trimming Back-up clock for PLL clock input                                     
+ 406:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 407:../Startup/system_XMC4500.c **** 	/* check for HIB Domain enabled  */
+ 408:../Startup/system_XMC4500.c **** 	if((SCU_POWER->PWRSTAT & SCU_POWER_PWRSTAT_HIBEN_Msk) == 0)
+ 409:../Startup/system_XMC4500.c **** 		SCU_POWER->PWRSET |= SCU_POWER_PWRSET_HIB_Msk; /*enable Hibernate domain*/
+ 410:../Startup/system_XMC4500.c **** 
+ 411:../Startup/system_XMC4500.c ****    /* check for HIB Domain is not in reset state  */
+ 412:../Startup/system_XMC4500.c **** 	if ((SCU_RESET->RSTSTAT & SCU_RESET_RSTSTAT_HIBRS_Msk)== 1)
+ 413:../Startup/system_XMC4500.c **** 	    SCU_RESET->RSTCLR |= SCU_RESET_RSTCLR_HIBRS_Msk; /*de-assert hibernate reset*/
+ 414:../Startup/system_XMC4500.c **** 
+ 415:../Startup/system_XMC4500.c **** 			/* PLL Back up clock selected */
+ 416:../Startup/system_XMC4500.c **** 		SCU_PLL->PLLCON2 |= SCU_PLL_PLLCON2_PINSEL_Msk;
+ 417:../Startup/system_XMC4500.c **** 	
+ 418:../Startup/system_XMC4500.c **** 		if (SCU_STANDBY_CLOCK == HIB_CLOCK_FOSI)
+ 419:../Startup/system_XMC4500.c **** 			{
+ 420:../Startup/system_XMC4500.c **** 			/***********************************************************************************************
+ 421:../Startup/system_XMC4500.c **** 			/*   Use fOSI as source of the standby clock                                                    
+ 422:../Startup/system_XMC4500.c **** 			/***********************************************************************************************
+ 423:../Startup/system_XMC4500.c **** 			SCU_HIBERNATE->HDCR &= ~SCU_HIBERNATE_HDCR_STDBYSEL_Msk;
+ 424:../Startup/system_XMC4500.c **** 			
+ 425:../Startup/system_XMC4500.c **** 			SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_FOTR_Msk;
+ 426:../Startup/system_XMC4500.c **** 			for(temp=0;temp<=0xFFFF;temp++);
+ 427:../Startup/system_XMC4500.c **** 
+ 428:../Startup/system_XMC4500.c **** 			SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_AOTREN_Msk;
+ 429:../Startup/system_XMC4500.c **** 			}
+ 430:../Startup/system_XMC4500.c **** 		else if (SCU_STANDBY_CLOCK == HIB_CLOCK_OSCULP)
+ 431:../Startup/system_XMC4500.c **** 			{
+ 432:../Startup/system_XMC4500.c **** 			/***********************************************************************************************
+ 433:../Startup/system_XMC4500.c **** 			/*   Use fULP as source of the standby clock                                                    
+ 434:../Startup/system_XMC4500.c **** 			/***********************************************************************************************
+ 435:../Startup/system_XMC4500.c **** 			/*check OSCUL if running correct*/
+ 436:../Startup/system_XMC4500.c **** 			if ((SCU_HIBERNATE->OSCULCTRL & SCU_HIBERNATE_OSCULCTRL_MODE_Msk)!= 0)
+ 437:../Startup/system_XMC4500.c **** 				{
+ 438:../Startup/system_XMC4500.c **** 					while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_OSCULCTRL_Msk);
+ 439:../Startup/system_XMC4500.c **** 
+ 440:../Startup/system_XMC4500.c **** 					SCU_HIBERNATE->OSCULCTRL &= ~SCU_HIBERNATE_OSCULCTRL_MODE_Msk; /*enable OSCUL*/
+ 441:../Startup/system_XMC4500.c **** 					/*now ceck if the clock is OK using OSCULP Oscillator Watchdog (ULPWDG)*/
+ 442:../Startup/system_XMC4500.c **** 					/* select OSCUL clock for RTC*/
+ 443:../Startup/system_XMC4500.c **** 					SCU_HIBERNATE->HDCR |= SCU_HIBERNATE_HDCR_RCS_Msk;
+ 444:../Startup/system_XMC4500.c **** 					while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCR_Msk);
+ 445:../Startup/system_XMC4500.c **** 					/*enable OSCULP WDG Alarm Enable*/
+ 446:../Startup/system_XMC4500.c **** 					SCU_HIBERNATE->HDCR |= SCU_HIBERNATE_HDCR_ULPWDGEN_Msk;
+ 447:../Startup/system_XMC4500.c **** 					while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCR_Msk);
+ 448:../Startup/system_XMC4500.c **** 					/*wait now for clock is stable */
+ 449:../Startup/system_XMC4500.c **** 					do
+ 450:../Startup/system_XMC4500.c **** 					{
+ 451:../Startup/system_XMC4500.c **** 					SCU_HIBERNATE->HDCLR |= SCU_HIBERNATE_HDCLR_ULPWDG_Msk;
+ 452:../Startup/system_XMC4500.c **** 					while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCLR_Msk);
+ 453:../Startup/system_XMC4500.c **** 					for(temp=0;temp<=0xFFFF;temp++);
+ 454:../Startup/system_XMC4500.c **** 					}
+ 455:../Startup/system_XMC4500.c **** 					while ((SCU_HIBERNATE->HDSTAT & SCU_HIBERNATE_HDSTAT_ULPWDG_Msk)==SCU_HIBERNATE_HDSTAT_ULPWDG_
+ 456:../Startup/system_XMC4500.c **** 
+ 457:../Startup/system_XMC4500.c **** 					SCU_HIBERNATE->HDCLR |= SCU_HIBERNATE_HDCLR_ULPWDG_Msk;
+ 458:../Startup/system_XMC4500.c **** 					while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCLR_Msk);
+ 459:../Startup/system_XMC4500.c **** 				}	
+ 460:../Startup/system_XMC4500.c **** 			// now OSCULP is running and can be used	 	 
+ 461:../Startup/system_XMC4500.c **** 			SCU_HIBERNATE->HDCR |= SCU_HIBERNATE_HDCR_STDBYSEL_Msk;
+ 462:../Startup/system_XMC4500.c **** 			while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCR_Msk);
+ 463:../Startup/system_XMC4500.c **** 			
+ 464:../Startup/system_XMC4500.c **** 			SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_FOTR_Msk;
+ 465:../Startup/system_XMC4500.c **** 			/*TRIAL for delay loop*/
+ 466:../Startup/system_XMC4500.c **** 			for(temp=0;temp<=0xFFFF;temp++);
+ 467:../Startup/system_XMC4500.c **** 			
+ 468:../Startup/system_XMC4500.c **** 			SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_AOTREN_Msk;
+ 469:../Startup/system_XMC4500.c **** 			/*TRIAL for delay loop*/
+ 470:../Startup/system_XMC4500.c **** 			for(temp=0;temp<=0xFFFF;temp++);
+ 471:../Startup/system_XMC4500.c **** 			
+ 472:../Startup/system_XMC4500.c **** 			}
+ 473:../Startup/system_XMC4500.c ****   }
+ 474:../Startup/system_XMC4500.c **** 
+ 475:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 476:../Startup/system_XMC4500.c **** 	/*   Setup and look the main PLL                                                                  
+ 477:../Startup/system_XMC4500.c **** 	/*************************************************************************************************
+ 478:../Startup/system_XMC4500.c **** 
+ 479:../Startup/system_XMC4500.c **** if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
+ 255              	 .loc 1 479 0
+ 256 00e4 704B     	 ldr r3,.L37+20
+ 257 00e6 1B68     	 ldr r3,[r3]
+ 258 00e8 13F0040F 	 tst r3,#4
+ 259 00ec 40F08B80 	 bne .L11
+ 480:../Startup/system_XMC4500.c **** 	/* Systen is still running from internal clock */
+ 481:../Startup/system_XMC4500.c **** 		   /* select FOFI as system clock */
+ 482:../Startup/system_XMC4500.c **** 		   if((SCU_CLK->SYSCLKCR & SCU_CLK_SYSCLKCR_SYSSEL_Msk) != 0x0)SCU_CLK->SYSCLKCR &= ~SCU_CLK_SYSC
+ 260              	 .loc 1 482 0
+ 261 00f0 6B4B     	 ldr r3,.L37+12
+ 262 00f2 DB68     	 ldr r3,[r3,#12]
+ 263 00f4 13F4803F 	 tst r3,#65536
+ 264 00f8 04D0     	 beq .L16
+ 265 00fa 694A     	 ldr r2,.L37+12
+ 266 00fc D368     	 ldr r3,[r2,#12]
+ 267 00fe 23F48033 	 bic r3,r3,#65536
+ 268 0102 D360     	 str r3,[r2,#12]
+ 269              	.L16:
+ 270              	.LVL7:
+ 483:../Startup/system_XMC4500.c **** 
+ 484:../Startup/system_XMC4500.c **** 
+ 485:../Startup/system_XMC4500.c **** 			 /*calulation for stepping*/
+ 486:../Startup/system_XMC4500.c **** 			 if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_CRYSTAL)VCO = (CLOCK_CRYSTAL_FREQUENCY/(SCU_PLL_PDIV+1))*(
+ 487:../Startup/system_XMC4500.c **** 			 if ((SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC) ||(SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BA
+ 488:../Startup/system_XMC4500.c **** 					VCO = (CLOCK_BACK_UP/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
+ 489:../Startup/system_XMC4500.c **** 	 
+ 490:../Startup/system_XMC4500.c **** 			 stepping_K2DIV = (VCO/24000000)-1;	
+ 491:../Startup/system_XMC4500.c **** 			 /* Go to bypass the Main PLL */
+ 492:../Startup/system_XMC4500.c **** 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_VCOBYP_Msk;
+ 271              	 .loc 1 492 0
+ 272 0104 684B     	 ldr r3,.L37+20
+ 273 0106 5A68     	 ldr r2,[r3,#4]
+ 274 0108 42F00102 	 orr r2,r2,#1
+ 275 010c 5A60     	 str r2,[r3,#4]
+ 493:../Startup/system_XMC4500.c **** 		   /* disconnect OSC_HP to PLL */
+ 494:../Startup/system_XMC4500.c **** 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_FINDIS_Msk;
+ 276              	 .loc 1 494 0
+ 277 010e 5A68     	 ldr r2,[r3,#4]
+ 278 0110 42F01002 	 orr r2,r2,#16
+ 279 0114 5A60     	 str r2,[r3,#4]
+ 495:../Startup/system_XMC4500.c **** 		   /* Setup devider settings for main PLL */
+ 496:../Startup/system_XMC4500.c **** 		   SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV
+ 280              	 .loc 1 496 0
+ 281 0116 694A     	 ldr r2,.L37+40
+ 282 0118 9A60     	 str r2,[r3,#8]
+ 497:../Startup/system_XMC4500.c **** 		   /* we may have to set OSCDISCDIS */
+ 498:../Startup/system_XMC4500.c **** 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_OSCDISCDIS_Msk;
+ 283              	 .loc 1 498 0
+ 284 011a 5A68     	 ldr r2,[r3,#4]
+ 285 011c 42F04002 	 orr r2,r2,#64
+ 286 0120 5A60     	 str r2,[r3,#4]
+ 499:../Startup/system_XMC4500.c **** 		   /* connect OSC_HP to PLL */
+ 500:../Startup/system_XMC4500.c **** 		   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_FINDIS_Msk;
+ 287              	 .loc 1 500 0
+ 288 0122 5A68     	 ldr r2,[r3,#4]
+ 289 0124 22F01002 	 bic r2,r2,#16
+ 290 0128 5A60     	 str r2,[r3,#4]
+ 501:../Startup/system_XMC4500.c **** 		   /* restart PLL Lock detection */
+ 502:../Startup/system_XMC4500.c **** 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_RESLD_Msk;
+ 291              	 .loc 1 502 0
+ 292 012a 5A68     	 ldr r2,[r3,#4]
+ 293 012c 42F48022 	 orr r2,r2,#262144
+ 294 0130 5A60     	 str r2,[r3,#4]
+ 503:../Startup/system_XMC4500.c **** 		   /* wait for PLL Lock */
+ 504:../Startup/system_XMC4500.c **** 		   /* setup time out loop */
+ 505:../Startup/system_XMC4500.c **** 	       /* Timeout for wait loo ~150ms */
+ 506:../Startup/system_XMC4500.c **** 		   /********************************/
+ 507:../Startup/system_XMC4500.c **** 		   SysTick->LOAD  = ((5000000+100) & SysTick_LOAD_RELOAD_Msk) - 1;/* set reload register */
+ 295              	 .loc 1 507 0
+ 296 0132 604B     	 ldr r3,.L37+32
+ 297 0134 604A     	 ldr r2,.L37+36
+ 298 0136 5A60     	 str r2,[r3,#4]
+ 508:../Startup/system_XMC4500.c **** 		   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value 
+ 299              	 .loc 1 508 0
+ 300 0138 0022     	 movs r2,#0
+ 301 013a 9A60     	 str r2,[r3,#8]
+ 509:../Startup/system_XMC4500.c **** 		   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+ 302              	 .loc 1 509 0
+ 303 013c 0522     	 movs r2,#5
+ 304 013e 1A60     	 str r2,[r3]
+ 510:../Startup/system_XMC4500.c **** 		                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick 
+ 511:../Startup/system_XMC4500.c **** 		   
+ 512:../Startup/system_XMC4500.c **** 		   while ((!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk))&&(SysTick->VAL >= 500));
+ 305              	 .loc 1 512 0
+ 306 0140 594A     	 ldr r2,.L37+20
+ 307 0142 1946     	 mov r1,r3
+ 308              	.L18:
+ 309 0144 1368     	 ldr r3,[r2]
+ 310 0146 13F0040F 	 tst r3,#4
+ 311 014a 03D1     	 bne .L17
+ 312 014c 8B68     	 ldr r3,[r1,#8]
+ 313 014e B3F5FA7F 	 cmp r3,#500
+ 314 0152 F7D2     	 bcs .L18
+ 315              	.L17:
+ 513:../Startup/system_XMC4500.c **** 	       SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
+ 316              	 .loc 1 513 0
+ 317 0154 574A     	 ldr r2,.L37+32
+ 318 0156 1368     	 ldr r3,[r2]
+ 319 0158 23F00103 	 bic r3,r3,#1
+ 320 015c 1360     	 str r3,[r2]
+ 514:../Startup/system_XMC4500.c **** 
+ 515:../Startup/system_XMC4500.c **** 		   if ((SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)==SCU_PLL_PLLSTAT_VCOLOCK_Msk)
+ 321              	 .loc 1 515 0
+ 322 015e 524B     	 ldr r3,.L37+20
+ 323 0160 1B68     	 ldr r3,[r3]
+ 324 0162 13F0040F 	 tst r3,#4
+ 325 0166 4ED0     	 beq .L11
+ 516:../Startup/system_XMC4500.c **** 		   		{
+ 517:../Startup/system_XMC4500.c **** 				/* Go back to the Main PLL */
+ 518:../Startup/system_XMC4500.c **** 				SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_VCOBYP_Msk;
+ 326              	 .loc 1 518 0
+ 327 0168 4F49     	 ldr r1,.L37+20
+ 328 016a 4B68     	 ldr r3,[r1,#4]
+ 329 016c 23F00103 	 bic r3,r3,#1
+ 330 0170 4B60     	 str r3,[r1,#4]
+ 519:../Startup/system_XMC4500.c **** 				}
+ 520:../Startup/system_XMC4500.c **** 				else return(0);
+ 521:../Startup/system_XMC4500.c **** 		 
+ 522:../Startup/system_XMC4500.c **** 	
+ 523:../Startup/system_XMC4500.c **** 	   /*********************************************************
+ 524:../Startup/system_XMC4500.c **** 	   here we need to setup the system clock divider
+ 525:../Startup/system_XMC4500.c **** 	   *********************************************************/
+ 526:../Startup/system_XMC4500.c **** 	
+ 527:../Startup/system_XMC4500.c **** 		SCU_CLK->CPUCLKCR = SCU_CPUCLKCR_DIV;
+ 331              	 .loc 1 527 0
+ 332 0172 4B4B     	 ldr r3,.L37+12
+ 333 0174 0022     	 movs r2,#0
+ 334 0176 1A61     	 str r2,[r3,#16]
+ 528:../Startup/system_XMC4500.c **** 		SCU_CLK->PBCLKCR = SCU_PBCLKCR_DIV;	
+ 335              	 .loc 1 528 0
+ 336 0178 5A61     	 str r2,[r3,#20]
+ 529:../Startup/system_XMC4500.c **** 		SCU_CLK->CCUCLKCR = SCU_CCUCLKCR_DIV;
+ 337              	 .loc 1 529 0
+ 338 017a 1A62     	 str r2,[r3,#32]
+ 530:../Startup/system_XMC4500.c **** 	
+ 531:../Startup/system_XMC4500.c **** 
+ 532:../Startup/system_XMC4500.c **** 		 /* Switch system clock to PLL */
+ 533:../Startup/system_XMC4500.c **** 	   SCU_CLK->SYSCLKCR |=  0x00010000; 
+ 339              	 .loc 1 533 0
+ 340 017c D868     	 ldr r0,[r3,#12]
+ 341 017e 40F48030 	 orr r0,r0,#65536
+ 342 0182 D860     	 str r0,[r3,#12]
+ 534:../Startup/system_XMC4500.c **** 				
+ 535:../Startup/system_XMC4500.c **** 	   /* we may have to reset OSCDISCDIS */
+ 536:../Startup/system_XMC4500.c **** 	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCDISCDIS_Msk;
+ 343              	 .loc 1 536 0
+ 344 0184 4B68     	 ldr r3,[r1,#4]
+ 345 0186 23F04003 	 bic r3,r3,#64
+ 346 018a 4B60     	 str r3,[r1,#4]
+ 537:../Startup/system_XMC4500.c **** 				
+ 538:../Startup/system_XMC4500.c **** 																  
+ 539:../Startup/system_XMC4500.c **** 		 /*********************************************************/
+ 540:../Startup/system_XMC4500.c **** 		 /* Delay for next K2 step ~50�s */
+ 541:../Startup/system_XMC4500.c **** 		 /*********************************************************/
+ 542:../Startup/system_XMC4500.c **** 		 SysTick->LOAD  = ((1250+100) & SysTick_LOAD_RELOAD_Msk) - 1;/* set reload register */
+ 347              	 .loc 1 542 0
+ 348 018c 494B     	 ldr r3,.L37+32
+ 349 018e 40F24551 	 movw r1,#1349
+ 350 0192 5960     	 str r1,[r3,#4]
+ 543:../Startup/system_XMC4500.c **** 		 SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value */
+ 351              	 .loc 1 543 0
+ 352 0194 9A60     	 str r2,[r3,#8]
+ 544:../Startup/system_XMC4500.c **** 		 SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+ 353              	 .loc 1 544 0
+ 354 0196 0522     	 movs r2,#5
+ 355 0198 1A60     	 str r2,[r3]
+ 545:../Startup/system_XMC4500.c **** 										 SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
+ 546:../Startup/system_XMC4500.c **** 	
+ 547:../Startup/system_XMC4500.c **** 		 while (SysTick->VAL >= 100);								   /* wait for ~50�s  */
+ 356              	 .loc 1 547 0
+ 357 019a 1A46     	 mov r2,r3
+ 358              	.L19:
+ 359 019c 9368     	 ldr r3,[r2,#8]
+ 360 019e 632B     	 cmp r3,#99
+ 361 01a0 FCD8     	 bhi .L19
+ 548:../Startup/system_XMC4500.c **** 		 SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
+ 362              	 .loc 1 548 0
+ 363 01a2 444B     	 ldr r3,.L37+32
+ 364 01a4 1A68     	 ldr r2,[r3]
+ 365 01a6 22F00102 	 bic r2,r2,#1
+ 366 01aa 1A60     	 str r2,[r3]
+ 367              	.LVL8:
+ 549:../Startup/system_XMC4500.c **** 		 /*********************************************************/
+ 550:../Startup/system_XMC4500.c **** 
+ 551:../Startup/system_XMC4500.c **** 	   /*********************************************************
+ 552:../Startup/system_XMC4500.c **** 	   here the ramp up of the system clock starts FSys < 60MHz
+ 553:../Startup/system_XMC4500.c **** 	   *********************************************************/
+ 554:../Startup/system_XMC4500.c **** 		if (CLOCK_FSYS > 60000000){
+ 555:../Startup/system_XMC4500.c **** 			 /*calulation for stepping*/
+ 556:../Startup/system_XMC4500.c **** 			 if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_CRYSTAL)VCO = (CLOCK_CRYSTAL_FREQUENCY/(SCU_PLL_PDIV+1))*(
+ 557:../Startup/system_XMC4500.c **** 			 if ((SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC) ||(SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BA
+ 558:../Startup/system_XMC4500.c **** 					VCO = (CLOCK_BACK_UP/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
+ 559:../Startup/system_XMC4500.c **** 	 
+ 560:../Startup/system_XMC4500.c **** 			 stepping_K2DIV = (VCO/60000000)-1;	
+ 561:../Startup/system_XMC4500.c **** 
+ 562:../Startup/system_XMC4500.c **** 			 /* Setup devider settings for main PLL */
+ 563:../Startup/system_XMC4500.c **** 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV<
+ 368              	 .loc 1 563 0
+ 369 01ac 4449     	 ldr r1,.L37+44
+ 370 01ae 3E4A     	 ldr r2,.L37+20
+ 371 01b0 9160     	 str r1,[r2,#8]
+ 564:../Startup/system_XMC4500.c **** 		 }
+ 565:../Startup/system_XMC4500.c **** 		 else
+ 566:../Startup/system_XMC4500.c **** 		 {
+ 567:../Startup/system_XMC4500.c **** 				/* Setup devider settings for main PLL */
+ 568:../Startup/system_XMC4500.c **** 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (SCU_PLL_K2DIV<<16) | (SCU_PLL_PDIV<<
+ 569:../Startup/system_XMC4500.c **** 		    SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear 
+ 570:../Startup/system_XMC4500.c **** 			  return(1);
+ 571:../Startup/system_XMC4500.c **** 		 }
+ 572:../Startup/system_XMC4500.c **** 
+ 573:../Startup/system_XMC4500.c **** 		 /*********************************************************/
+ 574:../Startup/system_XMC4500.c **** 		 /* Delay for next K2 step ~50�s */
+ 575:../Startup/system_XMC4500.c **** 		 /*********************************************************/
+ 576:../Startup/system_XMC4500.c **** 	   SysTick->LOAD  = ((3000+100) & SysTick_LOAD_RELOAD_Msk) - 1;
+ 372              	 .loc 1 576 0
+ 373 01b2 40F61B42 	 movw r2,#3099
+ 374 01b6 5A60     	 str r2,[r3,#4]
+ 577:../Startup/system_XMC4500.c **** 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value *
+ 375              	 .loc 1 577 0
+ 376 01b8 0022     	 movs r2,#0
+ 377 01ba 9A60     	 str r2,[r3,#8]
+ 578:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+ 378              	 .loc 1 578 0
+ 379 01bc 0522     	 movs r2,#5
+ 380 01be 1A60     	 str r2,[r3]
+ 579:../Startup/system_XMC4500.c **** 	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick T
+ 580:../Startup/system_XMC4500.c **** 	
+ 581:../Startup/system_XMC4500.c **** 	   while (SysTick->VAL >= 100);								   /* wait for ~50�s  */
+ 381              	 .loc 1 581 0
+ 382 01c0 1A46     	 mov r2,r3
+ 383              	.L20:
+ 384 01c2 9368     	 ldr r3,[r2,#8]
+ 385 01c4 632B     	 cmp r3,#99
+ 386 01c6 FCD8     	 bhi .L20
+ 582:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
+ 387              	 .loc 1 582 0
+ 388 01c8 3A4B     	 ldr r3,.L37+32
+ 389 01ca 1A68     	 ldr r2,[r3]
+ 390 01cc 22F00102 	 bic r2,r2,#1
+ 391 01d0 1A60     	 str r2,[r3]
+ 392              	.LVL9:
+ 583:../Startup/system_XMC4500.c **** 	   /********************************/
+ 584:../Startup/system_XMC4500.c **** 	
+ 585:../Startup/system_XMC4500.c ****    /*********************************************************
+ 586:../Startup/system_XMC4500.c **** 	   here the ramp up of the system clock starts FSys < 90MHz
+ 587:../Startup/system_XMC4500.c **** 	   *********************************************************/
+ 588:../Startup/system_XMC4500.c **** 		if (CLOCK_FSYS > 90000000){
+ 589:../Startup/system_XMC4500.c **** 			 /*calulation for stepping*/
+ 590:../Startup/system_XMC4500.c **** 			 if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_CRYSTAL)VCO = (CLOCK_CRYSTAL_FREQUENCY/(SCU_PLL_PDIV+1))*(
+ 591:../Startup/system_XMC4500.c **** 			 if ((SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC) ||(SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BA
+ 592:../Startup/system_XMC4500.c **** 					VCO = (CLOCK_BACK_UP/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
+ 593:../Startup/system_XMC4500.c **** 
+ 594:../Startup/system_XMC4500.c **** 			 stepping_K2DIV = (VCO/90000000)-1;			
+ 595:../Startup/system_XMC4500.c **** 
+ 596:../Startup/system_XMC4500.c **** 			 /* Setup devider settings for main PLL */
+ 597:../Startup/system_XMC4500.c **** 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV<
+ 393              	 .loc 1 597 0
+ 394 01d2 3C49     	 ldr r1,.L37+48
+ 395 01d4 344A     	 ldr r2,.L37+20
+ 396 01d6 9160     	 str r1,[r2,#8]
+ 598:../Startup/system_XMC4500.c **** 		 }
+ 599:../Startup/system_XMC4500.c **** 		 else
+ 600:../Startup/system_XMC4500.c **** 		 {
+ 601:../Startup/system_XMC4500.c **** 				/* Setup devider settings for main PLL */
+ 602:../Startup/system_XMC4500.c **** 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (SCU_PLL_K2DIV<<16) | (SCU_PLL_PDIV<<
+ 603:../Startup/system_XMC4500.c **** 	      SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear
+ 604:../Startup/system_XMC4500.c **** 				return(1);
+ 605:../Startup/system_XMC4500.c **** 		 }
+ 606:../Startup/system_XMC4500.c **** 	
+ 607:../Startup/system_XMC4500.c **** 		 /*********************************************************/
+ 608:../Startup/system_XMC4500.c **** 		 /* Delay for next K2 step ~50�s */
+ 609:../Startup/system_XMC4500.c **** 		 /*********************************************************/
+ 610:../Startup/system_XMC4500.c **** 	   SysTick->LOAD  = ((4800+100) & SysTick_LOAD_RELOAD_Msk) - 1;
+ 397              	 .loc 1 610 0
+ 398 01d8 41F22332 	 movw r2,#4899
+ 399 01dc 5A60     	 str r2,[r3,#4]
+ 611:../Startup/system_XMC4500.c **** 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value *
+ 400              	 .loc 1 611 0
+ 401 01de 0022     	 movs r2,#0
+ 402 01e0 9A60     	 str r2,[r3,#8]
+ 612:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+ 403              	 .loc 1 612 0
+ 404 01e2 0522     	 movs r2,#5
+ 405 01e4 1A60     	 str r2,[r3]
+ 613:../Startup/system_XMC4500.c **** 	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick T
+ 614:../Startup/system_XMC4500.c **** 	
+ 615:../Startup/system_XMC4500.c **** 	   while (SysTick->VAL >= 100);								   /* wait for ~50�s  */
+ 406              	 .loc 1 615 0
+ 407 01e6 1A46     	 mov r2,r3
+ 408              	.L21:
+ 409 01e8 9368     	 ldr r3,[r2,#8]
+ 410 01ea 632B     	 cmp r3,#99
+ 411 01ec FCD8     	 bhi .L21
+ 616:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
+ 412              	 .loc 1 616 0
+ 413 01ee 314A     	 ldr r2,.L37+32
+ 414 01f0 1368     	 ldr r3,[r2]
+ 415 01f2 23F00103 	 bic r3,r3,#1
+ 416 01f6 1360     	 str r3,[r2]
+ 617:../Startup/system_XMC4500.c **** 	   /********************************/
+ 618:../Startup/system_XMC4500.c **** 	
+ 619:../Startup/system_XMC4500.c **** 	   /* Setup devider settings for main PLL */
+ 620:../Startup/system_XMC4500.c **** 	   SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (SCU_PLL_K2DIV<<16) | (SCU_PLL_PDIV<<
+ 417              	 .loc 1 620 0
+ 418 01f8 334A     	 ldr r2,.L37+52
+ 419 01fa 2B4B     	 ldr r3,.L37+20
+ 420 01fc 9A60     	 str r2,[r3,#8]
+ 621:../Startup/system_XMC4500.c **** 	
+ 622:../Startup/system_XMC4500.c **** 	   SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear re
+ 421              	 .loc 1 622 0
+ 422 01fe 0522     	 movs r2,#5
+ 423 0200 A3F5B663 	 sub r3,r3,#1456
+ 424 0204 DA60     	 str r2,[r3,#12]
+ 425              	.LVL10:
+ 426              	.L11:
+ 427              	.LBE10:
+ 428              	.LBE9:
+ 429              	.LBE8:
+ 272:../Startup/system_XMC4500.c **** 
+ 430              	 .loc 1 272 0
+ 431 0206 FFF7FEFF 	 bl SystemCoreClockUpdate
+ 432              	.LVL11:
+ 433              	.LBB11:
+ 434              	.LBB12:
+ 623:../Startup/system_XMC4500.c **** 	}
+ 624:../Startup/system_XMC4500.c ****  }/* end this weak function enables DAVE3 clock App usage */	
+ 625:../Startup/system_XMC4500.c ****    return(1);
+ 626:../Startup/system_XMC4500.c **** 
+ 627:../Startup/system_XMC4500.c **** }
+ 628:../Startup/system_XMC4500.c **** #endif
+ 629:../Startup/system_XMC4500.c **** 
+ 630:../Startup/system_XMC4500.c **** /**
+ 631:../Startup/system_XMC4500.c ****   * @brief  -
+ 632:../Startup/system_XMC4500.c ****   * @note   -  
+ 633:../Startup/system_XMC4500.c ****   * @param  None
+ 634:../Startup/system_XMC4500.c ****   * @retval None
+ 635:../Startup/system_XMC4500.c ****   */
+ 636:../Startup/system_XMC4500.c **** #if (SCU_USB_CLOCK_SETUP == 1)
+ 637:../Startup/system_XMC4500.c **** static int USBClockSetup(void)
+ 638:../Startup/system_XMC4500.c **** {
+ 639:../Startup/system_XMC4500.c **** /* this weak function enables DAVE3 clock App usage */	
+ 640:../Startup/system_XMC4500.c **** if(AllowPLLInitByStartup()){
+ 435              	 .loc 1 640 0
+ 436 020a FFF7FEFF 	 bl AllowPLLInitByStartup
+ 437              	.LVL12:
+ 438 020e 0028     	 cmp r0,#0
+ 439 0210 00F08880 	 beq .L10
+ 641:../Startup/system_XMC4500.c **** 
+ 642:../Startup/system_XMC4500.c **** 	/* check if PLL is switched on */
+ 643:../Startup/system_XMC4500.c **** if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPWD_Msk)) != 0){
+ 440              	 .loc 1 643 0
+ 441 0214 244B     	 ldr r3,.L37+20
+ 442 0216 5A69     	 ldr r2,[r3,#20]
+ 443 0218 244B     	 ldr r3,.L37+24
+ 444 021a 1340     	 ands r3,r3,r2
+ 445 021c 33B1     	 cbz r3,.L23
+ 644:../Startup/system_XMC4500.c **** 	/* enable PLL first */
+ 645:../Startup/system_XMC4500.c ****   SCU_PLL->USBPLLCON &= ~(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPWD_Msk);
+ 446              	 .loc 1 645 0
+ 447 021e 224A     	 ldr r2,.L37+20
+ 448 0220 5369     	 ldr r3,[r2,#20]
+ 449 0222 23F48033 	 bic r3,r3,#65536
+ 450 0226 23F00203 	 bic r3,r3,#2
+ 451 022a 5361     	 str r3,[r2,#20]
+ 452              	.L23:
+ 646:../Startup/system_XMC4500.c **** }
+ 647:../Startup/system_XMC4500.c **** 
+ 648:../Startup/system_XMC4500.c **** /* check and if not already running enable OSC_HP */
+ 649:../Startup/system_XMC4500.c ****    if (SCU_OSC->OSCHPCTRL & SCU_OSC_OSCHPCTRL_MODE_Msk){
+ 453              	 .loc 1 649 0
+ 454 022c 204B     	 ldr r3,.L37+28
+ 455 022e 5B68     	 ldr r3,[r3,#4]
+ 456 0230 13F0300F 	 tst r3,#48
+ 457 0234 56D0     	 beq .L24
+ 650:../Startup/system_XMC4500.c **** 		 /* check if Main PLL is switched on for OSC WD*/
+ 651:../Startup/system_XMC4500.c **** 		 if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)) != 0){
+ 458              	 .loc 1 651 0
+ 459 0236 1C4B     	 ldr r3,.L37+20
+ 460 0238 5A68     	 ldr r2,[r3,#4]
+ 461 023a 1C4B     	 ldr r3,.L37+24
+ 462 023c 1340     	 ands r3,r3,r2
+ 463 023e 33B1     	 cbz r3,.L25
+ 652:../Startup/system_XMC4500.c **** 			/* enable PLL first */
+ 653:../Startup/system_XMC4500.c ****   			SCU_PLL->PLLCON0 &= ~(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk);
+ 464              	 .loc 1 653 0
+ 465 0240 194A     	 ldr r2,.L37+20
+ 466 0242 5368     	 ldr r3,[r2,#4]
+ 467 0244 23F48033 	 bic r3,r3,#65536
+ 468 0248 23F00203 	 bic r3,r3,#2
+ 469 024c 5360     	 str r3,[r2,#4]
+ 470              	.L25:
+ 654:../Startup/system_XMC4500.c **** 		 }
+ 655:../Startup/system_XMC4500.c **** 	   SCU_OSC->OSCHPCTRL &= ~(SCU_OSC_HP_MODE);	 /*enable the OSC_HP*/
+ 471              	 .loc 1 655 0
+ 472 024e 184B     	 ldr r3,.L37+28
+ 473 0250 5A68     	 ldr r2,[r3,#4]
+ 474 0252 22F0F002 	 bic r2,r2,#240
+ 475 0256 5A60     	 str r2,[r3,#4]
+ 656:../Startup/system_XMC4500.c **** 	   /* setup OSC WDG devider */
+ 657:../Startup/system_XMC4500.c **** 	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);         
+ 476              	 .loc 1 657 0
+ 477 0258 5A68     	 ldr r2,[r3,#4]
+ 478 025a 42F40032 	 orr r2,r2,#131072
+ 479 025e 5A60     	 str r2,[r3,#4]
+ 658:../Startup/system_XMC4500.c **** 	   /* restart OSC Watchdog */
+ 659:../Startup/system_XMC4500.c **** 	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCRES_Msk;  
+ 480              	 .loc 1 659 0
+ 481 0260 114A     	 ldr r2,.L37+20
+ 482 0262 5368     	 ldr r3,[r2,#4]
+ 483 0264 23F40033 	 bic r3,r3,#131072
+ 484 0268 5360     	 str r3,[r2,#4]
+ 660:../Startup/system_XMC4500.c **** 	
+ 661:../Startup/system_XMC4500.c ****        /* Timeout for wait loop ~150ms */
+ 662:../Startup/system_XMC4500.c **** 	   /********************************/
+ 663:../Startup/system_XMC4500.c **** 	   SysTick->LOAD  = ((5000000+100) & SysTick_LOAD_RELOAD_Msk) - 1;/* set reload register */
+ 485              	 .loc 1 663 0
+ 486 026a 124B     	 ldr r3,.L37+32
+ 487 026c 124A     	 ldr r2,.L37+36
+ 488 026e 5A60     	 str r2,[r3,#4]
+ 664:../Startup/system_XMC4500.c **** 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value *
+ 489              	 .loc 1 664 0
+ 490 0270 0022     	 movs r2,#0
+ 491 0272 9A60     	 str r2,[r3,#8]
+ 665:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+ 492              	 .loc 1 665 0
+ 493 0274 0522     	 movs r2,#5
+ 494 0276 1A60     	 str r2,[r3]
+ 666:../Startup/system_XMC4500.c **** 	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick T
+ 667:../Startup/system_XMC4500.c **** 	   do 
+ 668:../Startup/system_XMC4500.c **** 	   {
+ 669:../Startup/system_XMC4500.c ****        ;/* wait for ~150ms  */
+ 670:../Startup/system_XMC4500.c **** 	   }while((((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_P
+ 495              	 .loc 1 670 0
+ 496 0278 0B4A     	 ldr r2,.L37+20
+ 497 027a 1946     	 mov r1,r3
+ 498              	.L27:
+ 499 027c 1368     	 ldr r3,[r2]
+ 500 027e 03F46073 	 and r3,r3,#896
+ 501 0282 B3F5607F 	 cmp r3,#896
+ 502 0286 21D0     	 beq .L26
+ 503 0288 8B68     	 ldr r3,[r1,#8]
+ 504 028a B3F5FA7F 	 cmp r3,#500
+ 505 028e F5D2     	 bcs .L27
+ 506 0290 1CE0     	 b .L38
+ 507              	.L39:
+ 508 0292 00BF     	 .align 2
+ 509              	.L37:
+ 510 0294 00ED00E0 	 .word -536810240
+ 511 0298 00800050 	 .word 1342210048
+ 512 029c 00100058 	 .word 1476399104
+ 513 02a0 00460050 	 .word 1342195200
+ 514 02a4 00800248 	 .word 1208123392
+ 515 02a8 10470050 	 .word 1342195472
+ 516 02ac 02000100 	 .word 65538
+ 517 02b0 00470050 	 .word 1342195456
+ 518 02b4 10E000E0 	 .word -536813552
+ 519 02b8 A34B4C00 	 .word 5000099
+ 520 02bc 014F1301 	 .word 18042625
+ 521 02c0 014F0701 	 .word 17256193
+ 522 02c4 014F0401 	 .word 17059585
+ 523 02c8 014F0301 	 .word 16994049
+ 524              	.L38:
+ 525              	.L26:
+ 671:../Startup/system_XMC4500.c **** 
+ 672:../Startup/system_XMC4500.c **** 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
+ 526              	 .loc 1 672 0
+ 527 02cc 164A     	 ldr r2,.L40
+ 528 02ce 1368     	 ldr r3,[r2]
+ 529 02d0 23F00103 	 bic r3,r3,#1
+ 530 02d4 1360     	 str r3,[r2]
+ 673:../Startup/system_XMC4500.c **** 	   if (((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLST
+ 531              	 .loc 1 673 0
+ 532 02d6 154B     	 ldr r3,.L40+4
+ 533 02d8 1B68     	 ldr r3,[r3]
+ 534 02da 03F46073 	 and r3,r3,#896
+ 535 02de B3F5607F 	 cmp r3,#896
+ 536 02e2 1FD1     	 bne .L10
+ 537              	.L24:
+ 674:../Startup/system_XMC4500.c **** 	   return(0);/* Return Error */
+ 675:../Startup/system_XMC4500.c **** 	
+ 676:../Startup/system_XMC4500.c ****   }
+ 677:../Startup/system_XMC4500.c **** 
+ 678:../Startup/system_XMC4500.c **** 
+ 679:../Startup/system_XMC4500.c **** /* Setup USB PLL */
+ 680:../Startup/system_XMC4500.c ****    /* Go to bypass the Main PLL */
+ 681:../Startup/system_XMC4500.c ****    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_VCOBYP_Msk;
+ 538              	 .loc 1 681 0
+ 539 02e4 114B     	 ldr r3,.L40+4
+ 540 02e6 5A69     	 ldr r2,[r3,#20]
+ 541 02e8 42F00102 	 orr r2,r2,#1
+ 542 02ec 5A61     	 str r2,[r3,#20]
+ 682:../Startup/system_XMC4500.c ****    /* disconnect OSC_FI to PLL */
+ 683:../Startup/system_XMC4500.c ****    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_FINDIS_Msk;
+ 543              	 .loc 1 683 0
+ 544 02ee 5A69     	 ldr r2,[r3,#20]
+ 545 02f0 42F01002 	 orr r2,r2,#16
+ 546 02f4 5A61     	 str r2,[r3,#20]
+ 684:../Startup/system_XMC4500.c ****    /* Setup devider settings for main PLL */
+ 685:../Startup/system_XMC4500.c ****    SCU_PLL->USBPLLCON = ((SCU_USBPLL_NDIV<<8) | (SCU_USBPLL_PDIV<<24));
+ 547              	 .loc 1 685 0
+ 548 02f6 4FF4F852 	 mov r2,#7936
+ 549 02fa 5A61     	 str r2,[r3,#20]
+ 686:../Startup/system_XMC4500.c ****    /* Setup USBDIV settings USB clock */
+ 687:../Startup/system_XMC4500.c ****    SCU_CLK->USBCLKCR = SCU_USBDIV;
+ 550              	 .loc 1 687 0
+ 551 02fc 0321     	 movs r1,#3
+ 552 02fe 0C4A     	 ldr r2,.L40+8
+ 553 0300 9161     	 str r1,[r2,#24]
+ 688:../Startup/system_XMC4500.c ****    /* we may have to set OSCDISCDIS */
+ 689:../Startup/system_XMC4500.c ****    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_OSCDISCDIS_Msk;
+ 554              	 .loc 1 689 0
+ 555 0302 5A69     	 ldr r2,[r3,#20]
+ 556 0304 42F04002 	 orr r2,r2,#64
+ 557 0308 5A61     	 str r2,[r3,#20]
+ 690:../Startup/system_XMC4500.c ****    /* connect OSC_FI to PLL */
+ 691:../Startup/system_XMC4500.c ****    SCU_PLL->USBPLLCON &= ~SCU_PLL_USBPLLCON_FINDIS_Msk;
+ 558              	 .loc 1 691 0
+ 559 030a 5A69     	 ldr r2,[r3,#20]
+ 560 030c 22F01002 	 bic r2,r2,#16
+ 561 0310 5A61     	 str r2,[r3,#20]
+ 692:../Startup/system_XMC4500.c ****    /* restart PLL Lock detection */
+ 693:../Startup/system_XMC4500.c ****    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_RESLD_Msk;
+ 562              	 .loc 1 693 0
+ 563 0312 5A69     	 ldr r2,[r3,#20]
+ 564 0314 42F48022 	 orr r2,r2,#262144
+ 565 0318 5A61     	 str r2,[r3,#20]
+ 694:../Startup/system_XMC4500.c ****    /* wait for PLL Lock */
+ 695:../Startup/system_XMC4500.c ****    while (!(SCU_PLL->USBPLLSTAT & SCU_PLL_USBPLLSTAT_VCOLOCK_Msk));
+ 566              	 .loc 1 695 0
+ 567 031a 1A46     	 mov r2,r3
+ 568              	.L28:
+ 569 031c 1369     	 ldr r3,[r2,#16]
+ 570 031e 13F0040F 	 tst r3,#4
+ 571 0322 FBD0     	 beq .L28
+ 572              	.L10:
+ 573 0324 08BD     	 pop {r3,pc}
+ 574              	.L41:
+ 575 0326 00BF     	 .align 2
+ 576              	.L40:
+ 577 0328 10E000E0 	 .word -536813552
+ 578 032c 10470050 	 .word 1342195472
+ 579 0330 00460050 	 .word 1342195200
+ 580              	.LBE12:
+ 581              	.LBE11:
+ 582              	 .cfi_endproc
+ 583              	.LFE130:
+ 585              	 .global SystemCoreClock
+ 586              	 .section .data.SystemCoreClock,"aw",%progbits
+ 587              	 .align 2
+ 588              	 .set .LANCHOR0,.+0
+ 591              	SystemCoreClock:
+ 592 0000 000E2707 	 .word 120000000
+ 593              	 .text
+ 594              	.Letext0:
+ 595              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 596              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 597              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 598              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 system_XMC4500.c
+    {standard input}:19     .text.SystemCoreClockUpdate:00000000 $t
+    {standard input}:24     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+    {standard input}:105    .text.SystemCoreClockUpdate:00000068 $d
+    {standard input}:114    .text.SystemInit:00000000 $t
+    {standard input}:119    .text.SystemInit:00000000 SystemInit
+    {standard input}:510    .text.SystemInit:00000294 $d
+    {standard input}:527    .text.SystemInit:000002cc $t
+    {standard input}:577    .text.SystemInit:00000328 $d
+    {standard input}:591    .data.SystemCoreClock:00000000 SystemCoreClock
+    {standard input}:587    .data.SystemCoreClock:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.system_XMC4500.h.54.7380ec702d5640d2ef62b80aaef2ea67
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.a7bde2a03f053494851e0fbea3678ab0
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+
+UNDEFINED SYMBOLS
+AllowPLLInitByStartup

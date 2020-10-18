@@ -1,0 +1,1876 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "xmc4_rtc.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.XMC_RTC_Enable,"ax",%progbits
+  19              	 .align 2
+  20              	 .global XMC_RTC_Enable
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	XMC_RTC_Enable:
+  25              	.LFB171:
+  26              	 .file 1 "../Libraries/XMCLib/src/xmc4_rtc.c"
+   1:../Libraries/XMCLib/src/xmc4_rtc.c **** /**
+   2:../Libraries/XMCLib/src/xmc4_rtc.c ****  * @file xmc4_rtc.c
+   3:../Libraries/XMCLib/src/xmc4_rtc.c ****  * @date 2017-08-04
+   4:../Libraries/XMCLib/src/xmc4_rtc.c ****  *
+   5:../Libraries/XMCLib/src/xmc4_rtc.c ****  * @cond
+   6:../Libraries/XMCLib/src/xmc4_rtc.c ****  **************************************************************************************************
+   7:../Libraries/XMCLib/src/xmc4_rtc.c ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:../Libraries/XMCLib/src/xmc4_rtc.c ****  *
+   9:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:../Libraries/XMCLib/src/xmc4_rtc.c ****  * All rights reserved.                        
+  11:../Libraries/XMCLib/src/xmc4_rtc.c ****  *                                             
+  12:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:../Libraries/XMCLib/src/xmc4_rtc.c ****  * following conditions are met:   
+  14:../Libraries/XMCLib/src/xmc4_rtc.c ****  *                                                                              
+  15:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:../Libraries/XMCLib/src/xmc4_rtc.c ****  * disclaimer.                        
+  17:../Libraries/XMCLib/src/xmc4_rtc.c ****  * 
+  18:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:../Libraries/XMCLib/src/xmc4_rtc.c ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:../Libraries/XMCLib/src/xmc4_rtc.c ****  * 
+  21:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:../Libraries/XMCLib/src/xmc4_rtc.c ****  * products derived from this software without specific prior written permission.                  
+  23:../Libraries/XMCLib/src/xmc4_rtc.c ****  *                                                                              
+  24:../Libraries/XMCLib/src/xmc4_rtc.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:../Libraries/XMCLib/src/xmc4_rtc.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:../Libraries/XMCLib/src/xmc4_rtc.c ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:../Libraries/XMCLib/src/xmc4_rtc.c ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:../Libraries/XMCLib/src/xmc4_rtc.c ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:../Libraries/XMCLib/src/xmc4_rtc.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:../Libraries/XMCLib/src/xmc4_rtc.c ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:../Libraries/XMCLib/src/xmc4_rtc.c ****  *                                                                              
+  32:../Libraries/XMCLib/src/xmc4_rtc.c ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:../Libraries/XMCLib/src/xmc4_rtc.c ****  **************************************************************************************************
+  35:../Libraries/XMCLib/src/xmc4_rtc.c ****  *
+  36:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Change History
+  37:../Libraries/XMCLib/src/xmc4_rtc.c ****  * --------------
+  38:../Libraries/XMCLib/src/xmc4_rtc.c ****  *
+  39:../Libraries/XMCLib/src/xmc4_rtc.c ****  * 2015-02-20:
+  40:../Libraries/XMCLib/src/xmc4_rtc.c ****  *     - Initial <br>
+  41:../Libraries/XMCLib/src/xmc4_rtc.c ****  *      
+  42:../Libraries/XMCLib/src/xmc4_rtc.c ****  * 2016-03-09:
+  43:../Libraries/XMCLib/src/xmc4_rtc.c ****  *     - Optimize write only registers
+  44:../Libraries/XMCLib/src/xmc4_rtc.c ****  *      
+  45:../Libraries/XMCLib/src/xmc4_rtc.c ****  * 2017-08-04:
+  46:../Libraries/XMCLib/src/xmc4_rtc.c ****  *     - Changed XMC_RTC_EnableHibernationWakeUp() and XMC_RTC_DisableHibernationWakeUpcheck() 
+  47:../Libraries/XMCLib/src/xmc4_rtc.c ****  *       Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending to the RTC_C
+  48:../Libraries/XMCLib/src/xmc4_rtc.c ****  *
+  49:../Libraries/XMCLib/src/xmc4_rtc.c ****  * @endcond 
+  50:../Libraries/XMCLib/src/xmc4_rtc.c ****  *
+  51:../Libraries/XMCLib/src/xmc4_rtc.c ****  */
+  52:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  53:../Libraries/XMCLib/src/xmc4_rtc.c **** /**
+  54:../Libraries/XMCLib/src/xmc4_rtc.c ****  * @brief RTC driver for XMC microcontroller family.
+  55:../Libraries/XMCLib/src/xmc4_rtc.c ****  *
+  56:../Libraries/XMCLib/src/xmc4_rtc.c ****  */
+  57:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  58:../Libraries/XMCLib/src/xmc4_rtc.c **** /**************************************************************************************************
+  59:../Libraries/XMCLib/src/xmc4_rtc.c ****  * HEADER FILES
+  60:../Libraries/XMCLib/src/xmc4_rtc.c ****  **************************************************************************************************
+  61:../Libraries/XMCLib/src/xmc4_rtc.c **** #include <xmc_rtc.h>
+  62:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  63:../Libraries/XMCLib/src/xmc4_rtc.c **** #if UC_FAMILY == XMC4
+  64:../Libraries/XMCLib/src/xmc4_rtc.c **** #include <xmc_scu.h>
+  65:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  66:../Libraries/XMCLib/src/xmc4_rtc.c **** /**************************************************************************************************
+  67:../Libraries/XMCLib/src/xmc4_rtc.c ****  * API IMPLEMENTATION
+  68:../Libraries/XMCLib/src/xmc4_rtc.c ****  **************************************************************************************************
+  69:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  70:../Libraries/XMCLib/src/xmc4_rtc.c **** /*
+  71:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Enables RTC peripheral for programming its registers
+  72:../Libraries/XMCLib/src/xmc4_rtc.c ****  */
+  73:../Libraries/XMCLib/src/xmc4_rtc.c **** void XMC_RTC_Enable(void)
+  74:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+  27              	 .loc 1 74 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31 0000 08B5     	 push {r3,lr}
+  32              	.LCFI0:
+  33              	 .cfi_def_cfa_offset 8
+  34              	 .cfi_offset 3,-8
+  35              	 .cfi_offset 14,-4
+  75:../Libraries/XMCLib/src/xmc4_rtc.c ****   XMC_SCU_HIB_EnableHibernateDomain();
+  36              	 .loc 1 75 0
+  37 0002 FFF7FEFF 	 bl XMC_SCU_HIB_EnableHibernateDomain
+  38              	.LVL0:
+  39 0006 08BD     	 pop {r3,pc}
+  40              	 .cfi_endproc
+  41              	.LFE171:
+  43              	 .section .text.XMC_RTC_Disable,"ax",%progbits
+  44              	 .align 2
+  45              	 .global XMC_RTC_Disable
+  46              	 .thumb
+  47              	 .thumb_func
+  49              	XMC_RTC_Disable:
+  50              	.LFB172:
+  76:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+  77:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  78:../Libraries/XMCLib/src/xmc4_rtc.c **** /*
+  79:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Disables RTC peripheral for programming its registers
+  80:../Libraries/XMCLib/src/xmc4_rtc.c ****  */
+  81:../Libraries/XMCLib/src/xmc4_rtc.c **** void XMC_RTC_Disable(void)
+  82:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+  51              	 .loc 1 82 0
+  52              	 .cfi_startproc
+  53              	 
+  54              	 
+  55              	 
+  56 0000 7047     	 bx lr
+  57              	 .cfi_endproc
+  58              	.LFE172:
+  60 0002 00BF     	 .section .text.XMC_RTC_IsEnabled,"ax",%progbits
+  61              	 .align 2
+  62              	 .global XMC_RTC_IsEnabled
+  63              	 .thumb
+  64              	 .thumb_func
+  66              	XMC_RTC_IsEnabled:
+  67              	.LFB173:
+  83:../Libraries/XMCLib/src/xmc4_rtc.c ****   /*
+  84:../Libraries/XMCLib/src/xmc4_rtc.c ****    * Empty because disabling the hibernate
+  85:../Libraries/XMCLib/src/xmc4_rtc.c ****    * domain is not done intentionally.
+  86:../Libraries/XMCLib/src/xmc4_rtc.c ****    */
+  87:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+  88:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  89:../Libraries/XMCLib/src/xmc4_rtc.c **** /*
+  90:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Checks RTC peripheral is enabled for programming to its registers
+  91:../Libraries/XMCLib/src/xmc4_rtc.c ****  */
+  92:../Libraries/XMCLib/src/xmc4_rtc.c **** bool XMC_RTC_IsEnabled(void)
+  93:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+  68              	 .loc 1 93 0
+  69              	 .cfi_startproc
+  70              	 
+  71              	 
+  72              	 .loc 1 93 0
+  73 0000 08B5     	 push {r3,lr}
+  74              	.LCFI1:
+  75              	 .cfi_def_cfa_offset 8
+  76              	 .cfi_offset 3,-8
+  77              	 .cfi_offset 14,-4
+  94:../Libraries/XMCLib/src/xmc4_rtc.c ****   return XMC_SCU_HIB_IsHibernateDomainEnabled();
+  78              	 .loc 1 94 0
+  79 0002 FFF7FEFF 	 bl XMC_SCU_HIB_IsHibernateDomainEnabled
+  80              	.LVL1:
+  95:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+  81              	 .loc 1 95 0
+  82 0006 08BD     	 pop {r3,pc}
+  83              	 .cfi_endproc
+  84              	.LFE173:
+  86              	 .section .text.XMC_RTC_Init,"ax",%progbits
+  87              	 .align 2
+  88              	 .global XMC_RTC_Init
+  89              	 .thumb
+  90              	 .thumb_func
+  92              	XMC_RTC_Init:
+  93              	.LFB174:
+  96:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+  97:../Libraries/XMCLib/src/xmc4_rtc.c **** /*
+  98:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Initialize the RTC peripheral
+  99:../Libraries/XMCLib/src/xmc4_rtc.c ****  */
+ 100:../Libraries/XMCLib/src/xmc4_rtc.c **** XMC_RTC_STATUS_t XMC_RTC_Init(const XMC_RTC_CONFIG_t *const config)
+ 101:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+  94              	 .loc 1 101 0
+  95              	 .cfi_startproc
+  96              	 
+  97              	 
+  98              	.LVL2:
+  99              	.LBB22:
+ 100              	.LBB23:
+ 101              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_rtc.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @file xmc_rtc.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @date 2016-05-19
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @cond
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  **************************************************************************************************
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * All rights reserved.                        
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                                             
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * following conditions are met:   
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                                                                              
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * disclaimer.                        
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * products derived from this software without specific prior written permission.                  
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                                                                              
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                                                                              
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  **************************************************************************************************
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Change History
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * --------------
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 2015-02-20:
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *     - Initial
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *      
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 2015-05-20:
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *     - Documentation updates <br>
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *     - In xmc1_rtc file XMC_RTC_Init function
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *       is modified by adding the RTC running condition check
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *   
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 2015-06-20:
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *     - Removed version macros and declaration of GetDriverVersion API
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 2016-05-19:
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *     - Added XMC_RTC_SetTimeStdFormat() and XMC_RTC_SetAlarmStdFormat()
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @endcond 
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #ifndef XMC_RTC_H
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #define XMC_RTC_H
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**************************************************************************************************
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * HEADER FILES
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  **************************************************************************************************
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #include <xmc_common.h>
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #include <time.h>
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @addtogroup XMClib XMC Peripheral Library
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @{
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @addtogroup RTC
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @brief RTC driver for XMC microcontroller family.
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Real-time clock (RTC) is a clock that keeps track of the current time. Precise
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * real time keeping is with a 32.768 KHz external crystal clock or a 32.768 KHz
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * high precision internal clock. It provides a periodic time based interrupt and
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * a programmable alarm interrupt on time match. It also supports wakeup from
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * hibernate.
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The RTC low level driver provides functions to configure and initialize the RTC
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * hardware peripheral. 
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @{
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**************************************************************************************************
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * MACROS
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  **************************************************************************************************
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**************************************************************************************************
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * ENUMS
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  **************************************************************************************************
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *  Status return values for RTC low level driver
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** typedef enum XMC_RTC_STATUS
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_STATUS_OK    = 0U, /**< Operation successful */
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_STATUS_ERROR = 1U, /**< Operation unsuccessful */
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_STATUS_BUSY  = 2U  /**< Busy with a previous request */
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** } XMC_RTC_STATUS_t;
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Events which enables interrupt request generation
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** typedef enum XMC_RTC_EVENT
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_EVENT_PERIODIC_SECONDS = RTC_MSKSR_MPSE_Msk, /**< Mask value to enable an event on period
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_EVENT_PERIODIC_MINUTES = RTC_MSKSR_MPMI_Msk, /**< Mask value to enable an event on period
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_EVENT_PERIODIC_HOURS   = RTC_MSKSR_MPHO_Msk, /**< Mask value to enable an event on period
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_EVENT_PERIODIC_DAYS    = RTC_MSKSR_MPDA_Msk, /**< Mask value to enable an event on period
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_EVENT_PERIODIC_MONTHS  = RTC_MSKSR_MPMO_Msk, /**< Mask value to enable an event on period
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_EVENT_PERIODIC_YEARS   = RTC_MSKSR_MPYE_Msk, /**< Mask value to enable an event on period
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_EVENT_ALARM            = RTC_MSKSR_MAI_Msk   /**< Mask value to enable an event on period
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** } XMC_RTC_EVENT_t;
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *  Months used to program the date  
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** typedef enum XMC_RTC_MONTH
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_JANUARY   = 0U, 
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_FEBRUARY  = 1U,     
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_MARCH     = 2U,         
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_APRIL     = 3U,       
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_MAY       = 4U,         
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_JUNE      = 5U,         
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_JULY      = 6U,           
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_AUGUST    = 7U,         
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_SEPTEMBER = 8U,    
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_OCTOBER   = 9U,      
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_NOVEMBER  = 10U,     
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_MONTH_DECEMBER  = 11U     
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** } XMC_RTC_MONTH_t;
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *  Week days used program the date 
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** typedef enum XMC_RTC_WEEKDAY
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_WEEKDAY_SUNDAY    = 0U, 
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_WEEKDAY_MONDAY    = 1U,      
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_WEEKDAY_TUESDAY   = 2U,      
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_WEEKDAY_WEDNESDAY = 3U,    
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_WEEKDAY_THURSDAY  = 4U,     
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_WEEKDAY_FRIDAY    = 5U,       
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_WEEKDAY_SATURDAY  = 6U      
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** } XMC_RTC_WEEKDAY_t;
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**************************************************************************************************
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * DATA STRUCTURES
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  **************************************************************************************************
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /*Anonymous structure/union guard start*/
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #if defined(__CC_ARM)
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   #pragma push
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   #pragma anon_unions
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #elif defined(__TASKING__)
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   #pragma warning 586
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #endif
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Alarm time values of RTC  <br>
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The structure presents a convenient way to set/obtain the 
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * alarm time values for seconds, minutes, hours, days, month and year of RTC. 
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The XMC_RTC_SetAlarm() and XMC_RTC_GetAlarm() can be
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * used to populate the structure with the alarm time value of
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * RTC 
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */ 
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** typedef struct XMC_RTC_ALARM
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   union
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   {
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  uint32_t raw0;
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  struct
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  {
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t seconds  : 6; /**< Alarm seconds compare value (0-59: Above this causes this bitfield
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 2; 
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t minutes  : 6; /**< Alarm minutes compare value (0-59: Above this causes this bitfield
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 2;
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t hours    : 5; /**< Alarm hours compare value   (0-23: Above this causes this bitfield
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 3;
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t days     : 5; /**< Alarm days compare value (0-Actual days of month: Above this cause
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 3;
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  };
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   };
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   union
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   {
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****     uint32_t raw1;
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  struct
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  {
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 8;
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t month    : 4; /**< Alarm month compare value (0-11: Above this causes this bitfield t
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 4;
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t year     : 16; /**< Alarm year compare value */ 
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  };
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   };
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** } XMC_RTC_ALARM_t;
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Time values of RTC  <br>
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The structure presents a convenient way to set/obtain the 
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * time values for seconds, minutes, hours, days, month and year of RTC. 
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The XMC_RTC_SetTime() and XMC_RTC_GetTime() can be
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * used to populate the structure with the time value of
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * RTC 
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */ 
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** typedef struct XMC_RTC_TIME
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   union
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   {
+ 219:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****     uint32_t raw0;
+ 220:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  struct
+ 221:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  {
+ 222:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t seconds  : 6; /**< Seconds time value (0-59: Above this causes this bitfield to be se
+ 223:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 2; 
+ 224:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t minutes  : 6; /**< Minutes time value (0-59: Above this causes this bitfield to be se
+ 225:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 2;
+ 226:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t hours    : 5; /**< Hours time value   (0-23: Above this causes this bitfield to be se
+ 227:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 3;
+ 228:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t days     : 5; /**< Days time value (0-Actual days of month: Above this causes this bi
+ 229:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t          : 3;
+ 230:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  };
+ 231:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   };
+ 232:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 233:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   union
+ 234:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   {
+ 235:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****     uint32_t raw1;
+ 236:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  struct
+ 237:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	  {
+ 238:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t daysofweek  : 3; /**< Days of week time value (0-6: Above this causes this bitfield t
+ 239:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t             : 5;
+ 240:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t month       : 4; /**< Month time value       (0-11: Above this causes this bitfield t
+ 241:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t             : 4;
+ 242:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	    uint32_t year        : 16; /**< Year time value */
+ 243:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 	 };
+ 244:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   };
+ 245:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** } XMC_RTC_TIME_t;
+ 246:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /*Anonymous structure/union guard end*/
+ 247:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #if defined(__CC_ARM)
+ 248:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   #pragma pop
+ 249:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #elif defined(__TASKING__)
+ 250:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   #pragma warning restore
+ 251:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #endif
+ 252:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 253:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 254:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * RTC initialization with time, alarm and clock divider(prescaler) configurations <br>
+ 255:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 256:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The structure presents a convenient way to set/obtain the time and alarm configurations  
+ 257:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * for RTC. The XMC_RTC_Init() can be used to populate the structure with the time and alarm
+ 258:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * values of RTC.
+ 259:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */  
+ 260:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** typedef struct XMC_RTC_CONFIG
+ 261:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 262:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_TIME_t    time;
+ 263:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   XMC_RTC_ALARM_t   alarm;
+ 264:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   uint16_t          prescaler;
+ 265:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** } XMC_RTC_CONFIG_t;
+ 266:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 267:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /*******************************************************************************
+ 268:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * EXTENSIONS
+ 269:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *******************************************************************************/
+ 270:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 271:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #if UC_FAMILY == XMC1
+ 272:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #include "xmc1_rtc.h"
+ 273:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #endif
+ 274:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 275:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #if UC_FAMILY == XMC4
+ 276:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #include "xmc4_rtc.h"
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #endif
+ 278:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 279:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /*******************************************************************************
+ 280:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * API PROTOTYPES
+ 281:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  **************************************************************************************************
+ 282:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 283:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #ifdef __cplusplus
+ 284:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** extern "C" {
+ 285:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** #endif
+ 286:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 287:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 288:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param config Constant pointer to a constant ::XMC_RTC_CONFIG_t structure containing the
+ 289:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *               time, alarm time and clock divider(prescaler) configuration. 
+ 290:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return XMC_RTC_STATUS_t Always returns XMC_RTC_STATUS_OK (It contains only register assignment 
+ 291:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 292:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 293:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Initialize the RTC peripheral <br>
+ 294:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 295:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par \if XMC4
+ 296:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function enables the hibernate domain for accessing RTC peripheral registers, configures 
+ 297:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * internal clock divider, time and alarm values by writing to the CTR.DIV, TIM0, TIM1, ATIM0 and
+ 298:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * ATIM1 registers.
+ 299:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 300:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 301:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \if XMC1
+ 302:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function ungates the peripheral clock for RTC, configures 
+ 303:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * internal clock divider, time and alarm values by writing to the CTR.DIV, TIM0, TIM1, ATIM0 and
+ 304:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * ATIM1 registers.
+ 305:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 306:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 307:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** XMC_RTC_STATUS_t XMC_RTC_Init(const XMC_RTC_CONFIG_t *const config);
+ 308:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 309:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /** 
+ 310:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 311:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 312:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description</b><br>
+ 313:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Enables RTC peripheral for programming its registers <br>
+ 314:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 315:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par \if XMC4
+ 316:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Enables the hibernate domain for accessing RTC peripheral registers.
+ 317:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 318:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 319:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \if XMC1
+ 320:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Ungates the peripheral clock.
+ 321:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 322:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 323:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 324:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_Disable(), XMC_SCU_RESET_DeassertPeripheralReset()
+ 325:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */ 
+ 326:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_Enable(void);
+ 327:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 328:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /** 
+ 329:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 330:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 331:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description</b><br>
+ 332:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Disables RTC peripheral for programming its registers <br>
+ 333:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 334:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par \if XMC4
+ 335:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Empty function (Hibernate domain is not disabled).
+ 336:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 337:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 338:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \if XMC1
+ 339:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Gates the peripheral clock.
+ 340:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 341:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 342:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 343:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_Enable(), XMC_SCU_RESET_AssertPeripheralReset()
+ 344:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */ 
+ 345:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_Disable(void);
+ 346:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 347:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /** 
+ 348:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 349:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 350:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description</b><br>
+ 351:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Checks RTC peripheral is enabled for programming its registers <br>
+ 352:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 353:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par \if XMC4
+ 354:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Checks the hibernate domain is enabled or not.
+ 355:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 356:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 357:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \if XMC1
+ 358:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Checks peripheral clock is ungated or not.
+ 359:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \endif
+ 360:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 361:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 362:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_Enable(), XMC_RTC_Disable(), XMC_SCU_RESET_DeassertPeripheralReset(),
+ 363:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_SCU_RESET_AssertPeripheralReset()
+ 364:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */ 
+ 365:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** bool XMC_RTC_IsEnabled(void);
+ 366:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  
+ 367:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 368:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 369:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 370:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description</b><br>
+ 371:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Enables RTC peripheral to start counting time <br>
+ 372:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 373:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 374:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function starts the RTC for counting time by setting 
+ 375:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * CTR.ENB bit. Before starting the RTC, it should not be in
+ 376:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * running mode and also hibernate domain should be enabled.
+ 377:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 378:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 379:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_Enable(), XMC_RTC_Stop(), XMC_SCU_RESET_DeassertPeripheralReset()
+ 380:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */  
+ 381:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_Start(void);
+ 382:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 383:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 384:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 385:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 386:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description</b><br>
+ 387:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Disables RTC peripheral to start counting time <br>
+ 388:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 389:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 390:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function stops the RTC for counting time by resetting 
+ 391:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * CTR.ENB. Before stopping the RTC, hibernate domain should be enabled.
+ 392:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 393:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 394:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_Enable(), XMC_RTC_Start(), XMC_SCU_RESET_AssertPeripheralReset()
+ 395:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */  
+ 396:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_Stop(void);
+ 397:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   
+ 398:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 399:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param prescaler Prescaler value to be set                 
+ 400:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 401:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 402:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 403:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Sets the RTC module prescaler value <br>
+ 404:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 405:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 406:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function sets the CTR.DIV bitfield to configure the prescalar value. 
+ 407:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The default value for the prescalar with the 32.768kHz crystal (or the internal clock) 
+ 408:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * is 7FFFH for a time interval of 1 sec. Before setting the prescaler value RTC should be
+ 409:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * in stop mode and hibernate domain should be enabled.
+ 410:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 411:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 412:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_Stop(), XMC_RTC_Enable(), XMC_RTC_GetPrescaler()
+ 413:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */   
+ 414:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_SetPrescaler(uint16_t prescaler);
+ 415:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 416:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 417:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 418:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 419:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 420:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Gets the RTC module prescaler value <br>
+ 421:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 422:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 423:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function reads the CTR.DIV bitfield to get the prescalar value. The default value 
+ 424:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * for the prescalar with the 32.768kHz crystal (or the internal clock) is 7FFFH for a 
+ 425:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * time interval of 1 sec.
+ 426:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 427:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 428:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_SetPrescaler()
+ 429:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */   
+ 430:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** __STATIC_INLINE uint32_t XMC_RTC_GetPrescaler(void)
+ 431:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 432:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   return (uint32_t)(((uint32_t)RTC->CTR & (uint32_t)RTC_CTR_DIV_Msk) >> (uint32_t)RTC_CTR_DIV_Pos);
+ 433:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** }
+ 434:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 435:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 436:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param timeval Contstant pointer to a constant ::XMC_RTC_TIME_t structure containing the
+ 437:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                time parameters seconds, minutes, hours, days, daysofweek, month and year.     
+ 438:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 439:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 440:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 441:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Sets the RTC module time values <br>
+ 442:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 443:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 444:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function sets the TIM0, TIM1 registers with time values.
+ 445:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The values can only be written when RTC is disabled.
+ 446:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * See the structure ::XMC_RTC_TIME_t for the valid range of time value parameters. <br>
+ 447:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 448:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 449:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_GetTime(), XMC_RTC_Stop() 
+ 450:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */    
+ 451:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_SetTime(const XMC_RTC_TIME_t *const timeval);
+ 452:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 453:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 454:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param time Pointer to a constant ::XMC_RTC_TIME_t structure containing the time parameters
+ 455:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *             seconds, minutes, hours, days, daysofweek, month and year. 
+ 456:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 457:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 458:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 459:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Gets the RTC module time value <br>
+ 460:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 461:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 462:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function gets the time values from TIM0, TIM1 registers. 
+ 463:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * See the structure ::XMC_RTC_TIME_t for the valid range of time value parameters. <br>
+ 464:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 465:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 466:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_SetTime()
+ 467:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */    
+ 468:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_GetTime(XMC_RTC_TIME_t *const time);
+ 469:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 470:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 471:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param stdtime Pointer to a ::tm structure containing the time parameters seconds,
+ 472:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                minutes, hours, days, daysofweek, month, year(since 1900) and days in a   
+ 473:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                year in standard format.           
+ 474:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 475:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 476:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 477:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Sets the RTC module time value in standard format <br>
+ 478:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 479:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 480:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function sets the time values from TIM0, TIM1 registers. 
+ 481:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 482:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 483:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_SetTime(), XMC_RTC_GetTime()
+ 484:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */     
+ 485:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_SetTimeStdFormat(const struct tm *const stdtime);
+ 486:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 487:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 488:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param stdtime Pointer to a constant ::tm structure containing the time parameters seconds,
+ 489:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                minutes, hours, days, daysofweek, month, year(since 1900) and days in a   
+ 490:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                year in standard format.           
+ 491:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 492:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 493:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 494:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Gets the RTC module time value in standard format <br>
+ 495:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 496:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 497:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function gets the time values from TIM0, TIM1 registers. 
+ 498:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * See the structure ::XMC_RTC_TIME_t for the valid range of time value parameters. <br>
+ 499:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * For days the valid range is (1 - Actual days of month), year (since 1900) and 
+ 500:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * daysinyear (0 -365).
+ 501:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 502:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 503:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_SetTime(), XMC_RTC_GetTime()
+ 504:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */     
+ 505:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_GetTimeStdFormat(struct tm *const stdtime);
+ 506:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 507:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 508:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param alarm Constant pointer to a constant ::XMC_RTC_ALARM_t structure containing the
+ 509:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                alarm time parameters alarm seconds, alarm minutes, alarm hours, alarm days, 
+ 510:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                alarm daysofweek, alarm month and alarm year.           
+ 511:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 512:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 513:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 514:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Sets the RTC module alarm time value <br>
+ 515:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 516:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 517:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function sets the ATIM0, ATIM1 registers with alarm time values. 
+ 518:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * See the structure ::XMC_RTC_ALARM_t for the valid range of alarm time value parameters. <br>
+ 519:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 520:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 521:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_GetAlarm()
+ 522:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */     
+ 523:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_SetAlarm(const XMC_RTC_ALARM_t *const alarm);
+ 524:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 525:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 526:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param alarm Pointer to a constant ::XMC_RTC_ALARM_t structure containing the
+ 527:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *             time parameters alarm seconds, alarm minutes, alarm hours, alarm days, 
+ 528:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *             alarm daysofweek, alarm month and alarm year.           
+ 529:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 530:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 531:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 532:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Gets the RTC module alarm time value <br>
+ 533:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 534:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 535:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function gets the alarm time values from ATIM0, ATIM1 registers. 
+ 536:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * See the structure ::XMC_RTC_ALARM_t for the valid range of alarm time value parameters. <br>
+ 537:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 538:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 539:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_SetAlarm()
+ 540:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */    
+ 541:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_GetAlarm(XMC_RTC_ALARM_t *const alarm);
+ 542:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 543:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 544:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param stdtime Pointer to a ::tm structure containing the time parameters alarm seconds,
+ 545:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                alarm minutes, alarm hours, alarm days, alarm daysofweek, alarm month,  
+ 546:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                alarm year(since 1900) and alarm days in a year in standard format.           
+ 547:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 548:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 549:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 550:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Sets the RTC module alarm time value in standard format <br>
+ 551:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 552:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 553:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function sets the alarm time values from ATIM0, ATIM1 registers. 
+ 554:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 555:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 556:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_SetAlarm(), XMC_RTC_GetAlarm()
+ 557:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */     
+ 558:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_SetAlarmStdFormat(const struct tm *const stdtime);
+ 559:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 560:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 561:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param stdtime Pointer to a constant ::tm structure containing the time parameters alarm seconds
+ 562:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                alarm minutes, alarm hours, alarm days, alarm daysofweek, alarm month,  
+ 563:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *                alarm year(since 1900) and alarm days in a year in standard format.           
+ 564:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 565:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 566:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 567:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Gets the RTC module alarm time value in standard format <br>
+ 568:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 569:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 570:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function gets the alarm time values from ATIM0, ATIM1 registers. 
+ 571:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * See the structure ::XMC_RTC_ALARM_t for the valid range of alarm time value parameters. <br>
+ 572:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * For days the valid range is (1 - Actual days of month), year (since 1900) and 
+ 573:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * daysinyear (0 -365).
+ 574:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 575:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 576:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_SetAlarm(), XMC_RTC_GetAlarm()
+ 577:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */     
+ 578:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_GetAlarmStdFormat(struct tm *const stdtime);
+ 579:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 580:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 581:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param event A valid RTC event (::XMC_RTC_EVENT_t) or a valid combination of
+ 582:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *              logically OR'd events
+ 583:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 584:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 585:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 586:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Enable RTC periodic and alarm event(s) <br>
+ 587:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 588:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 589:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function sets the bitfields of MSKSR register to enable interrupt generation 
+ 590:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * for requested RTC event(s). 
+ 591:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Setting the masking value for the event(s) containing in the ::XMC_RTC_EVENT_t leads 
+ 592:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * to a generation of the interrupt.
+ 593:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 594:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 595:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_DisableEvent()
+ 596:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 597:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_EnableEvent(const uint32_t event);
+ 598:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 599:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 600:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param event A valid RTC event (::XMC_RTC_EVENT_t) or a valid combination of
+ 601:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *              logically OR'd events
+ 602:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 603:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 604:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 605:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Disable RTC periodic and alarm event(s) <br>
+ 606:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 607:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 608:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function resets the bitfields of MSKSR register to disable interrupt generation 
+ 609:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * for requested RTC event(s). 
+ 610:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Resetting the masking value for the the event(s) containing in the ::XMC_RTC_EVENT_t blocks 
+ 611:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * the generation of the interrupt.
+ 612:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 
+ 613:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 614:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_EnableEvent()
+ 615:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 616:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_DisableEvent(const uint32_t event);
+ 617:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 618:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 619:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @param event A valid RTC event (::XMC_RTC_EVENT_t) or a valid combination of
+ 620:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *              logically OR'd events
+ 621:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 622:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 623:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 624:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Clears periodic and alarm event(s) status <br>
+ 625:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 626:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 627:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function sets the bitfields of CLRSR register to clear status bits in RAWSTAT and STSSR regi
+ 628:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Setting the value for the the RTC event(s) containing in the ::XMC_RTC_EVENT_t clears the 
+ 629:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * corresponding status bits in RAWSTAT and STSSR registers.
+ 630:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 
+ 631:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 632:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_GetEventStatus()
+ 633:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */ 
+ 634:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** void XMC_RTC_ClearEvent(const uint32_t event);
+ 635:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 636:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 637:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return None
+ 638:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 639:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 640:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Gets the RTC periodic and alarm event(s) status <br>
+ 641:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 642:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 643:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function reads the bitfields of STSSR register 
+ 644:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * to get the status of RTC events. 
+ 645:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Reading the value of the register STSSR gives the status of the event(s) containing in the ::XMC
+ 646:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * 
+ 647:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 648:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_ClearEvent()
+ 649:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */
+ 650:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** uint32_t XMC_RTC_GetEventStatus(void);
+ 651:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** 
+ 652:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** /**
+ 653:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * @return bool true if RTC is running
+ 654:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *              false if RTC is not running
+ 655:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 656:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Description: </b><br>
+ 657:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * Checks the running status of the RTC <br>
+ 658:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 659:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par
+ 660:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * The function reads the bitfield ENB of CTR register 
+ 661:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * to get the running status of RTC. 
+ 662:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  *
+ 663:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * \par<b>Related APIs:</b><br>
+ 664:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  * XMC_RTC_Start(), XMC_RTC_Stop()
+ 665:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****  */ 
+ 666:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** __STATIC_INLINE bool XMC_RTC_IsRunning(void)
+ 667:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h **** {
+ 668:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_rtc.h ****   return (bool)(RTC->CTR & RTC_CTR_ENB_Msk);
+ 102              	 .loc 2 668 0
+ 103 0000 1B4B     	 ldr r3,.L19
+ 104 0002 5B68     	 ldr r3,[r3,#4]
+ 105              	.LBE23:
+ 106              	.LBE22:
+ 102:../Libraries/XMCLib/src/xmc4_rtc.c ****   if (XMC_RTC_IsRunning() == false)
+ 107              	 .loc 1 102 0
+ 108 0004 13F0010F 	 tst r3,#1
+ 109 0008 2FD1     	 bne .L18
+ 101:../Libraries/XMCLib/src/xmc4_rtc.c ****   if (XMC_RTC_IsRunning() == false)
+ 110              	 .loc 1 101 0
+ 111 000a 10B5     	 push {r4,lr}
+ 112              	.LCFI2:
+ 113              	 .cfi_def_cfa_offset 8
+ 114              	 .cfi_offset 4,-8
+ 115              	 .cfi_offset 14,-4
+ 116 000c 0446     	 mov r4,r0
+ 103:../Libraries/XMCLib/src/xmc4_rtc.c ****   {
+ 104:../Libraries/XMCLib/src/xmc4_rtc.c ****     if (XMC_SCU_HIB_IsHibernateDomainEnabled() == false)
+ 117              	 .loc 1 104 0
+ 118 000e FFF7FEFF 	 bl XMC_SCU_HIB_IsHibernateDomainEnabled
+ 119              	.LVL3:
+ 120 0012 08B9     	 cbnz r0,.L8
+ 105:../Libraries/XMCLib/src/xmc4_rtc.c ****     {
+ 106:../Libraries/XMCLib/src/xmc4_rtc.c ****       XMC_SCU_HIB_EnableHibernateDomain();
+ 121              	 .loc 1 106 0
+ 122 0014 FFF7FEFF 	 bl XMC_SCU_HIB_EnableHibernateDomain
+ 123              	.LVL4:
+ 124              	.L8:
+ 107:../Libraries/XMCLib/src/xmc4_rtc.c ****     }
+ 108:../Libraries/XMCLib/src/xmc4_rtc.c ****     
+ 109:../Libraries/XMCLib/src/xmc4_rtc.c ****     XMC_RTC_SetPrescaler(config->prescaler);
+ 125              	 .loc 1 109 0
+ 126 0018 208A     	 ldrh r0,[r4,#16]
+ 127 001a FFF7FEFF 	 bl XMC_RTC_SetPrescaler
+ 128              	.LVL5:
+ 129              	.LBB24:
+ 130              	.LBB25:
+ 131              	 .file 3 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_scu.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @file xmc_scu.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @date 2016-03-09
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @cond
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * All rights reserved.                        
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                                             
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * following conditions are met:   
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                                                                              
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * disclaimer.                        
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * products derived from this software without specific prior written permission.                  
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                                                                              
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                                                                              
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Change History
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * --------------
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 2015-02-20:
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *     - Initial <br>
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 2015-05-20:
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *     - Documentation improved <br>
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *     - XMC_ASSERT() hanging issues have fixed for XMC4 devices. <br>
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 2015-06-20:
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *     - Removed version macros and declaration of GetDriverVersion API
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *     - Removed STATIC_INLINE property for the below APIs and declared as void
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *       XMC_SCU_INTERRUPT_EnableEvent, XMC_SCU_INTERRUPT_DisableEvent,
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *       XMC_SCU_INTERRUPT_TriggerEvent, XMC_SCU_INTERUPT_GetEventStatus,
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *       XMC_SCU_INTERUPT_ClearEventStatus
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 2015-11-30:
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *     - Documentation improved <br>
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *      
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 2016-03-09:
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *     - Optimization of write only registers
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *      
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @endcond 
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #ifndef XMC_SCU_H
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #define XMC_SCU_H
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**************************************************************************************************
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * HEADER FILES
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #include <xmc_common.h>
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @addtogroup XMClib XMC Peripheral Library
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @{
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @addtogroup SCU
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @brief System Control Unit(SCU) driver for XMC microcontroller family.
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * System control unit is the SoC power, reset and a clock manager with additional responsibility o
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * providing system stability protection and other auxiliary functions.<br>
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * SCU provides the following features,
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Power control
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC4 
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Hibernate control 
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Reset control
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Clock control
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Miscellaneous control(boot mode, system interrupts etc.)<br><br>
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The SCU driver is divided in to clock control logic, reset control logic, system interrupt contr
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC4
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * , hibernate control logic, trap control logic, parity control logic 
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * and miscellaneous control logic.<br>
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Clock driver features:
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows clock configuration using the structure XMC_SCU_CLOCK_CONFIG_t and API XMC_SCU_CLOCK_I
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC4
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides structure XMC_SCU_CLOCK_SYSPLL_CONFIG_t for configuring the system PLL
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows selection of clock source for system PLL, XMC_SCU_CLOCK_GetSystemPllClockSource()
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides APIs for configuring different module clock frequencies XMC_SCU_CLOCK_SetWdtClockDiv
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows selection of clock source for external output, XMC_SCU_CLOCK_SetExternalOutputClockSou
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides APIs for enabling external high power oscillator and ultra low power oscillator, XMC
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides APIs for getting various clock frequencies XMC_SCU_CLOCK_GetPeripheralClockFrequency
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  XMC_SCU_CLOCK_GetCpuClockFrequency(), XMC_SCU_CLOCK_GetSystemClockFrequency()<br>
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC1
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows selection of peripheral clock frequency, XMC_SCU_CLOCK_SetFastPeripheralClockSource()
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides API to get the peripheral clock frequency, XMC_SCU_CLOCK_GetFastPeripheralClockFrequ
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Reset driver features:
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC4
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows to handle peripheral reset XMC_SCU_RESET_AssertPeripheralReset(), XMC_SCU_RESET_Deasse
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows configuration of NMI generation for selected events, XMC_SCU_INTERRUPT_EnableNmiReques
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC1
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows to trigger device reset XMC_SCU_RESET_AssertMasterReset()
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows to configure multiple sources for reset, XMC_SCU_RESET_EnableResetRequest()
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif <br>
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Interrupt driver features:
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides APIs for enabling/ disabling interrupt event generation XMC_SCU_INTERRUPT_EnableEven
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  XMC_SCU_INTERRUPT_DisableEvent()
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides API for registering callback function for events XMC_SCU_INTERRUPT_SetEventHandler()
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC4
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Hibernate driver features:
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows configuration of hibernate domain XMC_SCU_HIB_EnableHibernateDomain(), XMC_SCU_HIB_Dis
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows selection of standby clock source, XMC_SCU_HIB_SetStandbyClockSource()
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows selection of RTC clock source, XMC_SCU_HIB_SetRtcClockSource()
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Provides API for enabling slow internal clock used for backup clock, XMC_SCU_HIB_EnableIntern
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Trap driver features:
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows handling of trap XMC_SCU_TRAP_Enable(), XMC_SCU_TRAP_GetStatus(), XMC_SCU_TRAP_Trigger
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Parity driver features:
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Parity error generated by on-chip RAM can be monitored, XMC_SCU_PARITY_Enable(), XMC_SCU_PARI
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows configuration of trap generation on detection of parity error, XMC_SCU_PARITY_EnableTr
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Power driver features:
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows to power the USB module XMC_SCU_POWER_EnableUsb(), XMC_SCU_POWER_DisableUsb()
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Miscellaneous features:
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows to trigger multiple capture compare unit(CCU) channels to be started together XMC_SCU_
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC4
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Enables configuration of out of range comparator (ORC) XMC_SCU_EnableOutOfRangeComparator()
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Enables configuration of die temperature sensor XMC_SCU_EnableTemperatureSensor(), XMC_SCU_Ca
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Enables configuration of device boot mode XMC_SCU_SetBootMode()<br>
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \if XMC1
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Enables configuration of die temperature sensor XMC_SCU_StartTempMeasurement(), XMC_SCU_SetRa
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows configuring supply monitor unit using the structure XMC_SCU_SUPPLYMONITOR_t and API XM
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * -# Allows handling of protected bits XMC_SCU_LockProtectedBits(), XMC_SCU_UnlockProtectedBits()<
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  \endif
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @{
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**************************************************************************************************
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * MACROS
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**************************************************************************************************
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * ENUMS
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *  Defines the status of SCU API execution, used to verify the SCU related API calls.
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** typedef enum XMC_SCU_STATUS 
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** {
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   XMC_SCU_STATUS_OK   = 0UL, /**< SCU related operation successfully completed.*/
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   XMC_SCU_STATUS_ERROR,      /**< SCU related operation failed. When API cannot fulfill request, th
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   XMC_SCU_STATUS_BUSY,       /**< Cannot execute the SCU related operation request because
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****                                   another operation is in progress. \a XMC_SCU_STATUS_BUSY is retur
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****                                   processing another request. */
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** } XMC_SCU_STATUS_t;
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**************************************************************************************************
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * DATA TYPES
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Function pointer type used for registering callback functions on SCU event occurrence.
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** typedef void (*XMC_SCU_INTERRUPT_EVENT_HANDLER_t)(void);
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**************************************************************************************************
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * DEVICE EXTENSIONS
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #if (UC_FAMILY == XMC1)
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #include <xmc1_scu.h>
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #elif (UC_FAMILY == XMC4)
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #include <xmc4_scu.h>
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #else
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #error "Unspecified chipset"
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #endif
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**************************************************************************************************
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * API Prototypes
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  **************************************************************************************************
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #ifdef __cplusplus
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** extern "C" {
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #endif
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param trigger    CCU slices to be triggered synchronously via software. The value is a bitmask 
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    in the register CCUCON. <br>
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    \b Range: Use type @ref XMC_SCU_CCU_TRIGGER_t for bitmask of individual CCU s
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    combined using \a OR operation.
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 219:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 220:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Generates active edge(low to high) trigger for multiple CCU units at the same time.\n\n
+ 221:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Before executing this API, all the required CCU timers should configure external start.
+ 222:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The edge of the start signal should be selected as active edge.
+ 223:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The input signal for the CCU slice should be selected as SCU input.
+ 224:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The above mentioned configurations can be made using the CCU LLD API XMC_CCU4_SLICE_StartConfig(
+ 225:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * CCU timer slice should be started using XMC_CCU4_SLICE_StartTimer() before triggering 
+ 226:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * the timer using this API.<BR>
+ 227:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 228:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_CCU4_SLICE_StartConfig(), XMC_CCU4_SLICE_SetInput(), XMC_SCU_SetCcuTriggerLow()\n\n\n
+ 229:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 230:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** __STATIC_INLINE void XMC_SCU_SetCcuTriggerHigh(const uint32_t trigger)
+ 231:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** {
+ 232:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   SCU_GENERAL->CCUCON |= (uint32_t)trigger;
+ 233:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** }
+ 234:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 235:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 236:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 237:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param trigger  CCU slices to be triggered synchronously via software. The value is a bitmask of
+ 238:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    in the register CCUCON. <br>
+ 239:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    \b Range: Use type @ref XMC_SCU_CCU_TRIGGER_t for bitmask of individual CCU s
+ 240:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    combined using \a OR operation.
+ 241:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 242:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 243:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 244:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 245:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Generates passive edge(high to low) trigger for multiple CCU units at the same time.\n\n
+ 246:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Before executing this API, all the required CCU timers should configure external start.
+ 247:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The edge of the start signal should be selected as passive edge.
+ 248:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The input signal for the CCU slice should be selected as SCU input.
+ 249:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The above mentioned configurations can be made using the CCU LLD API XMC_CCU4_SLICE_StartConfig(
+ 250:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * CCU timer slice should be started using XMC_CCU4_SLICE_StartTimer() before triggering 
+ 251:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * the timer using this API.<BR>
+ 252:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 253:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_CCU4_SLICE_StartConfig(), XMC_CCU4_SLICE_SetInput(), XMC_SCU_SetCcuTriggerHigh()\n\n\n
+ 254:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 255:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** __STATIC_INLINE void XMC_SCU_SetCcuTriggerLow(const uint32_t trigger)
+ 256:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** {
+ 257:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   SCU_GENERAL->CCUCON &= (uint32_t)~trigger;
+ 258:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** }
+ 259:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 260:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 261:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 262:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param config Pointer to structure holding the clock prescaler values and divider values for 
+ 263:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                configuring clock generators and clock tree.\n
+ 264:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                \b Range: Configure the members of structure @ref XMC_SCU_CLOCK_CONFIG_t for vari
+ 265:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                parameters of clock setup.
+ 266:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 267:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 268:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 269:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 270:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Initializes clock generators and clock tree.\n\n
+ 271:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC1
+ 272:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Peripheral clock and system clock are configured based on the input configuration \a config.
+ 273:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The system clock frequency is tuned by configuring the FDIV and IDIV values of CLKCR register.
+ 274:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The values of FDIV and IDIV can be provided as part of input configuration.
+ 275:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The PCLK divider determines the ratio of peripheral clock to the system clock. 
+ 276:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The source of RTC clock is set based on the input configuration. 
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \a SystemCoreClock variable will be updated with the value of
+ 278:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * system clock frequency. Access to protected bit fields are handled internally.
+ 279:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 280:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC4
+ 281:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Enables the high precision oscillator(fOHP) input and configures the system and peripheral clock
+ 282:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Based on the system clock source selected in \a config, either fPLL or fOFI will be chosen as sy
+ 283:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Based on PLL mode(normal or prescaler mode) used, PLL ramps up in steps to achieve target freque
+ 284:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The clock dividers for CPU, CCU and peripheral clocks will be set based on the input configurati
+ 285:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The \a SystemCoreClock variable is set with the value of system clock frequency.
+ 286:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 287:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 288:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_CLOCK_GetPeripheralClockFrequency(), XMC_SCU_CLOCK_GetCpuClockFrequency() \n\n\n
+ 289:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 290:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** void XMC_SCU_CLOCK_Init(const XMC_SCU_CLOCK_CONFIG_t *const config);
+ 291:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 292:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 293:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 294:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param event  Bit mask of the event to enable. \b Range: Use type @ref XMC_SCU_INTERRUPT_EVENT_t
+ 295:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                for providing the input value. Multiple events can be combined using the \a OR op
+ 296:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 297:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 298:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 299:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 300:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Enables the generation of interrupt for the input events.\n\n
+ 301:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The events are enabled by setting the respective bit fields in the SRMSK register. \n
+ 302:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Note: User should separately enable the NVIC node responsible for handling the SCU interrupt.
+ 303:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The interrupt will be generated when the respective event occurs.
+ 304:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 305:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * NVIC_EnableIRQ(), XMC_SCU_INTERRUPT_DisableEvent()\n\n\n
+ 306:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 307:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** void XMC_SCU_INTERRUPT_EnableEvent(const XMC_SCU_INTERRUPT_EVENT_t event);
+ 308:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 309:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 310:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 311:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 312:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param event  Bit mask of the event to disable. \b Range: Use type @ref XMC_SCU_INTERRUPT_EVENT_
+ 313:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                for providing the input value. Multiple events can be combined using the \a OR op
+ 314:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 315:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 316:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 317:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 318:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Disables generation of interrupt on occurrence of the input event.\n\n
+ 319:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The events are disabled by resetting the respective bit fields in the SRMSK register. \n
+ 320:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 321:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * NVIC_DisableIRQ(), XMC_SCU_INTERRUPT_EnableEvent()\n\n\n
+ 322:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 323:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** void XMC_SCU_INTERRUPT_DisableEvent(const XMC_SCU_INTERRUPT_EVENT_t event);
+ 324:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 325:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 326:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 327:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param event Bit mask of the event to be triggered. \b Range: Use type @ref XMC_SCU_INTERRUPT_EV
+ 328:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                for providing the input value. Multiple events can be combined using the \a OR op
+ 329:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 330:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 331:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 332:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 333:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Triggers the event as if the hardware raised it.\n\n
+ 334:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Event will be triggered by setting the respective bitfield in the SRSET register.\n
+ 335:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Note: User should enable the NVIC node that handles the respective event for interrupt generatio
+ 336:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 337:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * NVIC_EnableIRQ(), XMC_SCU_INTERUPT_GetEventStatus(), XMC_SCU_INTERRUPT_ClearEventStatus() \n\n\n
+ 338:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 339:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** void XMC_SCU_INTERRUPT_TriggerEvent(const XMC_SCU_INTERRUPT_EVENT_t  event);
+ 340:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 341:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 342:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return uint32_t  Status of the SCU events.
+ 343:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 344:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 345:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Provides the status of all SCU events.\n\n
+ 346:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The status is read from the SRRAW register. To check the status of a particular 
+ 347:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * event, the returned value should be masked with the bit mask of the event. The bitmask
+ 348:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * of events can be obtained using the type @ref XMC_SCU_INTERRUPT_EVENT_t. Multiple events'
+ 349:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * status can be checked by combining the bit masks using \a OR operation. 
+ 350:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * After detecting the event, the event status should be cleared using software to detect the event
+ 351:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 352:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_INTERRUPT_ClearEventStatus(), XMC_SCU_INTERRUPT_TriggerEvent(), XMC_SCU_INTERRUPT_SetEve
+ 353:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 354:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** XMC_SCU_INTERRUPT_EVENT_t XMC_SCU_INTERUPT_GetEventStatus(void);
+ 355:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 356:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 357:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 358:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param event  Bit mask of the events to clear. \b Range: Use type @ref XMC_SCU_INTERRUPT_EVENT_t
+ 359:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                for providing the input value. Multiple events can be combined using the \a OR op
+ 360:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 361:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 362:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 363:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 364:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Clears the event status bit in SRRAW register.\n\n
+ 365:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The events are cleared by writing value 1 to their bit positions in the SRCLR register.
+ 366:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The API can be used when polling method is used. After detecting the event, the event status
+ 367:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * should be cleared using software to detect the event again.
+ 368:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 369:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 370:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_INTERUPT_GetEventStatus(), XMC_SCU_INTERRUPT_TriggerEvent() \n\n\n
+ 371:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 372:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** void XMC_SCU_INTERRUPT_ClearEventStatus(const XMC_SCU_INTERRUPT_EVENT_t event);
+ 373:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 374:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 375:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 376:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return uint32_t  Status representing the reason for device reset.
+ 377:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 378:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 379:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Provides the value representing the reason for device reset.\n\n
+ 380:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The return value is an encoded word, which can indicate multiple reasons for the last reset. Eac
+ 381:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * returned word is representative of a last reset cause. The returned value should be appropriatel
+ 382:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * the cause of reset. 
+ 383:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The cause of the last reset gets automatically stored in 
+ 384:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * the \a SCU_RSTSTAT register. The reset status shall be reset after each
+ 385:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * startup in order to ensure consistent source indication after the next reset.
+ 386:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \b Range: The type @ref XMC_SCU_RESET_REASON_t can be used to get the bit masks of the reset cau
+ 387:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 388:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 389:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_RESET_ClearDeviceResetReason() \n\n\n
+ 390:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 391:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** __STATIC_INLINE uint32_t XMC_SCU_RESET_GetDeviceResetReason(void)
+ 392:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** {
+ 393:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   return ((SCU_RESET->RSTSTAT) & SCU_RESET_RSTSTAT_RSTSTAT_Msk);
+ 394:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** }
+ 395:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 396:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None 
+ 397:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 398:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 399:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Clears the reset reason bits in the reset status register. \n\n
+ 400:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Clearing of the reset status information in the \a SCU_RSTSTAT register via register bit \a RSTC
+ 401:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * recommended to ensure a clear indication of the cause of next reset.
+ 402:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 403:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 404:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_RESET_GetDeviceResetReason() \n\n\n
+ 405:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 406:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** __STATIC_INLINE void XMC_SCU_RESET_ClearDeviceResetReason(void)
+ 407:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** {
+ 408:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   /* Clear RSTSTAT.RSTSTAT bitfield */
+ 409:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   SCU_RESET->RSTCLR = (uint32_t)SCU_RESET_RSTCLR_RSCLR_Msk;
+ 410:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** }
+ 411:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  
+ 412:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 413:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return uint32_t  Value of CPU clock frequency.
+ 414:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 415:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 416:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Provides the vlaue of CPU clock frequency.\n\n
+ 417:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The value is stored in a global variable \a \b SystemCoreClock.
+ 418:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * It is updated when the clock configuration is done using the SCU LLD APIs.
+ 419:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The value represents the frequency of clock used for CPU operation.
+ 420:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \b Range: Value is of type uint32_t, and gives the value of frequency in Hertz.
+ 421:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 422:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 423:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_CLOCK_GetPeripheralClockFrequency(), XMC_SCU_CLOCK_GatePeripheralClock() \n\n\n
+ 424:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 425:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** __STATIC_INLINE uint32_t XMC_SCU_CLOCK_GetCpuClockFrequency(void)
+ 426:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** {
+ 427:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   return SystemCoreClock;
+ 428:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** }
+ 429:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 430:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 431:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return uint32_t  Value of peripheral clock frequency in Hertz.
+ 432:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 433:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 434:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Provides the vlaue of clock frequency at which the peripherals are working.\n\n
+ 435:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The value is derived from the CPU frequency. \b Range: Value is of type uint32_t. It is represen
+ 436:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 437:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_CLOCK_GetCpuClockFrequency(),XMC_SCU_CLOCK_GatePeripheralClock() \n\n\n
+ 438:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 439:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** uint32_t XMC_SCU_CLOCK_GetPeripheralClockFrequency(void); 
+ 440:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 441:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #if(UC_SERIES != XMC45)
+ 442:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  
+ 443:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 444:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 445:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param  peripheral The peripheral for which the clock has to be gated. \b Range: Use type @ref X
+ 446:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    to identify the peripheral clock to be gated.
+ 447:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 448:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 449:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 450:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 451:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Blocks the supply of clock to the selected peripheral.\n\n
+ 452:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Clock gating helps in reducing the power consumption. User can selectively gate the clocks of un
+ 453:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC1
+ 454:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * fPCLK is the source of clock to various peripherals. Some peripherals support clock gate. Such a
+ 455:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * the clock supply for the selected peripheral.
+ 456:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Software can request for individual gating of such peripheral clocks by enabling the \a SCU_CGAT
+ 457:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * register bit field. Every bit in \a SCU_CGATSET0 register is protected by the bit protection sch
+ 458:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * bit fields are handled internally.
+ 459:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 460:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC4
+ 461:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * fPERI is the source of clock to various peripherals. Some peripherals support clock gate. Such a
+ 462:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * the clock supply for the selected peripheral.
+ 463:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Software can request for individual gating of such peripheral clocks by enabling one of the \a
+ 464:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * SCU_CGATSET0, \a SCU_CGATSET1 or \a SCU_CGATSET2 register bitfields.
+ 465:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * 
+ 466:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 467:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Note: Clock gating shall not be activated unless the module is in reset state. So use \a
+ 468:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_CLOCK_IsPeripheralClockGated() API before enabling the gating of any peripheral.
+ 469:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 470:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_CLOCK_IsPeripheralClockGated(), XMC_SCU_CLOCK_UngatePeripheralClock() \n\n\n
+ 471:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 472:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** void XMC_SCU_CLOCK_GatePeripheralClock(const XMC_SCU_PERIPHERAL_CLOCK_t peripheral);
+ 473:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  
+ 474:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 475:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 476:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param  peripheral  The peripheral for which the clock has to be ungated. \b Range: Use type @re
+ 477:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    to identify the peripheral.
+ 478:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 479:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return None
+ 480:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 481:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 482:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Enables the supply of clock to the selected peripheral.\n\n
+ 483:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * By default when the device powers on, the peripheral clock will be gated for the 
+ 484:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * peripherals that support clock gating.
+ 485:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The peripheral clock should be enabled before using it for any functionality.
+ 486:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC1
+ 487:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * fPCLK is the source of clock to various peripherals. Some peripherals support clock gate.
+ 488:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Software can request for individual ungating of such peripheral clocks by setting respective bit
+ 489:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * in the \a SCU_CGATCLR0 register.
+ 490:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 491:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC4
+ 492:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * fPERI is the source of clock to various peripherals. Some peripherals support clock gate.
+ 493:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Software can request for individual ungating of such peripheral clocks by setting the respective
+ 494:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * SCU_CGATCLR0, \a SCU_CGATCLR1 or \a SCU_CGATCLR2 registers.
+ 495:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 496:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 497:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 498:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_CLOCK_IsPeripheralClockGated(), XMC_SCU_CLOCK_GatePeripheralClock() \n\n\n
+ 499:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 500:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** void XMC_SCU_CLOCK_UngatePeripheralClock(const XMC_SCU_PERIPHERAL_CLOCK_t peripheral);
+ 501:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 502:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 503:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 504:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @param  peripheral  The peripheral for which the check for clock gating has to be done. 
+ 505:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    \b Range: Use type @ref XMC_SCU_PERIPHERAL_CLOCK_t to identify the peripheral
+ 506:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 507:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return bool Status of the peripheral clock gating. \b Range: true if the peripheral clock is ga
+ 508:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *              false if the peripheral clock ungated(gate de-asserted).
+ 509:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 510:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 511:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Gives the status of peripheral clock gating.\n\n
+ 512:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC1
+ 513:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Checks the status of peripheral clock gating using the register CGATSTAT0.
+ 514:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 515:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \if XMC4
+ 516:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Checks the status of peripheral clock gating using one of CGATSTAT0, CGATSTAT1 or CGATSTAT2 regi
+ 517:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \endif
+ 518:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * It is recommended to use this API before
+ 519:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * enabling the gating of any peripherals through \a XMC_SCU_CLOCK_GatePeripheralClock() API.
+ 520:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 521:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Related APIs:</b><BR>
+ 522:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * XMC_SCU_CLOCK_UngatePeripheralClock(), XMC_SCU_CLOCK_GatePeripheralClock() \n\n\n
+ 523:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 524:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** bool XMC_SCU_CLOCK_IsPeripheralClockGated(const XMC_SCU_PERIPHERAL_CLOCK_t peripheral);
+ 525:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** #endif
+ 526:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 527:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** 
+ 528:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** /**
+ 529:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * @return  uint32_t  Status of the register mirror update.\n
+ 530:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    \b Range: Use the bit mask of the SCU_GENERAL_MIRRSTS register for the mirror
+ 531:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    interest. e.g.: SCU_GENERAL_MIRRSTS_RTC_CTR_Msk. Multiple update events can b
+ 532:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *                    using \a OR operation.
+ 533:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  *
+ 534:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * \par<b>Description</b><br>
+ 535:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Provides the status of hibernate domain register update, when the respective mirror registers ar
+ 536:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * The hibernate domain is connected to the core domain via SPI serial communication. MIRRSTS is a 
+ 537:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * representing the communication of changed value of a mirror register to its corresponding regist
+ 538:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * hibernate domain. The bit fields of the register indicate
+ 539:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * that a corresponding register of the hibernate domain is ready to accept a write or that the com
+ 540:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * is busy with executing the previous operation.\n
+ 541:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  * Note: There is no hibernate domain in XMC1x devices. This register is retained for legacy purpos
+ 542:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****  */
+ 543:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** __STATIC_INLINE uint32_t XMC_SCU_GetMirrorStatus(void)
+ 544:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h **** {
+ 545:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_scu.h ****   return(SCU_GENERAL->MIRRSTS);
+ 132              	 .loc 3 545 0
+ 133 001e 154A     	 ldr r2,.L19+4
+ 134              	.L9:
+ 135              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 136 0020 D2F8C430 	 ldr r3,[r2,#196]
+ 137              	.LBE25:
+ 138              	.LBE24:
+ 110:../Libraries/XMCLib/src/xmc4_rtc.c ****     
+ 111:../Libraries/XMCLib/src/xmc4_rtc.c ****     while ((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_TIM0_Msk) != 0U)
+ 139              	 .loc 1 111 0 is_stmt 1 discriminator 1
+ 140 0024 13F4006F 	 tst r3,#2048
+ 141 0028 FAD1     	 bne .L9
+ 112:../Libraries/XMCLib/src/xmc4_rtc.c ****     {
+ 113:../Libraries/XMCLib/src/xmc4_rtc.c ****       /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 114:../Libraries/XMCLib/src/xmc4_rtc.c ****     }
+ 115:../Libraries/XMCLib/src/xmc4_rtc.c ****     RTC->TIM0 = config->time.raw0;
+ 142              	 .loc 1 115 0
+ 143 002a 2268     	 ldr r2,[r4]
+ 144 002c 104B     	 ldr r3,.L19
+ 145 002e 1A62     	 str r2,[r3,#32]
+ 146              	.LBB26:
+ 147              	.LBB27:
+ 148              	 .loc 3 545 0
+ 149 0030 104A     	 ldr r2,.L19+4
+ 150              	.L10:
+ 151              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 152 0032 D2F8C430 	 ldr r3,[r2,#196]
+ 153              	.LBE27:
+ 154              	.LBE26:
+ 116:../Libraries/XMCLib/src/xmc4_rtc.c ****     
+ 117:../Libraries/XMCLib/src/xmc4_rtc.c ****     while ((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_TIM1_Msk) != 0U)
+ 155              	 .loc 1 117 0 is_stmt 1 discriminator 1
+ 156 0036 13F4805F 	 tst r3,#4096
+ 157 003a FAD1     	 bne .L10
+ 118:../Libraries/XMCLib/src/xmc4_rtc.c ****     {
+ 119:../Libraries/XMCLib/src/xmc4_rtc.c ****       /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 120:../Libraries/XMCLib/src/xmc4_rtc.c ****     }
+ 121:../Libraries/XMCLib/src/xmc4_rtc.c ****     RTC->TIM1 = config->time.raw1;
+ 158              	 .loc 1 121 0
+ 159 003c 6268     	 ldr r2,[r4,#4]
+ 160 003e 0C4B     	 ldr r3,.L19
+ 161 0040 5A62     	 str r2,[r3,#36]
+ 162              	.LBB28:
+ 163              	.LBB29:
+ 164              	 .loc 3 545 0
+ 165 0042 0C4A     	 ldr r2,.L19+4
+ 166              	.L11:
+ 167              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 168 0044 D2F8C430 	 ldr r3,[r2,#196]
+ 169              	.LBE29:
+ 170              	.LBE28:
+ 122:../Libraries/XMCLib/src/xmc4_rtc.c ****     
+ 123:../Libraries/XMCLib/src/xmc4_rtc.c ****     while ((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_ATIM0_Msk) != 0U)
+ 171              	 .loc 1 123 0 is_stmt 1 discriminator 1
+ 172 0048 13F4007F 	 tst r3,#512
+ 173 004c FAD1     	 bne .L11
+ 124:../Libraries/XMCLib/src/xmc4_rtc.c ****     {
+ 125:../Libraries/XMCLib/src/xmc4_rtc.c ****       /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 126:../Libraries/XMCLib/src/xmc4_rtc.c ****     }
+ 127:../Libraries/XMCLib/src/xmc4_rtc.c ****     RTC->ATIM0 = config->alarm.raw0;
+ 174              	 .loc 1 127 0
+ 175 004e A268     	 ldr r2,[r4,#8]
+ 176 0050 074B     	 ldr r3,.L19
+ 177 0052 9A61     	 str r2,[r3,#24]
+ 178              	.LBB30:
+ 179              	.LBB31:
+ 180              	 .loc 3 545 0
+ 181 0054 074A     	 ldr r2,.L19+4
+ 182              	.L12:
+ 183              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 184 0056 D2F8C430 	 ldr r3,[r2,#196]
+ 185              	.LBE31:
+ 186              	.LBE30:
+ 128:../Libraries/XMCLib/src/xmc4_rtc.c ****     
+ 129:../Libraries/XMCLib/src/xmc4_rtc.c ****     while ((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_ATIM1_Msk) != 0U)
+ 187              	 .loc 1 129 0 is_stmt 1 discriminator 1
+ 188 005a 13F4806F 	 tst r3,#1024
+ 189 005e FAD1     	 bne .L12
+ 130:../Libraries/XMCLib/src/xmc4_rtc.c ****     {
+ 131:../Libraries/XMCLib/src/xmc4_rtc.c ****       /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 132:../Libraries/XMCLib/src/xmc4_rtc.c ****     }
+ 133:../Libraries/XMCLib/src/xmc4_rtc.c ****     RTC->ATIM1 = config->alarm.raw1;    
+ 190              	 .loc 1 133 0
+ 191 0060 E268     	 ldr r2,[r4,#12]
+ 192 0062 034B     	 ldr r3,.L19
+ 193 0064 DA61     	 str r2,[r3,#28]
+ 134:../Libraries/XMCLib/src/xmc4_rtc.c ****   }  
+ 135:../Libraries/XMCLib/src/xmc4_rtc.c ****   return XMC_RTC_STATUS_OK;
+ 136:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+ 194              	 .loc 1 136 0
+ 195 0066 0020     	 movs r0,#0
+ 196 0068 10BD     	 pop {r4,pc}
+ 197              	.LVL6:
+ 198              	.L18:
+ 199              	.LCFI3:
+ 200              	 .cfi_def_cfa_offset 0
+ 201              	 .cfi_restore 4
+ 202              	 .cfi_restore 14
+ 203 006a 0020     	 movs r0,#0
+ 204              	.LVL7:
+ 205 006c 7047     	 bx lr
+ 206              	.L20:
+ 207 006e 00BF     	 .align 2
+ 208              	.L19:
+ 209 0070 004A0050 	 .word 1342196224
+ 210 0074 00400050 	 .word 1342193664
+ 211              	 .cfi_endproc
+ 212              	.LFE174:
+ 214              	 .section .text.XMC_RTC_EnableEvent,"ax",%progbits
+ 215              	 .align 2
+ 216              	 .global XMC_RTC_EnableEvent
+ 217              	 .thumb
+ 218              	 .thumb_func
+ 220              	XMC_RTC_EnableEvent:
+ 221              	.LFB175:
+ 137:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+ 138:../Libraries/XMCLib/src/xmc4_rtc.c **** /*
+ 139:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Enable RTC periodic and alarm event(s)
+ 140:../Libraries/XMCLib/src/xmc4_rtc.c ****  */ 
+ 141:../Libraries/XMCLib/src/xmc4_rtc.c **** void XMC_RTC_EnableEvent(const uint32_t event)
+ 142:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+ 222              	 .loc 1 142 0
+ 223              	 .cfi_startproc
+ 224              	 
+ 225              	 
+ 226              	 
+ 227              	.LVL8:
+ 228              	.LBB32:
+ 229              	.LBB33:
+ 230              	 .loc 3 545 0
+ 231 0000 054A     	 ldr r2,.L24
+ 232              	.L22:
+ 233              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 234 0002 D2F8C430 	 ldr r3,[r2,#196]
+ 235              	.LBE33:
+ 236              	.LBE32:
+ 143:../Libraries/XMCLib/src/xmc4_rtc.c ****   while ((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_MSKSR_Msk) != 0U)
+ 237              	 .loc 1 143 0 is_stmt 1 discriminator 1
+ 238 0006 13F4804F 	 tst r3,#16384
+ 239 000a FAD1     	 bne .L22
+ 144:../Libraries/XMCLib/src/xmc4_rtc.c ****   {
+ 145:../Libraries/XMCLib/src/xmc4_rtc.c ****     /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 146:../Libraries/XMCLib/src/xmc4_rtc.c ****   }
+ 147:../Libraries/XMCLib/src/xmc4_rtc.c ****   RTC->MSKSR |= event;
+ 240              	 .loc 1 147 0
+ 241 000c 034A     	 ldr r2,.L24+4
+ 242 000e 1369     	 ldr r3,[r2,#16]
+ 243 0010 1843     	 orrs r0,r0,r3
+ 244              	.LVL9:
+ 245 0012 1061     	 str r0,[r2,#16]
+ 246 0014 7047     	 bx lr
+ 247              	.L25:
+ 248 0016 00BF     	 .align 2
+ 249              	.L24:
+ 250 0018 00400050 	 .word 1342193664
+ 251 001c 004A0050 	 .word 1342196224
+ 252              	 .cfi_endproc
+ 253              	.LFE175:
+ 255              	 .section .text.XMC_RTC_DisableEvent,"ax",%progbits
+ 256              	 .align 2
+ 257              	 .global XMC_RTC_DisableEvent
+ 258              	 .thumb
+ 259              	 .thumb_func
+ 261              	XMC_RTC_DisableEvent:
+ 262              	.LFB176:
+ 148:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+ 149:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+ 150:../Libraries/XMCLib/src/xmc4_rtc.c **** /*
+ 151:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Disable RTC periodic and alarm event(s)
+ 152:../Libraries/XMCLib/src/xmc4_rtc.c ****  */ 
+ 153:../Libraries/XMCLib/src/xmc4_rtc.c **** void XMC_RTC_DisableEvent(const uint32_t event)
+ 154:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+ 263              	 .loc 1 154 0
+ 264              	 .cfi_startproc
+ 265              	 
+ 266              	 
+ 267              	 
+ 268              	.LVL10:
+ 269              	.LBB34:
+ 270              	.LBB35:
+ 271              	 .loc 3 545 0
+ 272 0000 054A     	 ldr r2,.L29
+ 273              	.L27:
+ 274              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 275 0002 D2F8C430 	 ldr r3,[r2,#196]
+ 276              	.LBE35:
+ 277              	.LBE34:
+ 155:../Libraries/XMCLib/src/xmc4_rtc.c ****   while ((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_MSKSR_Msk) != 0U)
+ 278              	 .loc 1 155 0 is_stmt 1 discriminator 1
+ 279 0006 13F4804F 	 tst r3,#16384
+ 280 000a FAD1     	 bne .L27
+ 156:../Libraries/XMCLib/src/xmc4_rtc.c ****   {
+ 157:../Libraries/XMCLib/src/xmc4_rtc.c ****     /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 158:../Libraries/XMCLib/src/xmc4_rtc.c ****   }
+ 159:../Libraries/XMCLib/src/xmc4_rtc.c ****   RTC->MSKSR &= ~event;
+ 281              	 .loc 1 159 0
+ 282 000c 034A     	 ldr r2,.L29+4
+ 283 000e 1369     	 ldr r3,[r2,#16]
+ 284 0010 23EA0000 	 bic r0,r3,r0
+ 285              	.LVL11:
+ 286 0014 1061     	 str r0,[r2,#16]
+ 287 0016 7047     	 bx lr
+ 288              	.L30:
+ 289              	 .align 2
+ 290              	.L29:
+ 291 0018 00400050 	 .word 1342193664
+ 292 001c 004A0050 	 .word 1342196224
+ 293              	 .cfi_endproc
+ 294              	.LFE176:
+ 296              	 .section .text.XMC_RTC_ClearEvent,"ax",%progbits
+ 297              	 .align 2
+ 298              	 .global XMC_RTC_ClearEvent
+ 299              	 .thumb
+ 300              	 .thumb_func
+ 302              	XMC_RTC_ClearEvent:
+ 303              	.LFB177:
+ 160:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+ 161:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+ 162:../Libraries/XMCLib/src/xmc4_rtc.c **** /*
+ 163:../Libraries/XMCLib/src/xmc4_rtc.c ****  * Clear RTC periodic and alarm event(s)
+ 164:../Libraries/XMCLib/src/xmc4_rtc.c ****  */ 
+ 165:../Libraries/XMCLib/src/xmc4_rtc.c **** void XMC_RTC_ClearEvent(const uint32_t event)
+ 166:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+ 304              	 .loc 1 166 0
+ 305              	 .cfi_startproc
+ 306              	 
+ 307              	 
+ 308              	 
+ 309              	.LVL12:
+ 310              	.LBB36:
+ 311              	.LBB37:
+ 312              	 .loc 3 545 0
+ 313 0000 044A     	 ldr r2,.L34
+ 314              	.L32:
+ 315              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 316 0002 D2F8C430 	 ldr r3,[r2,#196]
+ 317              	.LBE37:
+ 318              	.LBE36:
+ 167:../Libraries/XMCLib/src/xmc4_rtc.c ****   while ((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_CLRSR_Msk) != 0U)
+ 319              	 .loc 1 167 0 is_stmt 1 discriminator 1
+ 320 0006 13F4004F 	 tst r3,#32768
+ 321 000a FAD1     	 bne .L32
+ 168:../Libraries/XMCLib/src/xmc4_rtc.c ****   {
+ 169:../Libraries/XMCLib/src/xmc4_rtc.c ****     /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 170:../Libraries/XMCLib/src/xmc4_rtc.c ****   }
+ 171:../Libraries/XMCLib/src/xmc4_rtc.c ****   RTC->CLRSR = event;
+ 322              	 .loc 1 171 0
+ 323 000c 024B     	 ldr r3,.L34+4
+ 324 000e 5861     	 str r0,[r3,#20]
+ 325 0010 7047     	 bx lr
+ 326              	.L35:
+ 327 0012 00BF     	 .align 2
+ 328              	.L34:
+ 329 0014 00400050 	 .word 1342193664
+ 330 0018 004A0050 	 .word 1342196224
+ 331              	 .cfi_endproc
+ 332              	.LFE177:
+ 334              	 .section .text.XMC_RTC_EnableHibernationWakeUp,"ax",%progbits
+ 335              	 .align 2
+ 336              	 .global XMC_RTC_EnableHibernationWakeUp
+ 337              	 .thumb
+ 338              	 .thumb_func
+ 340              	XMC_RTC_EnableHibernationWakeUp:
+ 341              	.LFB178:
+ 172:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+ 173:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+ 174:../Libraries/XMCLib/src/xmc4_rtc.c **** void XMC_RTC_EnableHibernationWakeUp(const uint32_t event)
+ 175:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+ 342              	 .loc 1 175 0
+ 343              	 .cfi_startproc
+ 344              	 
+ 345              	 
+ 346              	 
+ 347              	.LVL13:
+ 348              	.LBB38:
+ 349              	.LBB39:
+ 350              	 .loc 3 545 0
+ 351 0000 054A     	 ldr r2,.L39
+ 352              	.L37:
+ 353              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 354 0002 D2F8C430 	 ldr r3,[r2,#196]
+ 355              	.LBE39:
+ 356              	.LBE38:
+ 176:../Libraries/XMCLib/src/xmc4_rtc.c ****   while((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_CTR_Msk) != 0U)
+ 357              	 .loc 1 176 0 is_stmt 1 discriminator 1
+ 358 0006 13F4807F 	 tst r3,#256
+ 359 000a FAD1     	 bne .L37
+ 177:../Libraries/XMCLib/src/xmc4_rtc.c ****   {
+ 178:../Libraries/XMCLib/src/xmc4_rtc.c ****     /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 179:../Libraries/XMCLib/src/xmc4_rtc.c ****   }
+ 180:../Libraries/XMCLib/src/xmc4_rtc.c ****   RTC->CTR |= event;
+ 360              	 .loc 1 180 0
+ 361 000c 034A     	 ldr r2,.L39+4
+ 362 000e 5368     	 ldr r3,[r2,#4]
+ 363 0010 1843     	 orrs r0,r0,r3
+ 364              	.LVL14:
+ 365 0012 5060     	 str r0,[r2,#4]
+ 366 0014 7047     	 bx lr
+ 367              	.L40:
+ 368 0016 00BF     	 .align 2
+ 369              	.L39:
+ 370 0018 00400050 	 .word 1342193664
+ 371 001c 004A0050 	 .word 1342196224
+ 372              	 .cfi_endproc
+ 373              	.LFE178:
+ 375              	 .section .text.XMC_RTC_DisableHibernationWakeUp,"ax",%progbits
+ 376              	 .align 2
+ 377              	 .global XMC_RTC_DisableHibernationWakeUp
+ 378              	 .thumb
+ 379              	 .thumb_func
+ 381              	XMC_RTC_DisableHibernationWakeUp:
+ 382              	.LFB179:
+ 181:../Libraries/XMCLib/src/xmc4_rtc.c **** }
+ 182:../Libraries/XMCLib/src/xmc4_rtc.c **** 
+ 183:../Libraries/XMCLib/src/xmc4_rtc.c **** void XMC_RTC_DisableHibernationWakeUp(const uint32_t event)
+ 184:../Libraries/XMCLib/src/xmc4_rtc.c **** {
+ 383              	 .loc 1 184 0
+ 384              	 .cfi_startproc
+ 385              	 
+ 386              	 
+ 387              	 
+ 388              	.LVL15:
+ 389              	.LBB40:
+ 390              	.LBB41:
+ 391              	 .loc 3 545 0
+ 392 0000 054A     	 ldr r2,.L44
+ 393              	.L42:
+ 394              	 .loc 3 545 0 is_stmt 0 discriminator 1
+ 395 0002 D2F8C430 	 ldr r3,[r2,#196]
+ 396              	.LBE41:
+ 397              	.LBE40:
+ 185:../Libraries/XMCLib/src/xmc4_rtc.c ****   while((XMC_SCU_GetMirrorStatus() & SCU_GENERAL_MIRRSTS_RTC_CTR_Msk) != 0U)
+ 398              	 .loc 1 185 0 is_stmt 1 discriminator 1
+ 399 0006 13F4807F 	 tst r3,#256
+ 400 000a FAD1     	 bne .L42
+ 186:../Libraries/XMCLib/src/xmc4_rtc.c ****   {
+ 187:../Libraries/XMCLib/src/xmc4_rtc.c ****     /* check SCU_MIRRSTS to ensure that no transfer over serial interface is pending */
+ 188:../Libraries/XMCLib/src/xmc4_rtc.c ****   }
+ 189:../Libraries/XMCLib/src/xmc4_rtc.c ****   RTC->CTR &= ~event;
+ 401              	 .loc 1 189 0
+ 402 000c 034A     	 ldr r2,.L44+4
+ 403 000e 5368     	 ldr r3,[r2,#4]
+ 404 0010 23EA0000 	 bic r0,r3,r0
+ 405              	.LVL16:
+ 406 0014 5060     	 str r0,[r2,#4]
+ 407 0016 7047     	 bx lr
+ 408              	.L45:
+ 409              	 .align 2
+ 410              	.L44:
+ 411 0018 00400050 	 .word 1342193664
+ 412 001c 004A0050 	 .word 1342196224
+ 413              	 .cfi_endproc
+ 414              	.LFE179:
+ 416              	 .text
+ 417              	.Letext0:
+ 418              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 419              	 .file 5 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 420              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+ 421              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 422              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+ 423              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_scu.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc4_rtc.c
+    {standard input}:19     .text.XMC_RTC_Enable:00000000 $t
+    {standard input}:24     .text.XMC_RTC_Enable:00000000 XMC_RTC_Enable
+    {standard input}:44     .text.XMC_RTC_Disable:00000000 $t
+    {standard input}:49     .text.XMC_RTC_Disable:00000000 XMC_RTC_Disable
+    {standard input}:61     .text.XMC_RTC_IsEnabled:00000000 $t
+    {standard input}:66     .text.XMC_RTC_IsEnabled:00000000 XMC_RTC_IsEnabled
+    {standard input}:87     .text.XMC_RTC_Init:00000000 $t
+    {standard input}:92     .text.XMC_RTC_Init:00000000 XMC_RTC_Init
+    {standard input}:209    .text.XMC_RTC_Init:00000070 $d
+    {standard input}:215    .text.XMC_RTC_EnableEvent:00000000 $t
+    {standard input}:220    .text.XMC_RTC_EnableEvent:00000000 XMC_RTC_EnableEvent
+    {standard input}:250    .text.XMC_RTC_EnableEvent:00000018 $d
+    {standard input}:256    .text.XMC_RTC_DisableEvent:00000000 $t
+    {standard input}:261    .text.XMC_RTC_DisableEvent:00000000 XMC_RTC_DisableEvent
+    {standard input}:291    .text.XMC_RTC_DisableEvent:00000018 $d
+    {standard input}:297    .text.XMC_RTC_ClearEvent:00000000 $t
+    {standard input}:302    .text.XMC_RTC_ClearEvent:00000000 XMC_RTC_ClearEvent
+    {standard input}:329    .text.XMC_RTC_ClearEvent:00000014 $d
+    {standard input}:335    .text.XMC_RTC_EnableHibernationWakeUp:00000000 $t
+    {standard input}:340    .text.XMC_RTC_EnableHibernationWakeUp:00000000 XMC_RTC_EnableHibernationWakeUp
+    {standard input}:370    .text.XMC_RTC_EnableHibernationWakeUp:00000018 $d
+    {standard input}:376    .text.XMC_RTC_DisableHibernationWakeUp:00000000 $t
+    {standard input}:381    .text.XMC_RTC_DisableHibernationWakeUp:00000000 XMC_RTC_DisableHibernationWakeUp
+    {standard input}:411    .text.XMC_RTC_DisableHibernationWakeUp:00000018 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.time.h.8.2930fe070f4a8096b07db9159698c8e3
+                           .group:00000000 wm4.time.h.2.9857e62ad6ac99431e29d58067232314
+                           .group:00000000 wm4.time.h.24.3660bbb2d0a4c7457ff52ba3ada4c166
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.time.h.135.a144f22f40ef3cf15447b8562982e06e
+                           .group:00000000 wm4.xmc4_scu.h.106.b7d8d773976d331f6820948fe093a27d
+
+UNDEFINED SYMBOLS
+XMC_SCU_HIB_EnableHibernateDomain
+XMC_SCU_HIB_IsHibernateDomainEnabled
+XMC_RTC_SetPrescaler

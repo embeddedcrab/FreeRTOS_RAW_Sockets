@@ -1,0 +1,2084 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "phyHandling.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.vPhyInitialise,"ax",%progbits
+  19              	 .align 2
+  20              	 .global vPhyInitialise
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	vPhyInitialise:
+  25              	.LFB15:
+  26              	 .file 1 "../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c"
+   1:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*
+   2:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * Handling of Ethernet PHY's
+   3:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * PHY's communicate with an EMAC either through
+   4:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * a Media-Independent Interface (MII), or a Reduced Media-Independent Interface (RMII).
+   5:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * The EMAC can poll for PHY ports on 32 different addresses. Each of the PHY ports
+   6:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * shall be treated independently.
+   7:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * 
+   8:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  */
+   9:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  10:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Standard includes. */
+  11:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include <stdint.h>
+  12:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include <stdio.h>
+  13:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include <stdlib.h>
+  14:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  15:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* FreeRTOS includes. */
+  16:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include "FreeRTOS.h"
+  17:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include "task.h"
+  18:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include "queue.h"
+  19:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include "semphr.h"
+  20:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  21:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* FreeRTOS+TCP includes. */
+  22:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include "FreeRTOS_IP.h"
+  23:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include "FreeRTOS_Sockets.h"
+  24:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  25:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #include "phyHandling.h"
+  26:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  27:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyMIN_PHY_ADDRESS		0
+  28:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyMAX_PHY_ADDRESS		31
+  29:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  30:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #if defined( PHY_LS_HIGH_CHECK_TIME_MS ) || defined( PHY_LS_LOW_CHECK_TIME_MS )
+  31:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	#warning please use the new defines with 'ipconfig' prefix
+  32:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #endif
+  33:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  34:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #ifndef	ipconfigPHY_LS_HIGH_CHECK_TIME_MS
+  35:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* Check if the LinkStatus in the PHY is still high after 15 seconds of not
+  36:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	receiving packets. */
+  37:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	#define ipconfigPHY_LS_HIGH_CHECK_TIME_MS	15000UL
+  38:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #endif
+  39:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  40:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #ifndef	ipconfigPHY_LS_LOW_CHECK_TIME_MS
+  41:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* Check if the LinkStatus in the PHY is still low every second. */
+  42:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	#define ipconfigPHY_LS_LOW_CHECK_TIME_MS	1000UL
+  43:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #endif
+  44:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  45:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* As the following 3 macro's are OK in most situations, and so they're not
+  46:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** included in 'FreeRTOSIPConfigDefaults.h'.
+  47:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** Users can change their values in the project's 'FreeRTOSIPConfig.h'. */
+  48:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #ifndef phyPHY_MAX_RESET_TIME_MS
+  49:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	#define phyPHY_MAX_RESET_TIME_MS			1000UL
+  50:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #endif
+  51:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  52:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #ifndef phyPHY_MAX_NEGOTIATE_TIME_MS
+  53:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	#define phyPHY_MAX_NEGOTIATE_TIME_MS		3000UL
+  54:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #endif
+  55:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  56:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #ifndef phySHORT_DELAY_MS
+  57:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	#define phySHORT_DELAY_MS					50UL
+  58:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #endif
+  59:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  60:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Naming and numbering of basic PHY registers. */
+  61:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyREG_00_BMCR				0x00U	/* Basic Mode Control Register. */
+  62:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyREG_01_BMSR				0x01U	/* Basic Mode Status Register. */
+  63:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyREG_02_PHYSID1			0x02U	/* PHYS ID 1 */
+  64:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyREG_03_PHYSID2			0x03U	/* PHYS ID 2 */
+  65:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyREG_04_ADVERTISE			0x04U	/* Advertisement control reg */
+  66:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  67:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Naming and numbering of extended PHY registers. */
+  68:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define PHYREG_10_PHYSTS			0x10U	/* 16 PHY status register Offset */
+  69:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define	phyREG_19_PHYCR				0x19U	/* 25 RW PHY Control Register */
+  70:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define	phyREG_1F_PHYSPCS			0x1FU	/* 31 RW PHY Special Control Status */
+  71:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  72:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Bit fields for 'phyREG_00_BMCR', the 'Basic Mode Control Register'. */
+  73:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMCR_FULL_DUPLEX			0x0100U	/* Full duplex. */
+  74:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMCR_AN_RESTART			0x0200U	/* Auto negotiation restart. */
+  75:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMCR_ISOLATE				0x0400U /* 1 = Isolates 0 = Normal operation. */
+  76:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMCR_AN_ENABLE			0x1000U	/* Enable auto negotiation. */
+  77:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMCR_SPEED_100			0x2000U	/* Select 100Mbps. */
+  78:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMCR_RESET				0x8000U	/* Reset the PHY. */
+  79:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  80:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Bit fields for 'phyREG_19_PHYCR', the 'PHY Control Register'. */
+  81:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define PHYCR_MDIX_EN				0x8000U	/* Enable Auto MDIX. */
+  82:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define PHYCR_MDIX_FORCE			0x4000U	/* Force MDIX crossed. */
+  83:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  84:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMSR_AN_COMPLETE			0x0020U	/* Auto-Negotiation process completed */
+  85:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  86:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyBMSR_LINK_STATUS			0x0004U
+  87:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  88:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyPHYSTS_LINK_STATUS		0x0001U	/* PHY Link mask */
+  89:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyPHYSTS_SPEED_STATUS		0x0002U	/* PHY Speed mask */
+  90:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyPHYSTS_DUPLEX_STATUS		0x0004U	/* PHY Duplex mask */
+  91:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+  92:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Bit fields for 'phyREG_1F_PHYSPCS
+  93:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	001 = 10BASE-T half-duplex
+  94:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	101 = 10BASE-T full-duplex
+  95:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	010 = 100BASE-TX half-duplex
+  96:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	110 = 100BASE-TX full-duplex
+  97:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** */
+  98:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyPHYSPCS_SPEED_MASK		0x000CU
+  99:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyPHYSPCS_SPEED_10			0x0004U
+ 100:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyPHYSPCS_FULL_DUPLEX		0x0010U
+ 101:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 102:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*
+ 103:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * Description of all capabilities that can be advertised to
+ 104:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  * the peer (usually a switch or router).
+ 105:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****  */
+ 106:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 107:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyADVERTISE_CSMA			0x0001U	/* Supports IEEE 802.3u: Fast Ethernet at 100 Mbit/s */
+ 108:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyADVERTISE_10HALF			0x0020U	/* Try for 10mbps half-duplex. */
+ 109:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyADVERTISE_10FULL			0x0040U	/* Try for 10mbps full-duplex. */
+ 110:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyADVERTISE_100HALF		0x0080U	/* Try for 100mbps half-duplex. */
+ 111:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyADVERTISE_100FULL		0x0100U	/* Try for 100mbps full-duplex. */
+ 112:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 113:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** #define phyADVERTISE_ALL			( phyADVERTISE_10HALF | phyADVERTISE_10FULL | \
+ 114:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 									  phyADVERTISE_100HALF | phyADVERTISE_100FULL | \
+ 115:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 									  phyADVERTISE_CSMA )
+ 116:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 117:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Send a reset command to a set of PHY-ports. */
+ 118:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** static uint32_t xPhyReset( EthernetPhy_t *pxPhyObject, uint32_t ulPhyMask );
+ 119:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 120:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** static BaseType_t xHas_1F_PHYSPCS( uint32_t ulPhyID )
+ 121:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+ 122:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xResult;
+ 123:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 124:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	switch( ulPhyID )
+ 125:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 126:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_LAN8720:
+ 127:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_LAN8742A:
+ 128:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_KSZ8041:
+ 129:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*
+ 130:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_KSZ8051: // same ID as 8041
+ 131:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_KSZ8081: // same ID as 8041
+ 132:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** */
+ 133:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_KSZ8081MNXIA:
+ 134:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 135:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_KSZ8863:
+ 136:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		default:
+ 137:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* Most PHY's have a 1F_PHYSPCS */
+ 138:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			xResult = pdTRUE;
+ 139:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 140:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_DP83848I:
+ 141:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			xResult = pdFALSE;
+ 142:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 143:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 144:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return xResult;
+ 145:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 146:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 147:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 148:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** static BaseType_t xHas_19_PHYCR( uint32_t ulPhyID )
+ 149:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+ 150:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xResult;
+ 151:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 152:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	switch( ulPhyID )
+ 153:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 154:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_LAN8742A:
+ 155:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		case PHY_ID_DP83848I:
+ 156:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			xResult = pdTRUE;
+ 157:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 158:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		default:
+ 159:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* Most PHY's do not have a 19_PHYCR */
+ 160:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			xResult = pdFALSE;
+ 161:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 162:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 163:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return xResult;
+ 164:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 165:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 166:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 167:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Initialise the struct and assign a PHY-read and -write function. */
+ 168:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** void vPhyInitialise( EthernetPhy_t *pxPhyObject, xApplicationPhyReadHook_t fnPhyRead, xApplicationP
+ 169:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+  27              	 .loc 1 169 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 70B5     	 push {r4,r5,r6,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 16
+  35              	 .cfi_offset 4,-16
+  36              	 .cfi_offset 5,-12
+  37              	 .cfi_offset 6,-8
+  38              	 .cfi_offset 14,-4
+  39 0002 0446     	 mov r4,r0
+  40 0004 0E46     	 mov r6,r1
+  41 0006 1546     	 mov r5,r2
+ 170:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	memset( ( void * )pxPhyObject, 0, sizeof( *pxPhyObject ) );
+  42              	 .loc 1 170 0
+  43 0008 0021     	 movs r1,#0
+  44              	.LVL1:
+  45 000a 4022     	 movs r2,#64
+  46              	.LVL2:
+  47 000c FFF7FEFF 	 bl memset
+  48              	.LVL3:
+ 171:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 172:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	pxPhyObject->fnPhyRead = fnPhyRead;
+  49              	 .loc 1 172 0
+  50 0010 2660     	 str r6,[r4]
+ 173:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	pxPhyObject->fnPhyWrite = fnPhyWrite;
+  51              	 .loc 1 173 0
+  52 0012 6560     	 str r5,[r4,#4]
+  53 0014 70BD     	 pop {r4,r5,r6,pc}
+  54              	 .cfi_endproc
+  55              	.LFE15:
+  57 0016 00BF     	 .section .text.xPhyDiscover,"ax",%progbits
+  58              	 .align 2
+  59              	 .global xPhyDiscover
+  60              	 .thumb
+  61              	 .thumb_func
+  63              	xPhyDiscover:
+  64              	.LFB16:
+ 174:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 175:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 176:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 177:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Discover all PHY's connected by polling 32 indexes ( zero-based ) */
+ 178:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyDiscover( EthernetPhy_t *pxPhyObject )
+ 179:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+  65              	 .loc 1 179 0
+  66              	 .cfi_startproc
+  67              	 
+  68              	 
+  69              	.LVL4:
+  70 0000 F0B5     	 push {r4,r5,r6,r7,lr}
+  71              	.LCFI1:
+  72              	 .cfi_def_cfa_offset 20
+  73              	 .cfi_offset 4,-20
+  74              	 .cfi_offset 5,-16
+  75              	 .cfi_offset 6,-12
+  76              	 .cfi_offset 7,-8
+  77              	 .cfi_offset 14,-4
+  78 0002 83B0     	 sub sp,sp,#12
+  79              	.LCFI2:
+  80              	 .cfi_def_cfa_offset 32
+  81 0004 0546     	 mov r5,r0
+ 180:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyAddress;
+ 181:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 182:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	pxPhyObject->xPortCount = 0;
+  82              	 .loc 1 182 0
+  83 0006 0024     	 movs r4,#0
+  84 0008 8462     	 str r4,[r0,#40]
+  85              	.LVL5:
+  86              	.LBB2:
+ 183:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 184:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( xPhyAddress = phyMIN_PHY_ADDRESS; xPhyAddress <= phyMAX_PHY_ADDRESS; xPhyAddress++ )
+ 185:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 186:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	uint32_t ulLowerID;
+ 187:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 188:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->fnPhyRead( xPhyAddress, phyREG_03_PHYSID2, &ulLowerID );
+  87              	 .loc 1 188 0
+  88 000a 0327     	 movs r7,#3
+ 189:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* A valid PHY id can not be all zeros or all ones. */
+ 190:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( ulLowerID != ( uint16_t ) ~0U )  && ( ulLowerID != ( uint16_t ) 0U ) )
+  89              	 .loc 1 190 0
+  90 000c 4FF6FF76 	 movw r6,#65535
+  91              	.LVL6:
+  92              	.L7:
+ 188:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* A valid PHY id can not be all zeros or all ones. */
+  93              	 .loc 1 188 0
+  94 0010 2B68     	 ldr r3,[r5]
+  95 0012 2046     	 mov r0,r4
+  96 0014 3946     	 mov r1,r7
+  97 0016 6A46     	 mov r2,sp
+  98 0018 9847     	 blx r3
+  99              	.LVL7:
+ 100              	 .loc 1 190 0
+ 101 001a 009B     	 ldr r3,[sp]
+ 102 001c B342     	 cmp r3,r6
+ 103 001e 17D0     	 beq .L4
+ 104              	 .loc 1 190 0 is_stmt 0 discriminator 1
+ 105 0020 B3B1     	 cbz r3,.L4
+ 106              	.LBB3:
+ 191:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 192:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		uint32_t ulUpperID;
+ 193:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		uint32_t ulPhyID;
+ 194:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 195:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyRead( xPhyAddress, phyREG_02_PHYSID1, &ulUpperID );
+ 107              	 .loc 1 195 0 is_stmt 1
+ 108 0022 2B68     	 ldr r3,[r5]
+ 109 0024 2046     	 mov r0,r4
+ 110 0026 0221     	 movs r1,#2
+ 111 0028 01AA     	 add r2,sp,#4
+ 112 002a 9847     	 blx r3
+ 113              	.LVL8:
+ 196:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			ulPhyID = ( ( ( uint32_t ) ulUpperID ) << 16 ) | ( ulLowerID & 0xFFF0 );
+ 114              	 .loc 1 196 0
+ 115 002c 009B     	 ldr r3,[sp]
+ 116 002e 23F00F03 	 bic r3,r3,#15
+ 117 0032 1B04     	 lsls r3,r3,#16
+ 118 0034 1B0C     	 lsrs r3,r3,#16
+ 119 0036 019A     	 ldr r2,[sp,#4]
+ 120 0038 43EA0242 	 orr r2,r3,r2,lsl#16
+ 121              	.LVL9:
+ 197:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 198:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->ucPhyIndexes[ pxPhyObject->xPortCount ] = xPhyAddress;
+ 122              	 .loc 1 198 0
+ 123 003c AB6A     	 ldr r3,[r5,#40]
+ 124 003e E918     	 adds r1,r5,r3
+ 125 0040 0C76     	 strb r4,[r1,#24]
+ 199:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->ulPhyIDs[ pxPhyObject->xPortCount ] = ulPhyID;
+ 126              	 .loc 1 199 0
+ 127 0042 991C     	 adds r1,r3,#2
+ 128 0044 45F82120 	 str r2,[r5,r1,lsl#2]
+ 200:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 201:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->xPortCount++;
+ 129              	 .loc 1 201 0
+ 130 0048 0133     	 adds r3,r3,#1
+ 131 004a AB62     	 str r3,[r5,#40]
+ 202:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 203:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* See if there is more storage space. */
+ 204:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( pxPhyObject->xPortCount == ipconfigPHY_MAX_PORTS )
+ 132              	 .loc 1 204 0
+ 133 004c 042B     	 cmp r3,#4
+ 134 004e 02D0     	 beq .L6
+ 135              	.LVL10:
+ 136              	.L4:
+ 137              	.LBE3:
+ 138              	.LBE2:
+ 184:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 139              	 .loc 1 184 0 discriminator 1
+ 140 0050 0134     	 adds r4,r4,#1
+ 141              	.LVL11:
+ 142 0052 202C     	 cmp r4,#32
+ 143 0054 DCD1     	 bne .L7
+ 144              	.L6:
+ 205:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 206:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				break;
+ 207:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 208:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 209:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 210:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( pxPhyObject->xPortCount > 0 )
+ 211:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 212:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		FreeRTOS_printf( ( "PHY ID %lX\n", pxPhyObject->ulPhyIDs[ 0 ] ) );
+ 213:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 214:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 215:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return pxPhyObject->xPortCount;
+ 216:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 145              	 .loc 1 216 0
+ 146 0056 A86A     	 ldr r0,[r5,#40]
+ 147 0058 03B0     	 add sp,sp,#12
+ 148              	.LCFI3:
+ 149              	 .cfi_def_cfa_offset 20
+ 150              	 
+ 151 005a F0BD     	 pop {r4,r5,r6,r7,pc}
+ 152              	 .cfi_endproc
+ 153              	.LFE16:
+ 155              	 .section .text.xPhyConfigure,"ax",%progbits
+ 156              	 .align 2
+ 157              	 .global xPhyConfigure
+ 158              	 .thumb
+ 159              	 .thumb_func
+ 161              	xPhyConfigure:
+ 162              	.LFB18:
+ 217:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 218:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 219:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* Send a reset command to a set of PHY-ports. */
+ 220:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** static uint32_t xPhyReset( EthernetPhy_t *pxPhyObject, uint32_t ulPhyMask )
+ 221:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+ 222:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t ulDoneMask, ulConfig;
+ 223:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** TickType_t xRemainingTime;
+ 224:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** TimeOut_t xTimer;
+ 225:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyIndex;
+ 226:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 227:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* A bit-mask of PHY ports that are ready. */
+ 228:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	ulDoneMask = 0UL;
+ 229:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 230:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* Set the RESET bits high. */
+ 231:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++ )
+ 232:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 233:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 234:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 235:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Read Control register. */
+ 236:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->fnPhyRead( xPhyAddress, phyREG_00_BMCR, &ulConfig );
+ 237:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, ulConfig | phyBMCR_RESET );
+ 238:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 239:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 240:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	xRemainingTime = ( TickType_t ) pdMS_TO_TICKS( phyPHY_MAX_RESET_TIME_MS );
+ 241:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	vTaskSetTimeOutState( &xTimer );
+ 242:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 243:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* The reset should last less than a second. */
+ 244:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( ;; )
+ 245:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 246:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++ )
+ 247:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 248:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 249:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 250:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyRead( xPhyAddress, phyREG_00_BMCR, &ulConfig );
+ 251:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulConfig & phyBMCR_RESET ) == 0 )
+ 252:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 253:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				FreeRTOS_printf( ( "xPhyReset: phyBMCR_RESET %d ready\n", (int)xPhyIndex ) );
+ 254:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulDoneMask |= ( 1UL << xPhyIndex );
+ 255:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 256:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 257:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ulDoneMask == ulPhyMask )
+ 258:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 259:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 260:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 261:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( xTaskCheckForTimeOut( &xTimer, &xRemainingTime ) != pdFALSE )
+ 262:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 263:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			FreeRTOS_printf( ( "xPhyReset: phyBMCR_RESET timed out ( done 0x%02lX )\n", ulDoneMask ) );
+ 264:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 265:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 266:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Block for a while */
+ 267:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		vTaskDelay( pdMS_TO_TICKS( phySHORT_DELAY_MS ) );
+ 268:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 269:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 270:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* Clear the reset bits. */
+ 271:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++ )
+ 272:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 273:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( ulDoneMask & ( 1UL << xPhyIndex ) ) == 0UL )
+ 274:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 275:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 276:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 277:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* The reset operation timed out, clear the bit manually. */
+ 278:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyRead( xPhyAddress, phyREG_00_BMCR, &ulConfig );
+ 279:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, ulConfig & ~phyBMCR_RESET );
+ 280:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 281:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 282:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 283:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	vTaskDelay( pdMS_TO_TICKS( phySHORT_DELAY_MS ) );
+ 284:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 285:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return ulDoneMask;
+ 286:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 287:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 288:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 289:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyConfigure( EthernetPhy_t *pxPhyObject, const PhyProperties_t *pxPhyProperties )
+ 290:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+ 163              	 .loc 1 290 0
+ 164              	 .cfi_startproc
+ 165              	 
+ 166              	 
+ 167              	.LVL12:
+ 291:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t ulConfig, ulAdvertise;
+ 292:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyIndex;
+ 293:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 294:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( pxPhyObject->xPortCount < 1 )
+ 168              	 .loc 1 294 0
+ 169 0000 836A     	 ldr r3,[r0,#40]
+ 170 0002 002B     	 cmp r3,#0
+ 171 0004 40F3E080 	 ble .L37
+ 290:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t ulConfig, ulAdvertise;
+ 172              	 .loc 1 290 0
+ 173 0008 2DE9F04F 	 push {r4,r5,r6,r7,r8,r9,r10,fp,lr}
+ 174              	.LCFI4:
+ 175              	 .cfi_def_cfa_offset 36
+ 176              	 .cfi_offset 4,-36
+ 177              	 .cfi_offset 5,-32
+ 178              	 .cfi_offset 6,-28
+ 179              	 .cfi_offset 7,-24
+ 180              	 .cfi_offset 8,-20
+ 181              	 .cfi_offset 9,-16
+ 182              	 .cfi_offset 10,-12
+ 183              	 .cfi_offset 11,-8
+ 184              	 .cfi_offset 14,-4
+ 185 000c 8BB0     	 sub sp,sp,#44
+ 186              	.LCFI5:
+ 187              	 .cfi_def_cfa_offset 80
+ 295:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 296:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		FreeRTOS_printf( ( "xPhyConfigure: No PHY's detected.\n" ) );
+ 297:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		return -1;
+ 298:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 299:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 300:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* The expected ID for the 'LAN8742A'  is 0x0007c130. */
+ 301:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* The expected ID for the 'LAN8720'   is 0x0007c0f0. */
+ 302:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* The expected ID for the 'DP83848I'  is 0x20005C90. */
+ 303:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 304:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c ****     /* Set advertise register. */
+ 305:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( ( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_AUTO ) && ( pxPhyProperties->ucDuplex == ( 
+ 188              	 .loc 1 305 0
+ 189 000e 0A78     	 ldrb r2,[r1]
+ 190 0010 032A     	 cmp r2,#3
+ 191 0012 0AD1     	 bne .L12
+ 192              	 .loc 1 305 0 is_stmt 0 discriminator 1
+ 193 0014 8A78     	 ldrb r2,[r1,#2]
+ 194 0016 032A     	 cmp r2,#3
+ 195 0018 00F0D980 	 beq .L38
+ 196              	.LVL13:
+ 306:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 307:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulAdvertise = phyADVERTISE_ALL;
+ 308:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Reset auto-negotiation capability. */
+ 309:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 310:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	else
+ 311:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 312:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Always select protocol 802.3u. */
+ 313:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulAdvertise = phyADVERTISE_CSMA;
+ 314:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 315:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_AUTO )
+ 316:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 317:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_FULL )
+ 318:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 319:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_10FULL | phyADVERTISE_100FULL;
+ 320:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 321:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 322:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 323:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_10HALF | phyADVERTISE_100HALF;
+ 197              	 .loc 1 323 0 is_stmt 1
+ 198 001c 022A     	 cmp r2,#2
+ 199 001e 40F24112 	 movw r2,#321
+ 200 0022 18BF     	 it ne
+ 201 0024 A122     	 movne r2,#161
+ 202 0026 0292     	 str r2,[sp,#8]
+ 203 0028 D4E0     	 b .L13
+ 204              	.LVL14:
+ 205              	.L12:
+ 324:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 325:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 326:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		else if( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_AUTO )
+ 206              	 .loc 1 326 0
+ 207 002a 8C78     	 ldrb r4,[r1,#2]
+ 208 002c 032C     	 cmp r4,#3
+ 209 002e 06D1     	 bne .L14
+ 327:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 328:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_10 )
+ 329:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 330:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_10FULL | phyADVERTISE_10HALF;
+ 331:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 332:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 333:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 334:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_100FULL | phyADVERTISE_100HALF;
+ 210              	 .loc 1 334 0
+ 211 0030 012A     	 cmp r2,#1
+ 212 0032 40F28112 	 movw r2,#385
+ 213 0036 08BF     	 it eq
+ 214 0038 6122     	 moveq r2,#97
+ 215 003a 0292     	 str r2,[sp,#8]
+ 216 003c CAE0     	 b .L13
+ 217              	.L14:
+ 335:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 336:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 337:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		else if( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_100 )
+ 218              	 .loc 1 337 0
+ 219 003e 022A     	 cmp r2,#2
+ 220 0040 06D1     	 bne .L15
+ 338:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 339:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_FULL )
+ 340:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 341:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_100FULL;
+ 342:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 343:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 344:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 345:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_100HALF;
+ 221              	 .loc 1 345 0
+ 222 0042 022C     	 cmp r4,#2
+ 223 0044 40F20112 	 movw r2,#257
+ 224 0048 18BF     	 it ne
+ 225 004a 8122     	 movne r2,#129
+ 226 004c 0292     	 str r2,[sp,#8]
+ 227 004e C1E0     	 b .L13
+ 228              	.L15:
+ 346:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 347:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 348:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		else
+ 349:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 350:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_FULL )
+ 351:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 352:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_10FULL;
+ 353:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 354:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 355:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 356:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulAdvertise |= phyADVERTISE_10HALF;
+ 229              	 .loc 1 356 0
+ 230 0050 022C     	 cmp r4,#2
+ 231 0052 0CBF     	 ite eq
+ 232 0054 4122     	 moveq r2,#65
+ 233 0056 2122     	 movne r2,#33
+ 234 0058 0292     	 str r2,[sp,#8]
+ 235 005a BBE0     	 b .L13
+ 236              	.LVL15:
+ 237              	.L16:
+ 238              	.LBB13:
+ 239              	.LBB14:
+ 240              	.LBB15:
+ 233:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 241              	 .loc 1 233 0
+ 242 005c 18F8016F 	 ldrb r6,[r8,#1]!
+ 243              	.LVL16:
+ 236:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, ulConfig | phyBMCR_RESET );
+ 244              	 .loc 1 236 0
+ 245 0060 2B68     	 ldr r3,[r5]
+ 246 0062 3046     	 mov r0,r6
+ 247 0064 3946     	 mov r1,r7
+ 248 0066 05AA     	 add r2,sp,#20
+ 249 0068 9847     	 blx r3
+ 250              	.LVL17:
+ 237:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 251              	 .loc 1 237 0
+ 252 006a 6B68     	 ldr r3,[r5,#4]
+ 253 006c 3046     	 mov r0,r6
+ 254 006e 3946     	 mov r1,r7
+ 255 0070 059A     	 ldr r2,[sp,#20]
+ 256 0072 42F40042 	 orr r2,r2,#32768
+ 257 0076 9847     	 blx r3
+ 258              	.LVL18:
+ 259              	.LBE15:
+ 231:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 260              	 .loc 1 231 0
+ 261 0078 0134     	 adds r4,r4,#1
+ 262              	.LVL19:
+ 263 007a AB6A     	 ldr r3,[r5,#40]
+ 264 007c 9C42     	 cmp r4,r3
+ 265 007e EDDB     	 blt .L16
+ 240:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	vTaskSetTimeOutState( &xTimer );
+ 266              	 .loc 1 240 0
+ 267 0080 4FF47A73 	 mov r3,#1000
+ 268 0084 0693     	 str r3,[sp,#24]
+ 241:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 269              	 .loc 1 241 0
+ 270 0086 07A8     	 add r0,sp,#28
+ 271 0088 FFF7FEFF 	 bl vTaskSetTimeOutState
+ 272              	.LVL20:
+ 228:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 273              	 .loc 1 228 0
+ 274 008c 0027     	 movs r7,#0
+ 246:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 275              	 .loc 1 246 0
+ 276 008e CDF804B0 	 str fp,[sp,#4]
+ 277              	.LVL21:
+ 278              	.L24:
+ 279 0092 AB6A     	 ldr r3,[r5,#40]
+ 280 0094 002B     	 cmp r3,#0
+ 281 0096 15DD     	 ble .L17
+ 282 0098 019E     	 ldr r6,[sp,#4]
+ 283 009a 0024     	 movs r4,#0
+ 284              	.LBB16:
+ 250:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulConfig & phyBMCR_RESET ) == 0 )
+ 285              	 .loc 1 250 0
+ 286 009c A046     	 mov r8,r4
+ 254:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 287              	 .loc 1 254 0
+ 288 009e 4FF00109 	 mov r9,#1
+ 289              	.LVL22:
+ 290              	.L19:
+ 250:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulConfig & phyBMCR_RESET ) == 0 )
+ 291              	 .loc 1 250 0
+ 292 00a2 2B68     	 ldr r3,[r5]
+ 293 00a4 16F8010F 	 ldrb r0,[r6,#1]!
+ 294              	.LVL23:
+ 295 00a8 4146     	 mov r1,r8
+ 296 00aa 05AA     	 add r2,sp,#20
+ 297 00ac 9847     	 blx r3
+ 298              	.LVL24:
+ 251:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 299              	 .loc 1 251 0
+ 300 00ae 059B     	 ldr r3,[sp,#20]
+ 301 00b0 13F4004F 	 tst r3,#32768
+ 254:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 302              	 .loc 1 254 0
+ 303 00b4 04BF     	 itt eq
+ 304 00b6 09FA04F3 	 lsleq r3,r9,r4
+ 305 00ba 1F43     	 orreq r7,r7,r3
+ 306              	.LVL25:
+ 307              	.LBE16:
+ 246:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 308              	 .loc 1 246 0
+ 309 00bc 0134     	 adds r4,r4,#1
+ 310              	.LVL26:
+ 311 00be AB6A     	 ldr r3,[r5,#40]
+ 312 00c0 9C42     	 cmp r4,r3
+ 313 00c2 EEDB     	 blt .L19
+ 314              	.LVL27:
+ 315              	.L17:
+ 257:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 316              	 .loc 1 257 0
+ 317 00c4 BA45     	 cmp r10,r7
+ 318 00c6 04D0     	 beq .L20
+ 261:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 319              	 .loc 1 261 0
+ 320 00c8 07A8     	 add r0,sp,#28
+ 321 00ca 06A9     	 add r1,sp,#24
+ 322 00cc FFF7FEFF 	 bl xTaskCheckForTimeOut
+ 323              	.LVL28:
+ 324 00d0 18B1     	 cbz r0,.L21
+ 325              	.L20:
+ 326              	.LVL29:
+ 271:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 327              	 .loc 1 271 0
+ 328 00d2 AB6A     	 ldr r3,[r5,#40]
+ 329 00d4 002B     	 cmp r3,#0
+ 330 00d6 04DC     	 bgt .L22
+ 331 00d8 1FE0     	 b .L23
+ 332              	.LVL30:
+ 333              	.L21:
+ 267:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 334              	 .loc 1 267 0
+ 335 00da 3220     	 movs r0,#50
+ 336 00dc FFF7FEFF 	 bl vTaskDelay
+ 337              	.LVL31:
+ 338 00e0 D7E7     	 b .L24
+ 339              	.LVL32:
+ 340              	.L22:
+ 341 00e2 05F11806 	 add r6,r5,#24
+ 271:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 342              	 .loc 1 271 0
+ 343 00e6 0024     	 movs r4,#0
+ 344              	.LBB17:
+ 278:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, ulConfig & ~phyBMCR_RESET );
+ 345              	 .loc 1 278 0
+ 346 00e8 A146     	 mov r9,r4
+ 347              	.LVL33:
+ 348              	.L26:
+ 349              	.LBE17:
+ 273:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 350              	 .loc 1 273 0
+ 351 00ea 27FA04F3 	 lsr r3,r7,r4
+ 352 00ee 13F0010F 	 tst r3,#1
+ 353 00f2 0DD1     	 bne .L25
+ 354              	.LBB18:
+ 275:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 355              	 .loc 1 275 0
+ 356 00f4 96F80080 	 ldrb r8,[r6]
+ 357              	.LVL34:
+ 278:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, ulConfig & ~phyBMCR_RESET );
+ 358              	 .loc 1 278 0
+ 359 00f8 2B68     	 ldr r3,[r5]
+ 360 00fa 4046     	 mov r0,r8
+ 361 00fc 4946     	 mov r1,r9
+ 362 00fe 05AA     	 add r2,sp,#20
+ 363 0100 9847     	 blx r3
+ 364              	.LVL35:
+ 279:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 365              	 .loc 1 279 0
+ 366 0102 6B68     	 ldr r3,[r5,#4]
+ 367 0104 4046     	 mov r0,r8
+ 368 0106 4946     	 mov r1,r9
+ 369 0108 059A     	 ldr r2,[sp,#20]
+ 370 010a 22F40042 	 bic r2,r2,#32768
+ 371 010e 9847     	 blx r3
+ 372              	.LVL36:
+ 373              	.L25:
+ 374              	.LBE18:
+ 271:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 375              	 .loc 1 271 0
+ 376 0110 0134     	 adds r4,r4,#1
+ 377              	.LVL37:
+ 378 0112 0136     	 adds r6,r6,#1
+ 379 0114 AB6A     	 ldr r3,[r5,#40]
+ 380 0116 9C42     	 cmp r4,r3
+ 381 0118 E7DB     	 blt .L26
+ 382              	.LVL38:
+ 383              	.L23:
+ 283:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 384              	 .loc 1 283 0
+ 385 011a 3220     	 movs r0,#50
+ 386 011c FFF7FEFF 	 bl vTaskDelay
+ 387              	.LVL39:
+ 388              	.LBE14:
+ 389              	.LBE13:
+ 357:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 358:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 359:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 360:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 361:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* Send a reset command to a set of PHY-ports. */
+ 362:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	xPhyReset( pxPhyObject, xPhyGetMask( pxPhyObject ) );
+ 363:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 364:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++ )
+ 390              	 .loc 1 364 0
+ 391 0120 AB6A     	 ldr r3,[r5,#40]
+ 392 0122 002B     	 cmp r3,#0
+ 393 0124 48DD     	 ble .L27
+ 394 0126 05F10408 	 add r8,r5,#4
+ 395 012a 0026     	 movs r6,#0
+ 396              	.LBB21:
+ 397              	.LBB22:
+ 398              	.LBB23:
+ 152:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 399              	 .loc 1 152 0
+ 400 012c DFF8EC90 	 ldr r9,.L50
+ 401 0130 DFF8ECA0 	 ldr r10,.L50+4
+ 402              	.LVL40:
+ 403 0134 039C     	 ldr r4,[sp,#12]
+ 404              	.LVL41:
+ 405              	.L33:
+ 406              	.LBE23:
+ 407              	.LBE22:
+ 365:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 366:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 408              	 .loc 1 366 0
+ 409 0136 1BF8013F 	 ldrb r3,[fp,#1]!
+ 410 013a 1A46     	 mov r2,r3
+ 411 013c 0193     	 str r3,[sp,#4]
+ 412              	.LVL42:
+ 367:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	uint32_t ulPhyID = pxPhyObject->ulPhyIDs[ xPhyIndex ];
+ 413              	 .loc 1 367 0
+ 414 013e 58F8047F 	 ldr r7,[r8,#4]!
+ 415              	.LVL43:
+ 368:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 369:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Write advertise register. */
+ 370:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_04_ADVERTISE, ulAdvertise );
+ 416              	 .loc 1 370 0
+ 417 0142 6B68     	 ldr r3,[r5,#4]
+ 418 0144 1046     	 mov r0,r2
+ 419 0146 0421     	 movs r1,#4
+ 420 0148 029A     	 ldr r2,[sp,#8]
+ 421              	.LVL44:
+ 422 014a 9847     	 blx r3
+ 423              	.LVL45:
+ 371:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 372:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/*
+ 373:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				AN_EN        AN1         AN0       Forced Mode
+ 374:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  0           0           0        10BASE-T, Half-Duplex
+ 375:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  0           0           1        10BASE-T, Full-Duplex
+ 376:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  0           1           0        100BASE-TX, Half-Duplex
+ 377:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  0           1           1        100BASE-TX, Full-Duplex
+ 378:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				AN_EN        AN1         AN0       Advertised Mode
+ 379:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  1           0           0        10BASE-T, Half/Full-Duplex
+ 380:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  1           0           1        100BASE-TX, Half/Full-Duplex
+ 381:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  1           1           0        10BASE-T Half-Duplex
+ 382:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 												   100BASE-TX, Half-Duplex
+ 383:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				  1           1           1        10BASE-T, Half/Full-Duplex
+ 384:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 												   100BASE-TX, Half/Full-Duplex
+ 385:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		*/
+ 386:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 387:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Read Control register. */
+ 388:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->fnPhyRead( xPhyAddress, phyREG_00_BMCR, &ulConfig );
+ 424              	 .loc 1 388 0
+ 425 014c 2B68     	 ldr r3,[r5]
+ 426 014e 0198     	 ldr r0,[sp,#4]
+ 427 0150 0021     	 movs r1,#0
+ 428 0152 09AA     	 add r2,sp,#36
+ 429 0154 9847     	 blx r3
+ 430              	.LVL46:
+ 389:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 390:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulConfig &= ~( phyBMCR_SPEED_100 | phyBMCR_FULL_DUPLEX );
+ 431              	 .loc 1 390 0
+ 432 0156 099A     	 ldr r2,[sp,#36]
+ 433 0158 22F40452 	 bic r2,r2,#8448
+ 391:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 392:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulConfig |= phyBMCR_AN_ENABLE;
+ 434              	 .loc 1 392 0
+ 435 015c 42F48053 	 orr r3,r2,#4096
+ 436 0160 0993     	 str r3,[sp,#36]
+ 393:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 394:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_100 ) || ( pxPhyProperties->ucSpeed == ( u
+ 437              	 .loc 1 394 0
+ 438 0162 2378     	 ldrb r3,[r4]
+ 439 0164 023B     	 subs r3,r3,#2
+ 440 0166 DBB2     	 uxtb r3,r3
+ 441 0168 012B     	 cmp r3,#1
+ 395:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 396:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			ulConfig |= phyBMCR_SPEED_100;
+ 442              	 .loc 1 396 0
+ 443 016a 9CBF     	 itt ls
+ 444 016c 42F44052 	 orrls r2,r2,#12288
+ 445 0170 0992     	 strls r2,[sp,#36]
+ 397:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 398:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		else if( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_10 )
+ 399:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 400:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			ulConfig &= ~phyBMCR_SPEED_100;
+ 401:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 402:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 403:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_FULL ) || ( pxPhyProperties->ucDuplex ==
+ 446              	 .loc 1 403 0
+ 447 0172 A278     	 ldrb r2,[r4,#2]
+ 448 0174 931E     	 subs r3,r2,#2
+ 449 0176 DBB2     	 uxtb r3,r3
+ 450 0178 012B     	 cmp r3,#1
+ 451 017a 04D8     	 bhi .L29
+ 404:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 405:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			ulConfig |= phyBMCR_FULL_DUPLEX;
+ 452              	 .loc 1 405 0
+ 453 017c 099B     	 ldr r3,[sp,#36]
+ 454 017e 43F48073 	 orr r3,r3,#256
+ 455 0182 0993     	 str r3,[sp,#36]
+ 456 0184 41E0     	 b .L30
+ 457              	.L29:
+ 406:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 407:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		else if( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_HALF )
+ 458              	 .loc 1 407 0
+ 459 0186 012A     	 cmp r2,#1
+ 460 0188 3FD1     	 bne .L30
+ 408:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 409:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			ulConfig &= ~phyBMCR_FULL_DUPLEX;
+ 461              	 .loc 1 409 0
+ 462 018a 099B     	 ldr r3,[sp,#36]
+ 463 018c 23F48073 	 bic r3,r3,#256
+ 464 0190 0993     	 str r3,[sp,#36]
+ 465 0192 3AE0     	 b .L30
+ 466              	.LVL47:
+ 467              	.L35:
+ 468              	.LBB25:
+ 410:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 411:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 412:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( xHas_19_PHYCR( ulPhyID ) )
+ 413:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 414:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		uint32_t ulPhyControl;
+ 415:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* Read PHY Control register. */
+ 416:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyRead( xPhyAddress, phyREG_19_PHYCR, &ulPhyControl );
+ 417:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 418:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* Clear bits which might get set: */
+ 419:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			ulPhyControl &= ~( PHYCR_MDIX_EN|PHYCR_MDIX_FORCE );
+ 420:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 421:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( pxPhyProperties->ucMDI_X == PHY_MDIX_AUTO )
+ 422:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 423:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulPhyControl |= PHYCR_MDIX_EN;
+ 469              	 .loc 1 423 0
+ 470 0194 43F40043 	 orr r3,r3,#32768
+ 471 0198 0793     	 str r3,[sp,#28]
+ 472 019a 04E0     	 b .L31
+ 473              	.L48:
+ 424:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 425:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else if( pxPhyProperties->ucMDI_X == PHY_MDIX_CROSSED )
+ 474              	 .loc 1 425 0
+ 475 019c 022A     	 cmp r2,#2
+ 426:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 427:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				/* Force direct link = Use crossed RJ45 cable. */
+ 428:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulPhyControl &= ~PHYCR_MDIX_FORCE;
+ 429:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 430:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 431:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 432:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				/* Force crossed link = Use direct RJ45 cable. */
+ 433:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulPhyControl |= PHYCR_MDIX_FORCE;
+ 476              	 .loc 1 433 0
+ 477 019e 1CBF     	 itt ne
+ 478 01a0 43F48043 	 orrne r3,r3,#16384
+ 479 01a4 0793     	 strne r3,[sp,#28]
+ 480              	.L31:
+ 434:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 435:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* update PHY Control Register. */
+ 436:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_19_PHYCR, ulPhyControl );
+ 481              	 .loc 1 436 0
+ 482 01a6 6B68     	 ldr r3,[r5,#4]
+ 483 01a8 0198     	 ldr r0,[sp,#4]
+ 484 01aa 1921     	 movs r1,#25
+ 485 01ac 079A     	 ldr r2,[sp,#28]
+ 486 01ae 9847     	 blx r3
+ 487              	.LVL48:
+ 488              	.L32:
+ 489              	.LBE25:
+ 490              	.LBE21:
+ 364:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 491              	 .loc 1 364 0 discriminator 2
+ 492 01b0 0136     	 adds r6,r6,#1
+ 493              	.LVL49:
+ 494 01b2 AB6A     	 ldr r3,[r5,#40]
+ 495 01b4 B342     	 cmp r3,r6
+ 496 01b6 BEDC     	 bgt .L33
+ 497              	.LVL50:
+ 498              	.L27:
+ 437:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 438:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 439:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		FreeRTOS_printf( ( "+TCP: advertise: %04lX config %04lX\n", ulAdvertise, ulConfig ) );
+ 440:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 441:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 442:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* Keep these values for later use. */
+ 443:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	pxPhyObject->ulBCRValue = ulConfig & ~phyBMCR_ISOLATE;
+ 499              	 .loc 1 443 0
+ 500 01b8 099B     	 ldr r3,[sp,#36]
+ 501 01ba 23F48063 	 bic r3,r3,#1024
+ 502 01be EB62     	 str r3,[r5,#44]
+ 444:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	pxPhyObject->ulACRValue = ulAdvertise;
+ 503              	 .loc 1 444 0
+ 504 01c0 029B     	 ldr r3,[sp,#8]
+ 505 01c2 2B63     	 str r3,[r5,#48]
+ 445:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 446:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return 0;
+ 506              	 .loc 1 446 0
+ 507 01c4 0020     	 movs r0,#0
+ 508 01c6 25E0     	 b .L47
+ 509              	.LVL51:
+ 510              	.L37:
+ 511              	.LCFI6:
+ 512              	 .cfi_def_cfa_offset 0
+ 513              	 .cfi_restore 4
+ 514              	 .cfi_restore 5
+ 515              	 .cfi_restore 6
+ 516              	 .cfi_restore 7
+ 517              	 .cfi_restore 8
+ 518              	 .cfi_restore 9
+ 519              	 .cfi_restore 10
+ 520              	 .cfi_restore 11
+ 521              	 .cfi_restore 14
+ 297:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 522              	 .loc 1 297 0
+ 523 01c8 4FF0FF30 	 mov r0,#-1
+ 524              	.LVL52:
+ 447:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 525              	 .loc 1 447 0
+ 526 01cc 7047     	 bx lr
+ 527              	.LVL53:
+ 528              	.L38:
+ 529              	.LCFI7:
+ 530              	 .cfi_def_cfa_offset 80
+ 531              	 .cfi_offset 4,-36
+ 532              	 .cfi_offset 5,-32
+ 533              	 .cfi_offset 6,-28
+ 534              	 .cfi_offset 7,-24
+ 535              	 .cfi_offset 8,-20
+ 536              	 .cfi_offset 9,-16
+ 537              	 .cfi_offset 10,-12
+ 538              	 .cfi_offset 11,-8
+ 539              	 .cfi_offset 14,-4
+ 307:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Reset auto-negotiation capability. */
+ 540              	 .loc 1 307 0
+ 541 01ce 40F2E112 	 movw r2,#481
+ 542 01d2 0292     	 str r2,[sp,#8]
+ 543              	.L13:
+ 544 01d4 0391     	 str r1,[sp,#12]
+ 545 01d6 0546     	 mov r5,r0
+ 546              	.LVL54:
+ 362:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 547              	 .loc 1 362 0
+ 548 01d8 4FF0010A 	 mov r10,#1
+ 549 01dc 0AFA03FA 	 lsl r10,r10,r3
+ 550 01e0 0AF1FF3A 	 add r10,r10,#-1
+ 551              	.LVL55:
+ 552 01e4 00F1170B 	 add fp,r0,#23
+ 553 01e8 D846     	 mov r8,fp
+ 554 01ea 0024     	 movs r4,#0
+ 555              	.LBB28:
+ 556              	.LBB20:
+ 557              	.LBB19:
+ 236:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, ulConfig | phyBMCR_RESET );
+ 558              	 .loc 1 236 0
+ 559 01ec 2746     	 mov r7,r4
+ 560 01ee 35E7     	 b .L16
+ 561              	.LVL56:
+ 562              	.L34:
+ 563              	.LBE19:
+ 564              	.LBE20:
+ 565              	.LBE28:
+ 566              	.LBB29:
+ 567              	.LBB26:
+ 416:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 568              	 .loc 1 416 0
+ 569 01f0 2B68     	 ldr r3,[r5]
+ 570 01f2 0198     	 ldr r0,[sp,#4]
+ 571 01f4 1921     	 movs r1,#25
+ 572 01f6 07AA     	 add r2,sp,#28
+ 573 01f8 9847     	 blx r3
+ 574              	.LVL57:
+ 419:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 575              	 .loc 1 419 0
+ 576 01fa 079B     	 ldr r3,[sp,#28]
+ 577 01fc 23F44043 	 bic r3,r3,#49152
+ 578 0200 0793     	 str r3,[sp,#28]
+ 421:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 579              	 .loc 1 421 0
+ 580 0202 6278     	 ldrb r2,[r4,#1]
+ 581 0204 032A     	 cmp r2,#3
+ 582 0206 C9D1     	 bne .L48
+ 583 0208 C4E7     	 b .L35
+ 584              	.LVL58:
+ 585              	.L30:
+ 586              	.LBE26:
+ 587              	.LBB27:
+ 588              	.LBB24:
+ 152:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 589              	 .loc 1 152 0
+ 590 020a 4F45     	 cmp r7,r9
+ 591 020c F0D0     	 beq .L34
+ 592 020e 5745     	 cmp r7,r10
+ 593 0210 CED1     	 bne .L32
+ 594 0212 EDE7     	 b .L34
+ 595              	.LVL59:
+ 596              	.L47:
+ 597              	.LBE24:
+ 598              	.LBE27:
+ 599              	.LBE29:
+ 600              	 .loc 1 447 0
+ 601 0214 0BB0     	 add sp,sp,#44
+ 602              	.LCFI8:
+ 603              	 .cfi_def_cfa_offset 36
+ 604              	 
+ 605 0216 BDE8F08F 	 pop {r4,r5,r6,r7,r8,r9,r10,fp,pc}
+ 606              	.LVL60:
+ 607              	.L51:
+ 608 021a 00BF     	 .align 2
+ 609              	.L50:
+ 610 021c 30C10700 	 .word 508208
+ 611 0220 905C0020 	 .word 536894608
+ 612              	 .cfi_endproc
+ 613              	.LFE18:
+ 615              	 .section .text.xPhyFixedValue,"ax",%progbits
+ 616              	 .align 2
+ 617              	 .global xPhyFixedValue
+ 618              	 .thumb
+ 619              	 .thumb_func
+ 621              	xPhyFixedValue:
+ 622              	.LFB19:
+ 448:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 449:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 450:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* xPhyFixedValue(): this function is called in case auto-negotiation is disabled.
+ 451:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** The caller has set the values in 'xPhyPreferences' (ucDuplex and ucSpeed).
+ 452:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** The PHY register phyREG_00_BMCR will be set for every connected PHY that matches
+ 453:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** with ulPhyMask. */
+ 454:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyFixedValue( EthernetPhy_t *pxPhyObject, uint32_t ulPhyMask )
+ 455:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+ 623              	 .loc 1 455 0
+ 624              	 .cfi_startproc
+ 625              	 
+ 626              	 
+ 627              	.LVL61:
+ 628 0000 2DE9F047 	 push {r4,r5,r6,r7,r8,r9,r10,lr}
+ 629              	.LCFI9:
+ 630              	 .cfi_def_cfa_offset 32
+ 631              	 .cfi_offset 4,-32
+ 632              	 .cfi_offset 5,-28
+ 633              	 .cfi_offset 6,-24
+ 634              	 .cfi_offset 7,-20
+ 635              	 .cfi_offset 8,-16
+ 636              	 .cfi_offset 9,-12
+ 637              	 .cfi_offset 10,-8
+ 638              	 .cfi_offset 14,-4
+ 639              	.LVL62:
+ 456:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyIndex;
+ 457:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t ulValue, ulBitMask = ( uint32_t )1U;
+ 458:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 459:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	ulValue = ( uint32_t ) 0U;
+ 460:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 461:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( pxPhyObject->xPhyPreferences.ucDuplex == PHY_DUPLEX_FULL )
+ 640              	 .loc 1 461 0
+ 641 0004 90F83A30 	 ldrb r3,[r0,#58]
+ 462:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 463:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulValue |= phyBMCR_FULL_DUPLEX;
+ 642              	 .loc 1 463 0
+ 643 0008 022B     	 cmp r3,#2
+ 644 000a 14BF     	 ite ne
+ 645 000c 4FF00009 	 movne r9,#0
+ 646 0010 4FF48079 	 moveq r9,#256
+ 647              	.LVL63:
+ 464:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 465:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( pxPhyObject->xPhyPreferences.ucSpeed == PHY_SPEED_100 )
+ 648              	 .loc 1 465 0
+ 649 0014 90F83830 	 ldrb r3,[r0,#56]
+ 650 0018 022B     	 cmp r3,#2
+ 466:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 467:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulValue |= phyBMCR_SPEED_100;
+ 651              	 .loc 1 467 0
+ 652 001a 08BF     	 it eq
+ 653 001c 49F40059 	 orreq r9,r9,#8192
+ 654              	.LVL64:
+ 468:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 469:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 470:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 1 )
+ 655              	 .loc 1 470 0
+ 656 0020 836A     	 ldr r3,[r0,#40]
+ 657 0022 002B     	 cmp r3,#0
+ 658 0024 14DD     	 ble .L55
+ 659 0026 8846     	 mov r8,r1
+ 660 0028 0746     	 mov r7,r0
+ 661 002a 00F11806 	 add r6,r0,#24
+ 662 002e 0125     	 movs r5,#1
+ 663 0030 0024     	 movs r4,#0
+ 664              	.LBB30:
+ 471:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 472:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( ulPhyMask & ulBitMask ) != 0lu )
+ 473:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 474:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 475:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 476:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* Enable Auto-Negotiation. */
+ 477:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, ulValue );
+ 665              	 .loc 1 477 0
+ 666 0032 A246     	 mov r10,r4
+ 667              	.LVL65:
+ 668              	.L57:
+ 669              	.LBE30:
+ 472:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 670              	 .loc 1 472 0
+ 671 0034 15EA080F 	 tst r5,r8
+ 672 0038 04D0     	 beq .L56
+ 673              	.LVL66:
+ 674              	.LBB31:
+ 675              	 .loc 1 477 0
+ 676 003a 7B68     	 ldr r3,[r7,#4]
+ 677 003c 3078     	 ldrb r0,[r6]
+ 678              	.LVL67:
+ 679 003e 5146     	 mov r1,r10
+ 680 0040 4A46     	 mov r2,r9
+ 681 0042 9847     	 blx r3
+ 682              	.LVL68:
+ 683              	.L56:
+ 684              	.LBE31:
+ 470:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 685              	 .loc 1 470 0 discriminator 2
+ 686 0044 0134     	 adds r4,r4,#1
+ 687              	.LVL69:
+ 688 0046 6D00     	 lsls r5,r5,#1
+ 689              	.LVL70:
+ 690 0048 0136     	 adds r6,r6,#1
+ 691 004a BB6A     	 ldr r3,[r7,#40]
+ 692 004c A342     	 cmp r3,r4
+ 693 004e F1DC     	 bgt .L57
+ 694              	.LVL71:
+ 695              	.L55:
+ 478:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 479:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 480:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return 0;
+ 481:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 696              	 .loc 1 481 0
+ 697 0050 0020     	 movs r0,#0
+ 698 0052 BDE8F087 	 pop {r4,r5,r6,r7,r8,r9,r10,pc}
+ 699              	 .cfi_endproc
+ 700              	.LFE19:
+ 702 0056 00BF     	 .section .text.xPhyStartAutoNegotiation,"ax",%progbits
+ 703              	 .align 2
+ 704              	 .global xPhyStartAutoNegotiation
+ 705              	 .thumb
+ 706              	 .thumb_func
+ 708              	xPhyStartAutoNegotiation:
+ 709              	.LFB20:
+ 482:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 483:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 484:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /* xPhyStartAutoNegotiation() is the alternative xPhyFixedValue():
+ 485:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** It sets the BMCR_AN_RESTART bit and waits for the auto-negotiation completion
+ 486:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** ( phyBMSR_AN_COMPLETE ). */
+ 487:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyStartAutoNegotiation( EthernetPhy_t *pxPhyObject, uint32_t ulPhyMask )
+ 488:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+ 710              	 .loc 1 488 0
+ 711              	 .cfi_startproc
+ 712              	 
+ 713              	 
+ 714              	.LVL72:
+ 489:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t xPhyIndex, ulDoneMask, ulBitMask;
+ 490:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t ulPHYLinkStatus, ulRegValue;
+ 491:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** TickType_t xRemainingTime;
+ 492:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** TimeOut_t xTimer;
+ 493:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 494:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( ulPhyMask == ( uint32_t ) 0U )
+ 715              	 .loc 1 494 0
+ 716 0000 0029     	 cmp r1,#0
+ 717 0002 00F0CD80 	 beq .L94
+ 488:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t xPhyIndex, ulDoneMask, ulBitMask;
+ 718              	 .loc 1 488 0 discriminator 1
+ 719 0006 2DE9F04F 	 push {r4,r5,r6,r7,r8,r9,r10,fp,lr}
+ 720              	.LCFI10:
+ 721              	 .cfi_def_cfa_offset 36
+ 722              	 .cfi_offset 4,-36
+ 723              	 .cfi_offset 5,-32
+ 724              	 .cfi_offset 6,-28
+ 725              	 .cfi_offset 7,-24
+ 726              	 .cfi_offset 8,-20
+ 727              	 .cfi_offset 9,-16
+ 728              	 .cfi_offset 10,-12
+ 729              	 .cfi_offset 11,-8
+ 730              	 .cfi_offset 14,-4
+ 731 000a 87B0     	 sub sp,sp,#28
+ 732              	.LCFI11:
+ 733              	 .cfi_def_cfa_offset 64
+ 734 000c 8946     	 mov r9,r1
+ 735 000e 0446     	 mov r4,r0
+ 736              	.LVL73:
+ 495:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 496:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		return 0;
+ 497:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 498:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( xPhyIndex = 0; xPhyIndex < ( uint32_t ) pxPhyObject->xPortCount; xPhyIndex++ )
+ 737              	 .loc 1 498 0 discriminator 1
+ 738 0010 836A     	 ldr r3,[r0,#40]
+ 739 0012 EBB1     	 cbz r3,.L63
+ 740 0014 00F11806 	 add r6,r0,#24
+ 741              	 .loc 1 498 0 is_stmt 0
+ 742 0018 0025     	 movs r5,#0
+ 743              	.LBB39:
+ 499:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 500:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( ulPhyMask & ( 1lu << xPhyIndex ) ) != 0lu )
+ 501:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 502:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 503:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 504:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* Enable Auto-Negotiation. */
+ 505:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_04_ADVERTISE, pxPhyObject->ulACRValue);
+ 744              	 .loc 1 505 0 is_stmt 1
+ 745 001a 4FF00408 	 mov r8,#4
+ 506:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, pxPhyObject->ulBCRValue | phyBMCR_AN_RESTA
+ 746              	 .loc 1 506 0
+ 747 001e 2F46     	 mov r7,r5
+ 748              	.LVL74:
+ 749              	.L65:
+ 750              	.LBE39:
+ 500:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 751              	 .loc 1 500 0
+ 752 0020 29FA05F3 	 lsr r3,r9,r5
+ 753 0024 13F0010F 	 tst r3,#1
+ 754 0028 0DD0     	 beq .L64
+ 755              	.LBB40:
+ 502:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 756              	 .loc 1 502 0
+ 757 002a 96F800A0 	 ldrb r10,[r6]
+ 758              	.LVL75:
+ 505:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, pxPhyObject->ulBCRValue | phyBMCR_AN_RESTA
+ 759              	 .loc 1 505 0
+ 760 002e 6368     	 ldr r3,[r4,#4]
+ 761 0030 5046     	 mov r0,r10
+ 762 0032 4146     	 mov r1,r8
+ 763 0034 226B     	 ldr r2,[r4,#48]
+ 764 0036 9847     	 blx r3
+ 765              	.LVL76:
+ 766              	 .loc 1 506 0
+ 767 0038 E26A     	 ldr r2,[r4,#44]
+ 768 003a 6368     	 ldr r3,[r4,#4]
+ 769 003c 5046     	 mov r0,r10
+ 770 003e 3946     	 mov r1,r7
+ 771 0040 42F40072 	 orr r2,r2,#512
+ 772 0044 9847     	 blx r3
+ 773              	.LVL77:
+ 774              	.L64:
+ 775              	.LBE40:
+ 498:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 776              	 .loc 1 498 0 discriminator 2
+ 777 0046 0135     	 adds r5,r5,#1
+ 778              	.LVL78:
+ 779 0048 0136     	 adds r6,r6,#1
+ 780 004a A36A     	 ldr r3,[r4,#40]
+ 781 004c AB42     	 cmp r3,r5
+ 782 004e E7D8     	 bhi .L65
+ 783              	.LVL79:
+ 784              	.L63:
+ 507:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 508:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 509:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	xRemainingTime = ( TickType_t ) pdMS_TO_TICKS( phyPHY_MAX_NEGOTIATE_TIME_MS );
+ 785              	 .loc 1 509 0
+ 786 0050 40F6B833 	 movw r3,#3000
+ 787 0054 0493     	 str r3,[sp,#16]
+ 510:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	vTaskSetTimeOutState( &xTimer );
+ 788              	 .loc 1 510 0
+ 789 0056 02A8     	 add r0,sp,#8
+ 790 0058 FFF7FEFF 	 bl vTaskSetTimeOutState
+ 791              	.LVL80:
+ 511:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	ulDoneMask = 0;
+ 792              	 .loc 1 511 0
+ 793 005c 0025     	 movs r5,#0
+ 512:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	/* Wait until the auto-negotiation will be completed */
+ 513:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	for( ;; )
+ 514:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 515:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulBitMask = ( uint32_t ) 1U;
+ 516:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		for( xPhyIndex = 0; xPhyIndex < ( uint32_t ) pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 
+ 794              	 .loc 1 516 0
+ 795 005e 4FF0010A 	 mov r10,#1
+ 796              	.LVL81:
+ 797              	.L71:
+ 798 0062 A36A     	 ldr r3,[r4,#40]
+ 799 0064 D3B1     	 cbz r3,.L66
+ 800 0066 04F11808 	 add r8,r4,#24
+ 801 006a 5646     	 mov r6,r10
+ 802 006c 0027     	 movs r7,#0
+ 803              	.LVL82:
+ 804              	.L68:
+ 517:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 518:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulPhyMask & ulBitMask ) != 0lu )
+ 805              	 .loc 1 518 0
+ 806 006e 16EA090F 	 tst r6,r9
+ 807 0072 0CD0     	 beq .L67
+ 519:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 520:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				if( ( ulDoneMask & ulBitMask ) == 0lu )
+ 808              	 .loc 1 520 0
+ 809 0074 2E42     	 tst r6,r5
+ 810 0076 0AD1     	 bne .L67
+ 811              	.LVL83:
+ 812              	.LBB41:
+ 521:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				{
+ 522:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 523:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 524:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					pxPhyObject->fnPhyRead( xPhyAddress, phyREG_01_BMSR, &ulRegValue );
+ 813              	 .loc 1 524 0
+ 814 0078 2368     	 ldr r3,[r4]
+ 815 007a 98F80000 	 ldrb r0,[r8]
+ 816              	.LVL84:
+ 817 007e 5146     	 mov r1,r10
+ 818 0080 05AA     	 add r2,sp,#20
+ 819 0082 9847     	 blx r3
+ 820              	.LVL85:
+ 525:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					if( ( ulRegValue & phyBMSR_AN_COMPLETE ) != 0 )
+ 821              	 .loc 1 525 0
+ 822 0084 059B     	 ldr r3,[sp,#20]
+ 823 0086 13F0200F 	 tst r3,#32
+ 526:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					{
+ 527:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 						ulDoneMask |= ulBitMask;
+ 824              	 .loc 1 527 0
+ 825 008a 18BF     	 it ne
+ 826 008c 3543     	 orrne r5,r5,r6
+ 827              	.LVL86:
+ 828              	.L67:
+ 829              	.LBE41:
+ 516:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 830              	 .loc 1 516 0 discriminator 2
+ 831 008e 0137     	 adds r7,r7,#1
+ 832              	.LVL87:
+ 833 0090 7600     	 lsls r6,r6,#1
+ 834              	.LVL88:
+ 835 0092 08F10108 	 add r8,r8,#1
+ 836 0096 A36A     	 ldr r3,[r4,#40]
+ 837 0098 BB42     	 cmp r3,r7
+ 838 009a E8D8     	 bhi .L68
+ 839              	.LVL89:
+ 840              	.L66:
+ 528:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					}
+ 529:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				}
+ 530:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 531:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 532:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ulPhyMask == ulDoneMask )
+ 841              	 .loc 1 532 0
+ 842 009c A945     	 cmp r9,r5
+ 843 009e 0AD0     	 beq .L88
+ 533:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 534:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 535:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 536:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( xTaskCheckForTimeOut( &xTimer, &xRemainingTime ) != pdFALSE )
+ 844              	 .loc 1 536 0
+ 845 00a0 02A8     	 add r0,sp,#8
+ 846 00a2 04A9     	 add r1,sp,#16
+ 847 00a4 FFF7FEFF 	 bl xTaskCheckForTimeOut
+ 848              	.LVL90:
+ 849 00a8 18B9     	 cbnz r0,.L70
+ 537:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 538:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			FreeRTOS_printf( ( "xPhyStartAutoNegotiation: phyBMCR_RESET timed out ( done 0x%02lX )\n", ulDon
+ 539:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			break;
+ 540:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 541:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		vTaskDelay( pdMS_TO_TICKS( phySHORT_DELAY_MS ) );
+ 850              	 .loc 1 541 0
+ 851 00aa 3220     	 movs r0,#50
+ 852 00ac FFF7FEFF 	 bl vTaskDelay
+ 853              	.LVL91:
+ 542:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 854              	 .loc 1 542 0
+ 855 00b0 D7E7     	 b .L71
+ 856              	.L70:
+ 543:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 544:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( ulDoneMask != ( uint32_t) 0U )
+ 857              	 .loc 1 544 0
+ 858 00b2 002D     	 cmp r5,#0
+ 859 00b4 70D0     	 beq .L62
+ 860              	.L88:
+ 861              	.LVL92:
+ 545:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 546:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		ulBitMask = ( uint32_t ) 1U;
+ 547:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->ulLinkStatusMask &= ~( ulDoneMask );
+ 862              	 .loc 1 547 0
+ 863 00b6 636B     	 ldr r3,[r4,#52]
+ 864 00b8 23EA0503 	 bic r3,r3,r5
+ 865 00bc 6363     	 str r3,[r4,#52]
+ 866              	.LVL93:
+ 548:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		for( xPhyIndex = 0; xPhyIndex < ( uint32_t ) pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 
+ 867              	 .loc 1 548 0
+ 868 00be A36A     	 ldr r3,[r4,#40]
+ 869 00c0 002B     	 cmp r3,#0
+ 870 00c2 69D0     	 beq .L62
+ 871 00c4 04F11709 	 add r9,r4,#23
+ 872              	.LVL94:
+ 873 00c8 04F10408 	 add r8,r4,#4
+ 874 00cc 0126     	 movs r6,#1
+ 875 00ce 0027     	 movs r7,#0
+ 876              	.LVL95:
+ 877              	.L87:
+ 878              	.LBB42:
+ 549:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 550:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 879              	 .loc 1 550 0
+ 880 00d0 19F801AF 	 ldrb r10,[r9,#1]!
+ 881              	.LVL96:
+ 551:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		uint32_t ulPhyID = pxPhyObject->ulPhyIDs[ xPhyIndex ];
+ 882              	 .loc 1 551 0
+ 883 00d4 58F804BF 	 ldr fp,[r8,#4]!
+ 884              	.LVL97:
+ 552:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 553:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulDoneMask & ulBitMask ) == ( uint32_t ) 0U )
+ 885              	 .loc 1 553 0
+ 886 00d8 2E42     	 tst r6,r5
+ 887 00da 58D0     	 beq .L72
+ 554:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 555:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				continue;
+ 556:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 557:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 558:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* Clear the 'phyBMCR_AN_RESTART'  bit. */
+ 559:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, pxPhyObject->ulBCRValue );
+ 888              	 .loc 1 559 0
+ 889 00dc 6368     	 ldr r3,[r4,#4]
+ 890 00de 5046     	 mov r0,r10
+ 891 00e0 0021     	 movs r1,#0
+ 892 00e2 E26A     	 ldr r2,[r4,#44]
+ 893 00e4 9847     	 blx r3
+ 894              	.LVL98:
+ 560:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 561:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->fnPhyRead( xPhyAddress, phyREG_01_BMSR, &ulRegValue);
+ 895              	 .loc 1 561 0
+ 896 00e6 2368     	 ldr r3,[r4]
+ 897 00e8 5046     	 mov r0,r10
+ 898 00ea 0121     	 movs r1,#1
+ 899 00ec 05AA     	 add r2,sp,#20
+ 900 00ee 9847     	 blx r3
+ 901              	.LVL99:
+ 562:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulRegValue & phyBMSR_LINK_STATUS ) != 0 )
+ 902              	 .loc 1 562 0
+ 903 00f0 059B     	 ldr r3,[sp,#20]
+ 904 00f2 13F0040F 	 tst r3,#4
+ 905 00f6 02D0     	 beq .L73
+ 563:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 564:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulPHYLinkStatus |= phyBMSR_LINK_STATUS;
+ 565:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->ulLinkStatusMask |= ulBitMask;
+ 906              	 .loc 1 565 0
+ 907 00f8 636B     	 ldr r3,[r4,#52]
+ 908 00fa 3343     	 orrs r3,r3,r6
+ 909 00fc 6363     	 str r3,[r4,#52]
+ 910              	.L73:
+ 566:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 567:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 568:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 569:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulPHYLinkStatus &= ~( phyBMSR_LINK_STATUS );
+ 570:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 571:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 572:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ulPhyID == PHY_ID_KSZ8081MNXIA )
+ 911              	 .loc 1 572 0
+ 912 00fe 294B     	 ldr r3,.L95
+ 913 0100 9B45     	 cmp fp,r3
+ 914 0102 17D1     	 bne .L74
+ 915              	.LBB43:
+ 573:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 574:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			uint32_t ulControlStatus;
+ 575:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 576:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->fnPhyRead( xPhyAddress, 0x1E, &ulControlStatus);
+ 916              	 .loc 1 576 0
+ 917 0104 2368     	 ldr r3,[r4]
+ 918 0106 5046     	 mov r0,r10
+ 919 0108 1E21     	 movs r1,#30
+ 920 010a 01AA     	 add r2,sp,#4
+ 921 010c 9847     	 blx r3
+ 922              	.LVL100:
+ 577:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				switch( ulControlStatus & 0x07 )
+ 923              	 .loc 1 577 0
+ 924 010e 019B     	 ldr r3,[sp,#4]
+ 925 0110 03F00703 	 and r3,r3,#7
+ 926 0114 012B     	 cmp r3,#1
+ 927 0116 01D0     	 beq .L76
+ 928 0118 052B     	 cmp r3,#5
+ 929 011a 03D1     	 bne .L75
+ 930              	.L76:
+ 578:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				{
+ 579:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x01:
+ 580:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x05:
+ 581:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[001] = 10BASE-T half-duplex
+ 582:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[101] = 10BASE-T full-duplex
+ 583:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					/* 10 Mbps. */
+ 584:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					ulRegValue |= phyPHYSTS_SPEED_STATUS;
+ 931              	 .loc 1 584 0
+ 932 011c 059A     	 ldr r2,[sp,#20]
+ 933 011e 42F00202 	 orr r2,r2,#2
+ 934 0122 0592     	 str r2,[sp,#20]
+ 935              	.L75:
+ 585:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					break;
+ 586:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x02:
+ 587:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x06:
+ 588:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[010] = 100BASE-TX half-duplex
+ 589:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[110] = 100BASE-TX full-duplex
+ 590:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					break;
+ 591:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				}
+ 592:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				switch( ulControlStatus & 0x07 )
+ 936              	 .loc 1 592 0
+ 937 0124 053B     	 subs r3,r3,#5
+ 938 0126 012B     	 cmp r3,#1
+ 939 0128 22D8     	 bhi .L79
+ 593:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				{
+ 594:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x05:
+ 595:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x06:
+ 596:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[101] = 10BASE-T full-duplex
+ 597:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[110] = 100BASE-TX full-duplex
+ 598:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					/* Full duplex. */
+ 599:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					ulRegValue |= phyPHYSTS_DUPLEX_STATUS;
+ 940              	 .loc 1 599 0
+ 941 012a 059B     	 ldr r3,[sp,#20]
+ 942 012c 43F00403 	 orr r3,r3,#4
+ 943 0130 0593     	 str r3,[sp,#20]
+ 600:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					break;
+ 944              	 .loc 1 600 0
+ 945 0132 1DE0     	 b .L79
+ 946              	.L74:
+ 947              	.LVL101:
+ 948              	.LBE43:
+ 949              	.LBB44:
+ 950              	.LBB45:
+ 124:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 951              	 .loc 1 124 0
+ 952 0134 1C4B     	 ldr r3,.L95+4
+ 953 0136 9B45     	 cmp fp,r3
+ 954 0138 15D0     	 beq .L81
+ 955              	.LVL102:
+ 956              	.LBE45:
+ 957              	.LBE44:
+ 958              	.LBB46:
+ 601:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x01:
+ 602:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				case 0x02:
+ 603:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[001] = 10BASE-T half-duplex
+ 604:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** //	[010] = 100BASE-TX half-duplex
+ 605:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					break;
+ 606:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				}
+ 607:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 608:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else if( xHas_1F_PHYSPCS( ulPhyID ) )
+ 609:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 610:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* 31 RW PHY Special Control Status */
+ 611:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			uint32_t ulControlStatus;
+ 612:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 613:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->fnPhyRead( xPhyAddress, phyREG_1F_PHYSPCS, &ulControlStatus);
+ 959              	 .loc 1 613 0
+ 960 013a 2368     	 ldr r3,[r4]
+ 961 013c 5046     	 mov r0,r10
+ 962 013e 1F21     	 movs r1,#31
+ 963 0140 01AA     	 add r2,sp,#4
+ 964 0142 9847     	 blx r3
+ 965              	.LVL103:
+ 614:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulRegValue = 0;
+ 966              	 .loc 1 614 0
+ 967 0144 0023     	 movs r3,#0
+ 968 0146 0593     	 str r3,[sp,#20]
+ 615:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				if( ( ulControlStatus & phyPHYSPCS_FULL_DUPLEX ) != 0 )
+ 969              	 .loc 1 615 0
+ 970 0148 019B     	 ldr r3,[sp,#4]
+ 971 014a 13F0100F 	 tst r3,#16
+ 616:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				{
+ 617:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					ulRegValue |= phyPHYSTS_DUPLEX_STATUS;
+ 972              	 .loc 1 617 0
+ 973 014e 1CBF     	 itt ne
+ 974 0150 0422     	 movne r2,#4
+ 975 0152 0592     	 strne r2,[sp,#20]
+ 618:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				}
+ 619:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				if( ( ulControlStatus & phyPHYSPCS_SPEED_MASK ) == phyPHYSPCS_SPEED_10 )
+ 976              	 .loc 1 619 0
+ 977 0154 03F00C03 	 and r3,r3,#12
+ 978 0158 042B     	 cmp r3,#4
+ 979 015a 09D1     	 bne .L79
+ 620:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				{
+ 621:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					ulRegValue |= phyPHYSTS_SPEED_STATUS;
+ 980              	 .loc 1 621 0
+ 981 015c 059B     	 ldr r3,[sp,#20]
+ 982 015e 43F00203 	 orr r3,r3,#2
+ 983 0162 0593     	 str r3,[sp,#20]
+ 984 0164 04E0     	 b .L79
+ 985              	.LVL104:
+ 986              	.L81:
+ 987              	.LBE46:
+ 622:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				}
+ 623:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 624:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 625:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 626:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				/* Read the result of the auto-negotiation. */
+ 627:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->fnPhyRead( xPhyAddress, PHYREG_10_PHYSTS, &ulRegValue);
+ 988              	 .loc 1 627 0
+ 989 0166 2368     	 ldr r3,[r4]
+ 990 0168 5046     	 mov r0,r10
+ 991 016a 1021     	 movs r1,#16
+ 992 016c 05AA     	 add r2,sp,#20
+ 993 016e 9847     	 blx r3
+ 994              	.LVL105:
+ 995              	.L79:
+ 628:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 629:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 630:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			FreeRTOS_printf( ( "Autonego ready: %08lx: %s duplex %u mbit %s status\n",
+ 631:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				ulRegValue,
+ 632:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) ? "full" : "half",
+ 633:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				( ulRegValue & phyPHYSTS_SPEED_STATUS ) ? 10 : 100,
+ 634:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				( ( ulPHYLinkStatus |= phyBMSR_LINK_STATUS ) != 0) ? "high" : "low" ) );
+ 635:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) != ( uint32_t ) 0U )
+ 996              	 .loc 1 635 0
+ 997 0170 059B     	 ldr r3,[sp,#20]
+ 998 0172 13F0040F 	 tst r3,#4
+ 636:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 637:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->xPhyProperties.ucDuplex = PHY_DUPLEX_FULL;
+ 999              	 .loc 1 637 0
+ 1000 0176 14BF     	 ite ne
+ 1001 0178 0222     	 movne r2,#2
+ 638:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 639:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 640:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 641:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->xPhyProperties.ucDuplex = PHY_DUPLEX_HALF;
+ 1002              	 .loc 1 641 0
+ 1003 017a 0122     	 moveq r2,#1
+ 1004 017c 84F83E20 	 strb r2,[r4,#62]
+ 642:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 643:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 644:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( ulRegValue & phyPHYSTS_SPEED_STATUS ) != 0 )
+ 1005              	 .loc 1 644 0
+ 1006 0180 13F0020F 	 tst r3,#2
+ 645:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 646:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->xPhyProperties.ucSpeed = PHY_SPEED_10;
+ 1007              	 .loc 1 646 0
+ 1008 0184 14BF     	 ite ne
+ 1009 0186 0123     	 movne r3,#1
+ 647:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 648:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			else
+ 649:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 650:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->xPhyProperties.ucSpeed = PHY_SPEED_100;
+ 1010              	 .loc 1 650 0
+ 1011 0188 0223     	 moveq r3,#2
+ 1012 018a 84F83C30 	 strb r3,[r4,#60]
+ 1013              	.L72:
+ 1014              	.LBE42:
+ 548:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 1015              	 .loc 1 548 0 discriminator 2
+ 1016 018e 0137     	 adds r7,r7,#1
+ 1017              	.LVL106:
+ 1018 0190 7600     	 lsls r6,r6,#1
+ 1019              	.LVL107:
+ 1020 0192 A36A     	 ldr r3,[r4,#40]
+ 1021 0194 BB42     	 cmp r3,r7
+ 1022 0196 9BD8     	 bhi .L87
+ 1023              	.LVL108:
+ 1024              	.L62:
+ 651:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 652:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 653:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}	/* if( ulDoneMask != ( uint32_t) 0U ) */
+ 654:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 655:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return 0;
+ 656:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 1025              	 .loc 1 656 0
+ 1026 0198 0020     	 movs r0,#0
+ 1027 019a 07B0     	 add sp,sp,#28
+ 1028              	.LCFI12:
+ 1029              	 .cfi_def_cfa_offset 36
+ 1030              	 
+ 1031 019c BDE8F08F 	 pop {r4,r5,r6,r7,r8,r9,r10,fp,pc}
+ 1032              	.LVL109:
+ 1033              	.L94:
+ 1034              	.LCFI13:
+ 1035              	 .cfi_def_cfa_offset 0
+ 1036              	 .cfi_restore 4
+ 1037              	 .cfi_restore 5
+ 1038              	 .cfi_restore 6
+ 1039              	 .cfi_restore 7
+ 1040              	 .cfi_restore 8
+ 1041              	 .cfi_restore 9
+ 1042              	 .cfi_restore 10
+ 1043              	 .cfi_restore 11
+ 1044              	 .cfi_restore 14
+ 1045 01a0 0020     	 movs r0,#0
+ 1046              	.LVL110:
+ 1047 01a2 7047     	 bx lr
+ 1048              	.L96:
+ 1049              	 .align 2
+ 1050              	.L95:
+ 1051 01a4 60152200 	 .word 2233696
+ 1052 01a8 905C0020 	 .word 536894608
+ 1053              	 .cfi_endproc
+ 1054              	.LFE20:
+ 1056              	 .section .text.xPhyCheckLinkStatus,"ax",%progbits
+ 1057              	 .align 2
+ 1058              	 .global xPhyCheckLinkStatus
+ 1059              	 .thumb
+ 1060              	 .thumb_func
+ 1062              	xPhyCheckLinkStatus:
+ 1063              	.LFB21:
+ 657:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** /*-----------------------------------------------------------*/
+ 658:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 659:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyCheckLinkStatus( EthernetPhy_t *pxPhyObject, BaseType_t xHadReception )
+ 660:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** {
+ 1064              	 .loc 1 660 0
+ 1065              	 .cfi_startproc
+ 1066              	 
+ 1067              	 
+ 1068              	.LVL111:
+ 1069 0000 2DE9F047 	 push {r4,r5,r6,r7,r8,r9,r10,lr}
+ 1070              	.LCFI14:
+ 1071              	 .cfi_def_cfa_offset 32
+ 1072              	 .cfi_offset 4,-32
+ 1073              	 .cfi_offset 5,-28
+ 1074              	 .cfi_offset 6,-24
+ 1075              	 .cfi_offset 7,-20
+ 1076              	 .cfi_offset 8,-16
+ 1077              	 .cfi_offset 9,-12
+ 1078              	 .cfi_offset 10,-8
+ 1079              	 .cfi_offset 14,-4
+ 1080 0004 82B0     	 sub sp,sp,#8
+ 1081              	.LCFI15:
+ 1082              	 .cfi_def_cfa_offset 40
+ 1083 0006 0446     	 mov r4,r0
+ 1084              	.LVL112:
+ 661:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** uint32_t ulStatus, ulBitMask = 1U;
+ 662:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xPhyIndex;
+ 663:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** BaseType_t xNeedCheck = pdFALSE;
+ 664:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 665:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	if( xHadReception > 0 )
+ 1085              	 .loc 1 665 0
+ 1086 0008 0029     	 cmp r1,#0
+ 1087 000a 17DD     	 ble .L98
+ 666:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 667:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* A packet was received. No need to check for the PHY status now,
+ 668:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		but set a timer to check it later on. */
+ 669:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		vTaskSetTimeOutState( &( pxPhyObject->xLinkStatusTimer ) );
+ 1088              	 .loc 1 669 0
+ 1089 000c 1C30     	 adds r0,r0,#28
+ 1090              	.LVL113:
+ 1091 000e FFF7FEFF 	 bl vTaskSetTimeOutState
+ 1092              	.LVL114:
+ 670:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		pxPhyObject->xLinkStatusRemaining = pdMS_TO_TICKS( ipconfigPHY_LS_HIGH_CHECK_TIME_MS );
+ 1093              	 .loc 1 670 0
+ 1094 0012 43F69823 	 movw r3,#15000
+ 1095 0016 6362     	 str r3,[r4,#36]
+ 1096              	.LVL115:
+ 671:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 1 )
+ 1097              	 .loc 1 671 0
+ 1098 0018 A06A     	 ldr r0,[r4,#40]
+ 1099 001a 0028     	 cmp r0,#0
+ 1100 001c 4EDD     	 ble .L107
+ 1101 001e 0025     	 movs r5,#0
+ 1102 0020 2946     	 mov r1,r5
+ 1103 0022 0123     	 movs r3,#1
+ 672:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 673:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( ( pxPhyObject->ulLinkStatusMask & ulBitMask ) == 0UL )
+ 674:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 675:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				pxPhyObject->ulLinkStatusMask |= ulBitMask;
+ 676:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				FreeRTOS_printf( ( "xPhyCheckLinkStatus: PHY LS now %02lX\n", pxPhyObject->ulLinkStatusMask ) )
+ 677:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				xNeedCheck = pdTRUE;
+ 1104              	 .loc 1 677 0
+ 1105 0024 1E46     	 mov r6,r3
+ 1106              	.LVL116:
+ 1107              	.L101:
+ 673:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 1108              	 .loc 1 673 0
+ 1109 0026 626B     	 ldr r2,[r4,#52]
+ 1110 0028 1342     	 tst r3,r2
+ 1111 002a 02D1     	 bne .L100
+ 675:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				FreeRTOS_printf( ( "xPhyCheckLinkStatus: PHY LS now %02lX\n", pxPhyObject->ulLinkStatusMask ) )
+ 1112              	 .loc 1 675 0
+ 1113 002c 1A43     	 orrs r2,r2,r3
+ 1114 002e 6263     	 str r2,[r4,#52]
+ 1115              	.LVL117:
+ 1116              	 .loc 1 677 0
+ 1117 0030 3546     	 mov r5,r6
+ 1118              	.LVL118:
+ 1119              	.L100:
+ 671:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 1120              	 .loc 1 671 0 discriminator 2
+ 1121 0032 0131     	 adds r1,r1,#1
+ 1122              	.LVL119:
+ 1123 0034 5B00     	 lsls r3,r3,#1
+ 1124              	.LVL120:
+ 1125 0036 8142     	 cmp r1,r0
+ 1126 0038 F5DB     	 blt .L101
+ 1127 003a 48E0     	 b .L111
+ 1128              	.LVL121:
+ 1129              	.L98:
+ 678:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 679:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 680:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 681:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	else if( xTaskCheckForTimeOut( &( pxPhyObject->xLinkStatusTimer ), &( pxPhyObject->xLinkStatusRema
+ 1130              	 .loc 1 681 0
+ 1131 003c 00F11C0A 	 add r10,r0,#28
+ 1132 0040 5046     	 mov r0,r10
+ 1133              	.LVL122:
+ 1134 0042 04F12401 	 add r1,r4,#36
+ 1135              	.LVL123:
+ 1136 0046 FFF7FEFF 	 bl xTaskCheckForTimeOut
+ 1137              	.LVL124:
+ 1138 004a 0028     	 cmp r0,#0
+ 1139 004c 38D0     	 beq .L108
+ 1140              	.LVL125:
+ 682:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	{
+ 683:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		/* Frequent checking the PHY Link Status can affect for the performance of Ethernet controller.
+ 684:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		As long as packets are received, no polling is needed.
+ 685:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		Otherwise, polling will be done when the 'xLinkStatusTimer' expires. */
+ 686:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 1 )
+ 1141              	 .loc 1 686 0 discriminator 1
+ 1142 004e A36A     	 ldr r3,[r4,#40]
+ 1143 0050 002B     	 cmp r3,#0
+ 1144 0052 37DD     	 ble .L102
+ 1145 0054 04F11708 	 add r8,r4,#23
+ 1146              	 .loc 1 686 0 is_stmt 0
+ 1147 0058 0025     	 movs r5,#0
+ 1148 005a 2F46     	 mov r7,r5
+ 1149 005c 0126     	 movs r6,#1
+ 1150              	.LBB47:
+ 687:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 688:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
+ 689:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 690:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			if( pxPhyObject->fnPhyRead( xPhyAddress, phyREG_01_BMSR, &ulStatus ) == 0 )
+ 1151              	 .loc 1 690 0 is_stmt 1
+ 1152 005e B146     	 mov r9,r6
+ 1153              	.LVL126:
+ 1154              	.L105:
+ 1155 0060 2368     	 ldr r3,[r4]
+ 1156 0062 18F8010F 	 ldrb r0,[r8,#1]!
+ 1157              	.LVL127:
+ 1158 0066 4946     	 mov r1,r9
+ 1159 0068 01AA     	 add r2,sp,#4
+ 1160 006a 9847     	 blx r3
+ 1161              	.LVL128:
+ 1162 006c 90B9     	 cbnz r0,.L103
+ 691:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			{
+ 692:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				if( !!( pxPhyObject->ulLinkStatusMask & ulBitMask ) != !!( ulStatus & phyBMSR_LINK_STATUS ) )
+ 1163              	 .loc 1 692 0
+ 1164 006e 626B     	 ldr r2,[r4,#52]
+ 1165 0070 019B     	 ldr r3,[sp,#4]
+ 1166 0072 C3F38003 	 ubfx r3,r3,#2,#1
+ 1167 0076 1642     	 tst r6,r2
+ 1168 0078 14BF     	 ite ne
+ 1169 007a 0121     	 movne r1,#1
+ 1170 007c 0021     	 moveq r1,#0
+ 1171 007e 9942     	 cmp r1,r3
+ 1172 0080 08D0     	 beq .L103
+ 693:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				{
+ 694:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					if( ( ulStatus & phyBMSR_LINK_STATUS ) != 0 )
+ 1173              	 .loc 1 694 0
+ 1174 0082 1BB1     	 cbz r3,.L104
+ 695:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					{
+ 696:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 						pxPhyObject->ulLinkStatusMask |= ulBitMask;
+ 1175              	 .loc 1 696 0
+ 1176 0084 3243     	 orrs r2,r2,r6
+ 1177 0086 6263     	 str r2,[r4,#52]
+ 697:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					}
+ 698:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					else
+ 699:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					{
+ 700:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 						pxPhyObject->ulLinkStatusMask &= ~( ulBitMask );
+ 701:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					}
+ 702:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					FreeRTOS_printf( ( "xPhyCheckLinkStatus: PHY LS now %02lX\n", pxPhyObject->ulLinkStatusMask ) 
+ 703:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					xNeedCheck = pdTRUE;
+ 1178              	 .loc 1 703 0
+ 1179 0088 4D46     	 mov r5,r9
+ 1180 008a 03E0     	 b .L103
+ 1181              	.L104:
+ 700:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 					}
+ 1182              	 .loc 1 700 0
+ 1183 008c 22EA0602 	 bic r2,r2,r6
+ 1184 0090 6263     	 str r2,[r4,#52]
+ 1185              	 .loc 1 703 0
+ 1186 0092 4D46     	 mov r5,r9
+ 1187              	.L103:
+ 1188              	.LBE47:
+ 686:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 1189              	 .loc 1 686 0 discriminator 2
+ 1190 0094 0137     	 adds r7,r7,#1
+ 1191              	.LVL129:
+ 1192 0096 7600     	 lsls r6,r6,#1
+ 1193              	.LVL130:
+ 1194 0098 A36A     	 ldr r3,[r4,#40]
+ 1195 009a BB42     	 cmp r3,r7
+ 1196 009c E0DC     	 bgt .L105
+ 704:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 				}
+ 705:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			}
+ 706:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 707:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		vTaskSetTimeOutState( &( pxPhyObject->xLinkStatusTimer ) );
+ 1197              	 .loc 1 707 0
+ 1198 009e 5046     	 mov r0,r10
+ 1199 00a0 FFF7FEFF 	 bl vTaskSetTimeOutState
+ 1200              	.LVL131:
+ 708:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( pxPhyObject->ulLinkStatusMask & ( ulBitMask >> 1 ) ) != 0 )
+ 1201              	 .loc 1 708 0
+ 1202 00a4 636B     	 ldr r3,[r4,#52]
+ 1203 00a6 13EA5603 	 ands r3,r3,r6,lsr#1
+ 1204 00aa 03D0     	 beq .L106
+ 709:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 710:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* The link status is high, so don't poll the PHY too often. */
+ 711:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->xLinkStatusRemaining = pdMS_TO_TICKS( ipconfigPHY_LS_HIGH_CHECK_TIME_MS );
+ 1205              	 .loc 1 711 0
+ 1206 00ac 43F69823 	 movw r3,#15000
+ 1207 00b0 6362     	 str r3,[r4,#36]
+ 1208 00b2 0CE0     	 b .L111
+ 1209              	.LVL132:
+ 1210              	.L106:
+ 712:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 713:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		else
+ 714:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		{
+ 715:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			/* The link status is low, polling may be done more frequently. */
+ 716:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 			pxPhyObject->xLinkStatusRemaining = pdMS_TO_TICKS( ipconfigPHY_LS_LOW_CHECK_TIME_MS );
+ 1211              	 .loc 1 716 0
+ 1212 00b4 4FF47A73 	 mov r3,#1000
+ 1213 00b8 6362     	 str r3,[r4,#36]
+ 1214 00ba 08E0     	 b .L111
+ 1215              	.LVL133:
+ 1216              	.L107:
+ 663:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 
+ 1217              	 .loc 1 663 0
+ 1218 00bc 0025     	 movs r5,#0
+ 1219 00be 06E0     	 b .L111
+ 1220              	.LVL134:
+ 1221              	.L108:
+ 1222 00c0 0025     	 movs r5,#0
+ 1223              	.LVL135:
+ 1224 00c2 04E0     	 b .L111
+ 1225              	.LVL136:
+ 1226              	.L102:
+ 707:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		if( ( pxPhyObject->ulLinkStatusMask & ( ulBitMask >> 1 ) ) != 0 )
+ 1227              	 .loc 1 707 0
+ 1228 00c4 5046     	 mov r0,r10
+ 1229 00c6 FFF7FEFF 	 bl vTaskSetTimeOutState
+ 1230              	.LVL137:
+ 1231 00ca 0025     	 movs r5,#0
+ 1232 00cc F2E7     	 b .L106
+ 1233              	.LVL138:
+ 1234              	.L111:
+ 717:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 		}
+ 718:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	}
+ 719:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** 	return xNeedCheck;
+ 720:../FreeRTOS-Plus-TCP/portable/NetworkInterface/Common/phyHandling.c **** }
+ 1235              	 .loc 1 720 0
+ 1236 00ce 2846     	 mov r0,r5
+ 1237 00d0 02B0     	 add sp,sp,#8
+ 1238              	.LCFI16:
+ 1239              	 .cfi_def_cfa_offset 32
+ 1240              	 
+ 1241 00d2 BDE8F087 	 pop {r4,r5,r6,r7,r8,r9,r10,pc}
+ 1242              	 .cfi_endproc
+ 1243              	.LFE21:
+ 1245 00d6 00BF     	 .text
+ 1246              	.Letext0:
+ 1247              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1248              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 1249              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 1250              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/task.h"
+ 1251              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/portable/NetworkInterface/include/phyHandling.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 phyHandling.c
+    {standard input}:19     .text.vPhyInitialise:00000000 $t
+    {standard input}:24     .text.vPhyInitialise:00000000 vPhyInitialise
+    {standard input}:58     .text.xPhyDiscover:00000000 $t
+    {standard input}:63     .text.xPhyDiscover:00000000 xPhyDiscover
+    {standard input}:156    .text.xPhyConfigure:00000000 $t
+    {standard input}:161    .text.xPhyConfigure:00000000 xPhyConfigure
+    {standard input}:610    .text.xPhyConfigure:0000021c $d
+    {standard input}:616    .text.xPhyFixedValue:00000000 $t
+    {standard input}:621    .text.xPhyFixedValue:00000000 xPhyFixedValue
+    {standard input}:703    .text.xPhyStartAutoNegotiation:00000000 $t
+    {standard input}:708    .text.xPhyStartAutoNegotiation:00000000 xPhyStartAutoNegotiation
+    {standard input}:1051   .text.xPhyStartAutoNegotiation:000001a4 $d
+    {standard input}:1057   .text.xPhyCheckLinkStatus:00000000 $t
+    {standard input}:1062   .text.xPhyCheckLinkStatus:00000000 xPhyCheckLinkStatus
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.stddef.h.39.fb88e218f22ad7a0ab38f3d93c6eb3e4
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.65.7c7009d79fb33c27bcf8e2214c76b343
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.53.fe81d5186f74ee22c982a1a79f340ee8
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+                           .group:00000000 wm4.queue.h.66.45d4a3cf5de24cde7e732f8dad25383c
+                           .group:00000000 wm4.semphr.h.38.96f44691bfa19eb833944d3a35b81e54
+                           .group:00000000 wm4.FreeRTOSIPConfig.h.37.3f9c1db988571ff1f3dec4c7e54978d6
+                           .group:00000000 wm4.FreeRTOS_errno_TCP.h.27.708877b341d0e6bcb4ba112b2ad8082a
+                           .group:00000000 wm4.FreeRTOSIPConfigDefaults.h.41.f972b11d9b1eba5383080cfaef1fd740
+                           .group:00000000 wm4.IPTraceMacroDefaults.h.31.69642530b5a79c93e762c9b09ac0d1d5
+                           .group:00000000 wm4.FreeRTOS_IP.h.59.3f5e36f6612bd0c66747c6093da47335
+                           .group:00000000 wm4.FreeRTOS_IP.h.179.e5077063e624bc5d3f02542470d6ea94
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.timers.h.29.025d268d6baf57298309e7b498ee1cc7
+                           .group:00000000 wm4.FreeRTOS_Sockets.h.58.61d472da32c0e0f5bc49c368f15d0ac5
+                           .group:00000000 wm4.phyHandling.h.12.0a4ebfeb660f925569139c679c56048c
+
+UNDEFINED SYMBOLS
+memset
+vTaskSetTimeOutState
+xTaskCheckForTimeOut
+vTaskDelay

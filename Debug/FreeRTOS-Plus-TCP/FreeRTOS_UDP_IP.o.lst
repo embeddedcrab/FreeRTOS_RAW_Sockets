@@ -1,0 +1,1148 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "FreeRTOS_UDP_IP.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.vProcessGeneratedUDPPacket,"ax",%progbits
+  19              	 .align 2
+  20              	 .global vProcessGeneratedUDPPacket
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	vProcessGeneratedUDPPacket:
+  25              	.LFB50:
+  26              	 .file 1 "../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c"
+   1:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /*
+   2:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * FreeRTOS+TCP V2.2.2
+   3:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+   4:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  *
+   5:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+   6:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * this software and associated documentation files (the "Software"), to deal in
+   7:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * the Software without restriction, including without limitation the rights to
+   8:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   9:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * the Software, and to permit persons to whom the Software is furnished to do so,
+  10:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * subject to the following conditions:
+  11:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  *
+  12:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * The above copyright notice and this permission notice shall be included in all
+  13:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * copies or substantial portions of the Software.
+  14:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  *
+  15:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  16:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  17:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  18:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  19:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  20:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  21:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  *
+  22:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * http://aws.amazon.com/freertos
+  23:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  * http://www.FreeRTOS.org
+  24:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c ****  */
+  25:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  26:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /* Standard includes. */
+  27:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include <stdint.h>
+  28:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include <stdio.h>
+  29:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  30:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /* FreeRTOS includes. */
+  31:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "FreeRTOS.h"
+  32:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "task.h"
+  33:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "queue.h"
+  34:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "semphr.h"
+  35:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  36:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /* FreeRTOS+TCP includes. */
+  37:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "FreeRTOS_IP.h"
+  38:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "FreeRTOS_Sockets.h"
+  39:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "FreeRTOS_IP_Private.h"
+  40:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "FreeRTOS_UDP_IP.h"
+  41:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "FreeRTOS_ARP.h"
+  42:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "FreeRTOS_DHCP.h"
+  43:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "NetworkInterface.h"
+  44:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #include "NetworkBufferManagement.h"
+  45:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  46:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #if( ipconfigUSE_DNS == 1 )
+  47:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	#include "FreeRTOS_DNS.h"
+  48:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #endif
+  49:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  50:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /* The expected IP version and header length coded into the IP header itself. */
+  51:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #define ipIP_VERSION_AND_HEADER_LENGTH_BYTE ( ( uint8_t ) 0x45 )
+  52:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  53:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /* Part of the Ethernet and IP headers are always constant when sending an IPv4
+  54:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** UDP packet.  This array defines the constant parts, allowing this part of the
+  55:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** packet to be filled in using a simple memcpy() instead of individual writes. */
+  56:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /*lint -e708 (Info -- union initialization). */
+  57:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** UDPPacketHeader_t xDefaultPartUDPPacketHeader =
+  58:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** {
+  59:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	/* .ucBytes : */
+  60:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+  61:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* Ethernet source MAC address. */
+  62:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x08, 0x00, 							/* Ethernet frame type. */
+  63:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		ipIP_VERSION_AND_HEADER_LENGTH_BYTE, 	/* ucVersionHeaderLength. */
+  64:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 									/* ucDifferentiatedServicesCode. */
+  65:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usLength. */
+  66:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usIdentification. */
+  67:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usFragmentOffset. */
+  68:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		ipconfigUDP_TIME_TO_LIVE, 				/* ucTimeToLive */
+  69:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		ipPROTOCOL_UDP, 						/* ucProtocol. */
+  70:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usHeaderChecksum. */
+  71:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 0x00, 0x00 					/* Source IP address. */
+  72:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+  73:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** };
+  74:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  75:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** UDPPacketHeader_t xDefaultPartRAWPacketHeader =
+  76:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** {
+  77:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	/* .ucBytes : */
+  78:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+  79:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* Ethernet source MAC address. */
+  80:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x08, 0x00, 							/* Ethernet frame type. */
+  81:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		ipIP_VERSION_AND_HEADER_LENGTH_BYTE, 	/* ucVersionHeaderLength. */
+  82:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 									/* ucDifferentiatedServicesCode. */
+  83:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usLength. */
+  84:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usIdentification. */
+  85:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usFragmentOffset. */
+  86:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		ipconfigUDP_TIME_TO_LIVE, 				/* ucTimeToLive */
+  87:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		ipPROTOCOL_RAW, 						/* ucProtocol. */
+  88:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 							/* usHeaderChecksum. */
+  89:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		0x00, 0x00, 0x00, 0x00 					/* Source IP address. */
+  90:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+  91:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** };
+  92:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /*-----------------------------------------------------------*/
+  93:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+  94:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** void vProcessGeneratedUDPPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
+  95:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** {
+  27              	 .loc 1 95 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 2DE9F041 	 push {r4,r5,r6,r7,r8,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 24
+  35              	 .cfi_offset 4,-24
+  36              	 .cfi_offset 5,-20
+  37              	 .cfi_offset 6,-16
+  38              	 .cfi_offset 7,-12
+  39              	 .cfi_offset 8,-8
+  40              	 .cfi_offset 14,-4
+  41 0004 82B0     	 sub sp,sp,#8
+  42              	.LCFI1:
+  43              	 .cfi_def_cfa_offset 32
+  44 0006 0446     	 mov r4,r0
+  96:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** UDPPacket_t *pxUDPPacket;
+  97:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** IPHeader_t *pxIPHeader;
+  98:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** eARPLookupResult_t eReturned;
+  99:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
+  45              	 .loc 1 99 0
+  46 0008 4369     	 ldr r3,[r0,#20]
+  47 000a 0193     	 str r3,[sp,#4]
+ 100:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** size_t uxPayloadSize;
+ 101:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 102:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	/* Map the UDP packet onto the start of the frame. */
+ 103:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	pxUDPPacket = ipCAST_PTR_TO_TYPE_PTR( UDPPacket_t, pxNetworkBuffer->pucEthernetBuffer );
+  48              	 .loc 1 103 0
+  49 000c 8569     	 ldr r5,[r0,#24]
+  50              	.LVL1:
+ 104:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 105:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #if ipconfigSUPPORT_OUTGOING_PINGS == 1
+ 106:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
+ 107:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+ 108:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		uxPayloadSize = pxNetworkBuffer->xDataLength - sizeof( ICMPPacket_t );
+ 109:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+ 110:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	else
+ 111:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** #endif
+ 112:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+ 113:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		uxPayloadSize = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
+  51              	 .loc 1 113 0
+  52 000e C669     	 ldr r6,[r0,#28]
+  53 0010 2A3E     	 subs r6,r6,#42
+  54              	.LVL2:
+ 114:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+ 115:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 116:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	/* Determine the ARP cache status for the requested IP address. */
+ 117:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	eReturned = eARPGetCacheEntry( &( ulIPAddress ), &( pxUDPPacket->xEthernetHeader.xDestinationAddre
+  55              	 .loc 1 117 0
+  56 0012 01A8     	 add r0,sp,#4
+  57              	.LVL3:
+  58 0014 2946     	 mov r1,r5
+  59 0016 FFF7FEFF 	 bl eARPGetCacheEntry
+  60              	.LVL4:
+ 118:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 119:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	if( eReturned != eCantSendPacket )
+  61              	 .loc 1 119 0
+  62 001a 0228     	 cmp r0,#2
+  63 001c 64D0     	 beq .L4
+ 120:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+ 121:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		if( eReturned == eARPCacheHit )
+  64              	 .loc 1 121 0
+  65 001e 0128     	 cmp r0,#1
+  66 0020 54D1     	 bne .L5
+  67              	.LVL5:
+  68              	.LBB12:
+ 122:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		{
+ 123:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+ 124:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				uint8_t ucSocketOptions;
+ 125:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#endif
+ 126:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			iptraceSENDING_UDP_PACKET( pxNetworkBuffer->ulIPAddress );
+ 127:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 128:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* Create short cuts to the data within the packet. */
+ 129:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			pxIPHeader = &( pxUDPPacket->xIPHeader );
+ 130:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 131:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+ 132:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* Is it possible that the packet is not actually a UDP packet
+ 133:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			after all, but an ICMP packet. */
+ 134:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( pxNetworkBuffer->usPort != ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
+  69              	 .loc 1 134 0
+  70 0022 238C     	 ldrh r3,[r4,#32]
+  71 0024 73B1     	 cbz r3,.L6
+  72              	.LVL6:
+  73              	.LBB13:
+ 135:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif /* ipconfigSUPPORT_OUTGOING_PINGS */
+ 136:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 137:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			UDPHeader_t *pxUDPHeader;
+ 138:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 139:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxUDPHeader = &( pxUDPPacket->xUDPHeader );
+ 140:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 141:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxUDPHeader->usDestinationPort = pxNetworkBuffer->usPort;
+  74              	 .loc 1 141 0
+  75 0026 AB84     	 strh r3,[r5,#36]
+ 142:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxUDPHeader->usSourcePort = pxNetworkBuffer->usBoundPort;
+  76              	 .loc 1 142 0
+  77 0028 638C     	 ldrh r3,[r4,#34]
+  78 002a 6B84     	 strh r3,[r5,#34]
+ 143:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxUDPHeader->usLength = ( uint16_t ) ( uxPayloadSize + sizeof( UDPHeader_t ) );
+  79              	 .loc 1 143 0
+  80 002c 06F10803 	 add r3,r6,#8
+  81 0030 9BB2     	 uxth r3,r3
+ 144:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxUDPHeader->usLength = FreeRTOS_htons( pxUDPHeader->usLength );
+  82              	 .loc 1 144 0
+  83 0032 1A0A     	 lsrs r2,r3,#8
+  84 0034 42EA0323 	 orr r3,r2,r3,lsl#8
+  85 0038 EB84     	 strh r3,[r5,#38]
+ 145:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxUDPHeader->usChecksum = 0U;
+  86              	 .loc 1 145 0
+  87 003a 0023     	 movs r3,#0
+  88 003c 85F82830 	 strb r3,[r5,#40]
+  89 0040 85F82930 	 strb r3,[r5,#41]
+  90              	.LVL7:
+  91              	.L6:
+  92              	.LBE13:
+ 146:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 147:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 148:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* memcpy() the constant parts of the header information into
+ 149:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			the	correct location within the packet.  This fills in:
+ 150:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xEthernetHeader.xSourceAddress
+ 151:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xEthernetHeader.usFrameType
+ 152:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.ucVersionHeaderLength
+ 153:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.ucDifferentiatedServicesCode
+ 154:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.usLength
+ 155:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.usIdentification
+ 156:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.usFragmentOffset
+ 157:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.ucTimeToLive
+ 158:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.ucProtocol
+ 159:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			and
+ 160:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xIPHeader.usHeaderChecksum
+ 161:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			*/
+ 162:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 163:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* Save options now, as they will be overwritten by memcpy */
+ 164:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+ 165:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 166:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				ucSocketOptions = pxNetworkBuffer->pucEthernetBuffer[ ipSOCKET_OPTIONS_OFFSET ];
+  93              	 .loc 1 166 0
+  94 0044 D4F818C0 	 ldr ip,[r4,#24]
+  95 0048 1CF8068F 	 ldrb r8,[ip,#6]!
+  96              	.LVL8:
+ 167:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 168:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#endif
+ 169:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/*
+ 170:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			 * Offset the memcpy by the size of a MAC address to start at the packet's
+ 171:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			 * Ethernet header 'source' MAC address; the preceding 'destination' should not be altered.
+ 172:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			 */
+ 173:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* The Ethernet source address is at offset 6. */
+ 174:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			char *pxUdpSrcAddrOffset = ( char *) ( &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddress
+ 175:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			( void ) memcpy( ( void * ) pxUdpSrcAddrOffset, ( const void * ) ( xDefaultPartUDPPacketHeader.u
+  97              	 .loc 1 175 0
+  98 004c DFF8A4E0 	 ldr lr,.L13
+  99 0050 BEE80F00 	 ldmia lr!,{r0,r1,r2,r3}
+ 100              	.LVL9:
+ 101 0054 A769     	 ldr r7,[r4,#24]
+ 102 0056 C7F80600 	 str r0,[r7,#6]
+ 103 005a CCF80410 	 str r1,[ip,#4]
+ 104 005e CCF80820 	 str r2,[ip,#8]
+ 105 0062 CCF80C30 	 str r3,[ip,#12]
+ 106 0066 BEE80300 	 ldmia lr!,{r0,r1}
+ 107 006a CCF81000 	 str r0,[ip,#16]
+ 108 006e CCF81410 	 str r1,[ip,#20]
+ 176:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 177:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if ipconfigSUPPORT_OUTGOING_PINGS == 1
+ 178:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
+ 109              	 .loc 1 178 0
+ 110 0072 238C     	 ldrh r3,[r4,#32]
+ 111 0074 23B9     	 cbnz r3,.L7
+ 179:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 180:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxIPHeader->ucProtocol = ipPROTOCOL_ICMP;
+ 112              	 .loc 1 180 0
+ 113 0076 0123     	 movs r3,#1
+ 114 0078 EB75     	 strb r3,[r5,#23]
+ 181:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxIPHeader->usLength = ( uint16_t ) ( uxPayloadSize + sizeof( IPHeader_t ) + sizeof( ICMPHeader
+ 115              	 .loc 1 181 0
+ 116 007a 1C36     	 adds r6,r6,#28
+ 117              	.LVL10:
+ 118 007c 2E82     	 strh r6,[r5,#16]
+ 119 007e 01E0     	 b .L8
+ 120              	.LVL11:
+ 121              	.L7:
+ 182:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 183:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			else
+ 184:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif /* ipconfigSUPPORT_OUTGOING_PINGS */
+ 185:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 186:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxIPHeader->usLength = ( uint16_t ) ( uxPayloadSize + sizeof( IPHeader_t ) + sizeof( UDPHeader_
+ 122              	 .loc 1 186 0
+ 123 0080 1C36     	 adds r6,r6,#28
+ 124              	.LVL12:
+ 125 0082 2E82     	 strh r6,[r5,#16]
+ 126              	.LVL13:
+ 127              	.L8:
+ 187:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 188:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 189:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			pxIPHeader->usLength = FreeRTOS_htons( pxIPHeader->usLength );
+ 128              	 .loc 1 189 0
+ 129 0084 2A8A     	 ldrh r2,[r5,#16]
+ 130 0086 130A     	 lsrs r3,r2,#8
+ 131 0088 43EA0223 	 orr r3,r3,r2,lsl#8
+ 132 008c 2B82     	 strh r3,[r5,#16]
+ 190:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			pxIPHeader->ulDestinationIPAddress = pxNetworkBuffer->ulIPAddress;
+ 133              	 .loc 1 190 0
+ 134 008e 6369     	 ldr r3,[r4,#20]
+ 135 0090 C5F81E30 	 str r3,[r5,#30]
+ 191:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 192:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#if( ipconfigUSE_LLMNR == 1 )
+ 193:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 194:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				/* LLMNR messages are typically used on a LAN and they're
+ 195:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				 * not supposed to cross routers */
+ 196:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				if( pxNetworkBuffer->ulIPAddress == ipLLMNR_IP_ADDR )
+ 197:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 198:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					pxIPHeader->ucTimeToLive = 0x01;
+ 199:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 200:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 201:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#endif
+ 202:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 203:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+ 204:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 205:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxIPHeader->usHeaderChecksum = 0U;
+ 136              	 .loc 1 205 0
+ 137 0094 0020     	 movs r0,#0
+ 138 0096 2876     	 strb r0,[r5,#24]
+ 139 0098 6876     	 strb r0,[r5,#25]
+ 206:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0U, ( uint8_t * ) &( pxIPHeader->ucVersionHe
+ 140              	 .loc 1 206 0
+ 141 009a 05F10E01 	 add r1,r5,#14
+ 142 009e 1422     	 movs r2,#20
+ 143 00a0 FFF7FEFF 	 bl usGenerateChecksum
+ 144              	.LVL14:
+ 207:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
+ 145              	 .loc 1 207 0
+ 146 00a4 030A     	 lsrs r3,r0,#8
+ 147 00a6 43EA0020 	 orr r0,r3,r0,lsl#8
+ 148 00aa C043     	 mvns r0,r0
+ 149 00ac 2883     	 strh r0,[r5,#24]
+ 208:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 209:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				if( ( ucSocketOptions & ( uint8_t ) FREERTOS_SO_UDPCKSUM_OUT ) != 0U )
+ 150              	 .loc 1 209 0
+ 151 00ae 18F0020F 	 tst r8,#2
+ 152 00b2 05D0     	 beq .L9
+ 210:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 211:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					( void ) usGenerateProtocolChecksum( ( uint8_t * ) pxUDPPacket, pxNetworkBuffer->xDataLength, 
+ 153              	 .loc 1 211 0
+ 154 00b4 2846     	 mov r0,r5
+ 155 00b6 E169     	 ldr r1,[r4,#28]
+ 156 00b8 0122     	 movs r2,#1
+ 157 00ba FFF7FEFF 	 bl usGenerateProtocolChecksum
+ 158              	.LVL15:
+ 159 00be 0EE0     	 b .L10
+ 160              	.L9:
+ 212:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 213:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				else
+ 214:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 215:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					pxUDPPacket->xUDPHeader.usChecksum = 0U;
+ 161              	 .loc 1 215 0
+ 162 00c0 0023     	 movs r3,#0
+ 163 00c2 85F82830 	 strb r3,[r5,#40]
+ 164 00c6 85F82930 	 strb r3,[r5,#41]
+ 165 00ca 08E0     	 b .L10
+ 166              	.LVL16:
+ 167              	.L5:
+ 168              	.LBE12:
+ 216:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 217:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 218:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#endif
+ 219:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 220:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		else if( eReturned == eARPCacheMiss )
+ 169              	 .loc 1 220 0
+ 170 00cc 60B9     	 cbnz r0,.L4
+ 221:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		{
+ 222:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* Add an entry to the ARP table with a null hardware address.
+ 223:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			This allows the ARP timer to know that an ARP reply is
+ 224:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			outstanding, and perform retransmissions if necessary. */
+ 225:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			vARPRefreshCacheEntry( NULL, ulIPAddress );
+ 171              	 .loc 1 225 0
+ 172 00ce 0199     	 ldr r1,[sp,#4]
+ 173 00d0 FFF7FEFF 	 bl vARPRefreshCacheEntry
+ 174              	.LVL17:
+ 226:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 227:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* Generate an ARP for the required IP address. */
+ 228:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			iptracePACKET_DROPPED_TO_GENERATE_ARP( pxNetworkBuffer->ulIPAddress );
+ 229:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			pxNetworkBuffer->ulIPAddress = ulIPAddress;
+ 175              	 .loc 1 229 0
+ 176 00d4 019B     	 ldr r3,[sp,#4]
+ 177 00d6 6361     	 str r3,[r4,#20]
+ 230:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			vARPGenerateRequestPacket( pxNetworkBuffer );
+ 178              	 .loc 1 230 0
+ 179 00d8 2046     	 mov r0,r4
+ 180 00da FFF7FEFF 	 bl vARPGenerateRequestPacket
+ 181              	.LVL18:
+ 182              	.L10:
+ 231:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 232:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		else
+ 233:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		{
+ 234:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* The lookup indicated that an ARP request has already been
+ 235:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			sent out for the queried IP address. */
+ 236:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			eReturned = eCantSendPacket;
+ 237:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 238:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+ 239:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 240:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	if( eReturned != eCantSendPacket )
+ 241:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+ 242:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		/* The network driver is responsible for freeing the network buffer
+ 243:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		after the packet has been sent. */
+ 244:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 245:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if defined( ipconfigETHERNET_MINIMUM_PACKET_BYTES )
+ 246:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		{
+ 247:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( pxNetworkBuffer->xDataLength < ( size_t ) ipconfigETHERNET_MINIMUM_PACKET_BYTES )
+ 248:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 249:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			BaseType_t xIndex;
+ 250:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 251:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				for( xIndex = ( BaseType_t ) pxNetworkBuffer->xDataLength; xIndex < ( BaseType_t ) ipconfigETHE
+ 252:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 253:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					pxNetworkBuffer->pucEthernetBuffer[ xIndex ] = 0U;
+ 254:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 255:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				pxNetworkBuffer->xDataLength = ( size_t ) ipconfigETHERNET_MINIMUM_PACKET_BYTES;
+ 256:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 257:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 258:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif
+ 259:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 260:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE );
+ 183              	 .loc 1 260 0
+ 184 00de 2046     	 mov r0,r4
+ 185 00e0 0121     	 movs r1,#1
+ 186 00e2 FFF7FEFF 	 bl xNetworkInterfaceOutput
+ 187              	.LVL19:
+ 188 00e6 02E0     	 b .L1
+ 189              	.LVL20:
+ 190              	.L4:
+ 261:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+ 262:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	else
+ 263:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+ 264:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		/* The packet can't be sent (DHCP not completed?).  Just drop the
+ 265:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		packet. */
+ 266:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		vReleaseNetworkBufferAndDescriptor( pxNetworkBuffer );
+ 191              	 .loc 1 266 0
+ 192 00e8 2046     	 mov r0,r4
+ 193 00ea FFF7FEFF 	 bl vReleaseNetworkBufferAndDescriptor
+ 194              	.LVL21:
+ 195              	.L1:
+ 267:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+ 268:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** }
+ 196              	 .loc 1 268 0
+ 197 00ee 02B0     	 add sp,sp,#8
+ 198              	.LCFI2:
+ 199              	 .cfi_def_cfa_offset 24
+ 200              	 
+ 201 00f0 BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 202              	.LVL22:
+ 203              	.L14:
+ 204              	 .align 2
+ 205              	.L13:
+ 206 00f4 00000000 	 .word .LANCHOR0
+ 207              	 .cfi_endproc
+ 208              	.LFE50:
+ 210              	 .section .text.xProcessReceivedUDPPacket,"ax",%progbits
+ 211              	 .align 2
+ 212              	 .global xProcessReceivedUDPPacket
+ 213              	 .thumb
+ 214              	 .thumb_func
+ 216              	xProcessReceivedUDPPacket:
+ 217              	.LFB51:
+ 269:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /*-----------------------------------------------------------*/
+ 270:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 271:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** BaseType_t xProcessReceivedUDPPacket( NetworkBufferDescriptor_t *pxNetworkBuffer, uint16_t usPort )
+ 272:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** {
+ 218              	 .loc 1 272 0
+ 219              	 .cfi_startproc
+ 220              	 
+ 221              	 
+ 222              	.LVL23:
+ 273:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** BaseType_t xReturn = pdPASS;
+ 274:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** FreeRTOS_Socket_t *pxSocket;
+ 275:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** configASSERT( pxNetworkBuffer != NULL );
+ 223              	 .loc 1 275 0
+ 224 0000 40B9     	 cbnz r0,.L16
+ 225              	.LBB14:
+ 226              	.LBB15:
+ 227              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * FreeRTOS Kernel V10.4.1
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * this software and associated documentation files (the "Software"), to deal in
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * the Software without restriction, including without limitation the rights to
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * the Software, and to permit persons to whom the Software is furnished to do so,
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * subject to the following conditions:
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * The above copyright notice and this permission notice shall be included in all
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * copies or substantial portions of the Software.
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * https://www.FreeRTOS.org
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * https://github.com/FreeRTOS
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * 1 tab == 4 spaces!
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  */
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** #ifndef PORTMACRO_H
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define PORTMACRO_H
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifdef __cplusplus
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         extern "C" {
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Port specific definitions.
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * The settings in this file configure FreeRTOS correctly for the
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * given hardware and compiler.
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * These settings should not be altered.
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *-----------------------------------------------------------
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  */
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Type definitions. */
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portCHAR          char
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portFLOAT         float
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDOUBLE        double
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portLONG          long
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSHORT         short
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSTACK_TYPE    uint32_t
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portBASE_TYPE     long
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef portSTACK_TYPE   StackType_t;
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef long             BaseType_t;
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef unsigned long    UBaseType_t;
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #if ( configUSE_16_BIT_TICKS == 1 )
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         typedef uint16_t     TickType_t;
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portMAX_DELAY              ( TickType_t ) 0xffff
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #else
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         typedef uint32_t     TickType_t;
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portMAX_DELAY              ( TickType_t ) 0xffffffffUL
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * not need to be guarded with a critical section. */
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portTICK_TYPE_IS_ATOMIC    1
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Architecture specifics. */
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSTACK_GROWTH      ( -1 )
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portBYTE_ALIGNMENT    8
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDONT_DISCARD      __attribute__( ( used ) )
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Scheduler utilities. */
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portYIELD()                                 \
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {                                                   \
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Set a PendSV to request a context switch. */ \
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT; \
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****                                                         \
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Barriers are normally not required but do ensure the code is completely \
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****          * within the specified behaviour for the architecture. */ \
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "dsb" ::: "memory" );                     \
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "isb" );                                  \
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     }
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNVIC_INT_CTRL_REG     ( *( ( volatile uint32_t * ) 0xe000ed04 ) )
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNVIC_PENDSVSET_BIT    ( 1UL << 28UL )
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portEND_SWITCHING_ISR( xSwitchRequired )    if( xSwitchRequired != pdFALSE ) portYIELD(
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portYIELD_FROM_ISR( x )                     portEND_SWITCHING_ISR( x )
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Critical section management. */
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     extern void vPortEnterCritical( void );
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     extern void vPortExitCritical( void );
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSET_INTERRUPT_MASK_FROM_ISR()         ulPortRaiseBASEPRI()
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x )    vPortSetBASEPRI( x )
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDISABLE_INTERRUPTS()                  vPortRaiseBASEPRI()
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portENABLE_INTERRUPTS()                   vPortSetBASEPRI( 0 )
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portENTER_CRITICAL()                      vPortEnterCritical()
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portEXIT_CRITICAL()                       vPortExitCritical()
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Task function macros as described on the FreeRTOS.org WEB site.  These are
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * not necessary for to use this port.  They are defined so the common demo files
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * (which build with all the ports) will build. */
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParamete
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParamete
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Tickless idle/low power functionality. */
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef portSUPPRESS_TICKS_AND_SLEEP
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         extern void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime )    vPortSuppressTicksAndSleep( xE
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Architecture specific optimisations. */
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define configUSE_PORT_OPTIMISED_TASK_SELECTION    1
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Generic helper function. */
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __attribute__( ( always_inline ) ) static inline uint8_t ucPortCountLeadingZeros( uint32_t 
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             uint8_t ucReturn;
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             __asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) : "memory" );
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             return ucReturn;
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Check the configuration. */
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #if ( configMAX_PRIORITIES > 32 )
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             #error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIO
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #endif
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Store/clear the ready priorities in a bit map. */
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities )    ( uxReadyPriorities )
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities )     ( uxReadyPriorities )
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    uxTopPriority = ( 3
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifdef configASSERT
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         void vPortValidateInterruptPriority( void );
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()    vPortValidateInterruptPriority()
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* portNOP() is not required by this port. */
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNOP()
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portINLINE              __inline
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef portFORCE_INLINE
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portFORCE_INLINE    inline __attribute__( ( always_inline ) )
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         uint32_t ulCurrentInterrupt;
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         BaseType_t xReturn;
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Obtain the number of the currently executing interrupt. */
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "mrs %0, ipsr" : "=r" ( ulCurrentInterrupt )::"memory" );
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         if( ulCurrentInterrupt == 0 )
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             xReturn = pdFALSE;
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         else
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             xReturn = pdTRUE;
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         return xReturn;
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     }
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         uint32_t ulNewBASEPRI;
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile
+ 228              	 .loc 2 197 0
+ 229              	
+ 230 0002 4FF01403 	 mov r3,#20
+ 231 0006 83F31188 	 msr basepri,r3
+ 232 000a BFF36F8F 	 isb 
+ 233 000e BFF34F8F 	 dsb 
+ 234              	
+ 235              	
+ 236              	.LVL24:
+ 237              	 .thumb
+ 238              	.L17:
+ 239              	.LBE15:
+ 240              	.LBE14:
+ 241              	 .loc 1 275 0 discriminator 1
+ 242 0012 FEE7     	 b .L17
+ 243              	.L16:
+ 272:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** BaseType_t xReturn = pdPASS;
+ 244              	 .loc 1 272 0
+ 245 0014 70B5     	 push {r4,r5,r6,lr}
+ 246              	.LCFI3:
+ 247              	 .cfi_def_cfa_offset 16
+ 248              	 .cfi_offset 4,-16
+ 249              	 .cfi_offset 5,-12
+ 250              	 .cfi_offset 6,-8
+ 251              	 .cfi_offset 14,-4
+ 252 0016 0446     	 mov r4,r0
+ 276:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** configASSERT( pxNetworkBuffer->pucEthernetBuffer != NULL );
+ 253              	 .loc 1 276 0
+ 254 0018 8569     	 ldr r5,[r0,#24]
+ 255 001a 45B9     	 cbnz r5,.L18
+ 256              	.LBB16:
+ 257              	.LBB17:
+ 258              	 .loc 2 197 0
+ 259              	
+ 260 001c 4FF01403 	 mov r3,#20
+ 261 0020 83F31188 	 msr basepri,r3
+ 262 0024 BFF36F8F 	 isb 
+ 263 0028 BFF34F8F 	 dsb 
+ 264              	
+ 265              	
+ 266              	.LVL25:
+ 267              	 .thumb
+ 268              	.L19:
+ 269              	.LBE17:
+ 270              	.LBE16:
+ 271              	 .loc 1 276 0 discriminator 2
+ 272 002c FEE7     	 b .L19
+ 273              	.L18:
+ 274 002e 0846     	 mov r0,r1
+ 275              	.LVL26:
+ 277:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 278:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** /* Map the ethernet buffer to the UDPPacket_t struct for easy access to the fields. */
+ 279:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** const UDPPacket_t *pxUDPPacket = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( UDPPacket_t, pxNetworkBuffer->
+ 280:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 281:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	/* Caller must check for minimum packet size. */
+ 282:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	pxSocket = pxUDPSocketLookup( usPort );
+ 276              	 .loc 1 282 0
+ 277 0030 FFF7FEFF 	 bl pxUDPSocketLookup
+ 278              	.LVL27:
+ 283:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 284:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	if( pxSocket != NULL )
+ 279              	 .loc 1 284 0
+ 280 0034 0646     	 mov r6,r0
+ 281 0036 10B3     	 cbz r0,.L20
+ 285:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+ 286:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 287:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		/* When refreshing the ARP cache with received UDP packets we must be
+ 288:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		careful;  hundreds of broadcast messages may pass and if we're not
+ 289:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		handling them, no use to fill the ARP cache with those IP addresses. */
+ 290:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		vARPRefreshCacheEntry( &( pxUDPPacket->xEthernetHeader.xSourceAddress ), pxUDPPacket->xIPHeader.u
+ 282              	 .loc 1 290 0
+ 283 0038 A81D     	 adds r0,r5,#6
+ 284              	.LVL28:
+ 285 003a D5F81A10 	 ldr r1,[r5,#26]
+ 286 003e FFF7FEFF 	 bl vARPRefreshCacheEntry
+ 287              	.LVL29:
+ 291:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 292:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if( ipconfigUSE_CALLBACKS == 1 )
+ 293:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		{
+ 294:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* Did the owner of this socket register a reception handler ? */
+ 295:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( ipconfigIS_VALID_PROG_ADDRESS( pxSocket->u.xUDP.pxHandleReceive ) )
+ 296:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 297:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				struct freertos_sockaddr xSourceAddress, destinationAddress;
+ 298:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				void *pcData = &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] );
+ 299:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				FOnUDPReceive_t xHandler = ( FOnUDPReceive_t ) pxSocket->u.xUDP.pxHandleReceive;
+ 300:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xSourceAddress.sin_port = pxNetworkBuffer->usPort;
+ 301:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xSourceAddress.sin_addr = pxNetworkBuffer->ulIPAddress;
+ 302:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				destinationAddress.sin_port = usPort;
+ 303:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				destinationAddress.sin_addr = pxUDPPacket->xIPHeader.ulDestinationIPAddress;
+ 304:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 305:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				/* The value of 'xDataLength' was proven to be at least the size of a UDP packet in prvProcessI
+ 306:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				if( xHandler( ( Socket_t ) pxSocket,
+ 307:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 							  ( void* ) pcData,
+ 308:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 							  ( size_t ) ( pxNetworkBuffer->xDataLength - ipUDP_PAYLOAD_OFFSET_IPv4 ),
+ 309:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 							  &( xSourceAddress ),
+ 310:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 							  &( destinationAddress ) ) != 0 )
+ 311:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 312:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					xReturn = pdFAIL; /* xHandler has consumed the data, do not add it to .xWaitingPacketsList'. *
+ 313:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 314:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 315:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 316:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif /* ipconfigUSE_CALLBACKS */
+ 317:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 318:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if( ipconfigUDP_MAX_RX_PACKETS > 0U )
+ 319:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		{
+ 320:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( xReturn == pdPASS )
+ 321:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 322:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				if ( listCURRENT_LIST_LENGTH( &( pxSocket->u.xUDP.xWaitingPacketsList ) ) >= pxSocket->u.xUDP.u
+ 323:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 324:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					FreeRTOS_debug_printf( ( "xProcessReceivedUDPPacket: buffer full %ld >= %ld port %u\n",
+ 325:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 						listCURRENT_LIST_LENGTH( &( pxSocket->u.xUDP.xWaitingPacketsList ) ),
+ 326:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 						pxSocket->u.xUDP.uxMaxPackets, pxSocket->usLocalPort ) );
+ 327:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					xReturn = pdFAIL; /* we did not consume or release the buffer */
+ 328:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 329:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 330:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 331:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif
+ 332:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 333:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if( ipconfigUSE_CALLBACKS == 1 ) || ( ipconfigUDP_MAX_RX_PACKETS > 0U )
+ 334:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		if( xReturn == pdPASS )	/*lint !e774: Boolean within 'if' always evaluates to True, depending on 
+ 335:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#else
+ 336:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		/* xReturn is still pdPASS. */
+ 337:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif
+ 338:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		{
+ 339:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			vTaskSuspendAll();
+ 288              	 .loc 1 339 0
+ 289 0042 FFF7FEFF 	 bl vTaskSuspendAll
+ 290              	.LVL30:
+ 340:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 341:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				taskENTER_CRITICAL();
+ 291              	 .loc 1 341 0
+ 292 0046 FFF7FEFF 	 bl vPortEnterCritical
+ 293              	.LVL31:
+ 342:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 343:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					if( FREERTOS_SOCK_RAW == pxSocket->ucSocketType )
+ 344:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					{
+ 345:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 						vListInsertEnd( &( pxSocket->u.xRAW.xWaitingPacketsList ), &( pxNetworkBuffer->xBufferListIte
+ 346:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					}
+ 347:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					else
+ 348:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					{
+ 349:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 						/* Add the network packet to the list of packets to be
+ 350:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 						processed by the socket. */
+ 351:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 						vListInsertEnd( &( pxSocket->u.xUDP.xWaitingPacketsList ), &( pxNetworkBuffer->xBufferListIte
+ 294              	 .loc 1 351 0
+ 295 004a 06F13800 	 add r0,r6,#56
+ 296 004e 2146     	 mov r1,r4
+ 297 0050 FFF7FEFF 	 bl vListInsertEnd
+ 298              	.LVL32:
+ 352:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					}
+ 353:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 354:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				taskEXIT_CRITICAL();
+ 299              	 .loc 1 354 0
+ 300 0054 FFF7FEFF 	 bl vPortExitCritical
+ 301              	.LVL33:
+ 355:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 356:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			( void ) xTaskResumeAll();
+ 302              	 .loc 1 356 0
+ 303 0058 FFF7FEFF 	 bl xTaskResumeAll
+ 304              	.LVL34:
+ 357:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 358:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* Set the socket's receive event */
+ 359:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( pxSocket->xEventGroup != NULL )
+ 305              	 .loc 1 359 0
+ 306 005c 7068     	 ldr r0,[r6,#4]
+ 307 005e 10B1     	 cbz r0,.L23
+ 360:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 361:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				( void ) xEventGroupSetBits( pxSocket->xEventGroup, ( EventBits_t ) eSOCKET_RECEIVE );
+ 308              	 .loc 1 361 0
+ 309 0060 0121     	 movs r1,#1
+ 310 0062 FFF7FEFF 	 bl xEventGroupSetBits
+ 311              	.LVL35:
+ 312              	.L23:
+ 362:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 363:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 364:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
+ 365:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 366:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				if( ( pxSocket->pxSocketSet != NULL ) && ( ( pxSocket->xSelectBits & ( ( EventBits_t ) eSELECT_
+ 313              	 .loc 1 366 0
+ 314 0066 F36A     	 ldr r3,[r6,#44]
+ 315 0068 CBB1     	 cbz r3,.L25
+ 316              	 .loc 1 366 0 is_stmt 0 discriminator 1
+ 317 006a 326B     	 ldr r2,[r6,#48]
+ 318 006c 12F0010F 	 tst r2,#1
+ 319 0070 17D0     	 beq .L26
+ 367:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 368:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					( void ) xEventGroupSetBits( pxSocket->pxSocketSet->xSelectGroup, ( EventBits_t ) eSELECT_READ
+ 320              	 .loc 1 368 0 is_stmt 1
+ 321 0072 1868     	 ldr r0,[r3]
+ 322 0074 0121     	 movs r1,#1
+ 323 0076 FFF7FEFF 	 bl xEventGroupSetBits
+ 324              	.LVL36:
+ 273:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** FreeRTOS_Socket_t *pxSocket;
+ 325              	 .loc 1 273 0
+ 326 007a 0120     	 movs r0,#1
+ 327 007c 70BD     	 pop {r4,r5,r6,pc}
+ 328              	.LVL37:
+ 329              	.L20:
+ 369:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 370:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 371:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#endif
+ 372:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 373:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#if( ipconfigSOCKET_HAS_USER_SEMAPHORE == 1 )
+ 374:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 375:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				if( pxSocket->pxUserSemaphore != NULL )
+ 376:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 377:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					( void ) xSemaphoreGive( pxSocket->pxUserSemaphore );
+ 378:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 379:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 380:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#endif
+ 381:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 382:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#if( ipconfigUSE_DHCP == 1 )
+ 383:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 384:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				if( xIsDHCPSocket( pxSocket ) != 0 )
+ 385:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				{
+ 386:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 					( void ) xSendEventToIPTask( eDHCPEvent );
+ 387:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				}
+ 388:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 389:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			#endif
+ 390:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		}
+ 391:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+ 392:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	else
+ 393:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	{
+ 394:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		/* There is no socket listening to the target port, but still it might
+ 395:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		be for this node. */
+ 396:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 397:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if( ipconfigUSE_DNS == 1 ) && ( ipconfigDNS_USE_CALLBACKS == 1 )
+ 398:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* A DNS reply, check for the source port.  Although the DNS client
+ 399:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			does open a UDP socket to send a messages, this socket will be
+ 400:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			closed after a short timeout.  Messages that come late (after the
+ 401:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			socket is closed) will be treated here. */
+ 402:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usSourcePort ) == ( uint16_t ) ipDNS_PORT )
+ 330              	 .loc 1 402 0
+ 331 007e 6A8C     	 ldrh r2,[r5,#34]
+ 332 0080 130A     	 lsrs r3,r2,#8
+ 333 0082 43EA0223 	 orr r3,r3,r2,lsl#8
+ 334 0086 1BB2     	 sxth r3,r3
+ 335 0088 352B     	 cmp r3,#53
+ 336 008a 0CD1     	 bne .L27
+ 403:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 404:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				vARPRefreshCacheEntry( &( pxUDPPacket->xEthernetHeader.xSourceAddress ), pxUDPPacket->xIPHeader
+ 337              	 .loc 1 404 0
+ 338 008c A81D     	 adds r0,r5,#6
+ 339              	.LVL38:
+ 340 008e D5F81A10 	 ldr r1,[r5,#26]
+ 341 0092 FFF7FEFF 	 bl vARPRefreshCacheEntry
+ 342              	.LVL39:
+ 405:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xReturn = ( BaseType_t )ulDNSHandlePacket( pxNetworkBuffer );
+ 343              	 .loc 1 405 0
+ 344 0096 2046     	 mov r0,r4
+ 345 0098 FFF7FEFF 	 bl ulDNSHandlePacket
+ 346              	.LVL40:
+ 347 009c 70BD     	 pop {r4,r5,r6,pc}
+ 348              	.LVL41:
+ 349              	.L25:
+ 273:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** FreeRTOS_Socket_t *pxSocket;
+ 350              	 .loc 1 273 0
+ 351 009e 0120     	 movs r0,#1
+ 352 00a0 70BD     	 pop {r4,r5,r6,pc}
+ 353              	.LVL42:
+ 354              	.L26:
+ 355 00a2 0120     	 movs r0,#1
+ 356 00a4 70BD     	 pop {r4,r5,r6,pc}
+ 357              	.LVL43:
+ 358              	.L27:
+ 406:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 407:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			else
+ 408:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif
+ 409:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 410:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if( ipconfigUSE_LLMNR == 1 )
+ 411:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* A LLMNR request, check for the destination port. */
+ 412:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( ( usPort == FreeRTOS_ntohs( ipLLMNR_PORT ) ) ||
+ 413:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				( pxUDPPacket->xUDPHeader.usSourcePort == FreeRTOS_ntohs( ipLLMNR_PORT ) ) )
+ 414:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 415:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				vARPRefreshCacheEntry( &( pxUDPPacket->xEthernetHeader.xSourceAddress ), pxUDPPacket->xIPHeader
+ 416:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xReturn = ( BaseType_t )ulDNSHandlePacket( pxNetworkBuffer );
+ 417:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 418:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			else
+ 419:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif /* ipconfigUSE_LLMNR */
+ 420:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 421:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#if( ipconfigUSE_NBNS == 1 )
+ 422:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			/* a NetBIOS request, check for the destination port */
+ 423:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			if( ( usPort == FreeRTOS_ntohs( ipNBNS_PORT ) ) ||
+ 424:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				( pxUDPPacket->xUDPHeader.usSourcePort == FreeRTOS_ntohs( ipNBNS_PORT ) ) )
+ 425:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 426:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				vARPRefreshCacheEntry( &( pxUDPPacket->xEthernetHeader.xSourceAddress ), pxUDPPacket->xIPHeader
+ 427:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xReturn = ( BaseType_t )ulNBNSHandlePacket( pxNetworkBuffer );
+ 428:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 429:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			else
+ 430:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 		#endif /* ipconfigUSE_NBNS */
+ 431:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			{
+ 432:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 				xReturn = pdFAIL;
+ 359              	 .loc 1 432 0
+ 360 00a6 0020     	 movs r0,#0
+ 361              	.LVL44:
+ 433:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 			}
+ 434:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	}
+ 435:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 
+ 436:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** 	return xReturn;
+ 437:../FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c **** }
+ 362              	 .loc 1 437 0
+ 363 00a8 70BD     	 pop {r4,r5,r6,pc}
+ 364              	 .cfi_endproc
+ 365              	.LFE51:
+ 367              	 .global xDefaultPartRAWPacketHeader
+ 368              	 .global xDefaultPartUDPPacketHeader
+ 369 00aa 00BF     	 .section .data.xDefaultPartRAWPacketHeader,"aw",%progbits
+ 370              	 .align 2
+ 373              	xDefaultPartRAWPacketHeader:
+ 374 0000 00       	 .byte 0
+ 375 0001 00       	 .byte 0
+ 376 0002 00       	 .byte 0
+ 377 0003 00       	 .byte 0
+ 378 0004 00       	 .byte 0
+ 379 0005 00       	 .byte 0
+ 380 0006 08       	 .byte 8
+ 381 0007 00       	 .byte 0
+ 382 0008 45       	 .byte 69
+ 383 0009 00       	 .byte 0
+ 384 000a 00       	 .byte 0
+ 385 000b 00       	 .byte 0
+ 386 000c 00       	 .byte 0
+ 387 000d 00       	 .byte 0
+ 388 000e 00       	 .byte 0
+ 389 000f 00       	 .byte 0
+ 390 0010 80       	 .byte -128
+ 391 0011 FF       	 .byte -1
+ 392 0012 00       	 .byte 0
+ 393 0013 00       	 .byte 0
+ 394 0014 00       	 .byte 0
+ 395 0015 00       	 .byte 0
+ 396 0016 00       	 .byte 0
+ 397 0017 00       	 .byte 0
+ 398              	 .section .data.xDefaultPartUDPPacketHeader,"aw",%progbits
+ 399              	 .align 2
+ 400              	 .set .LANCHOR0,.+0
+ 403              	xDefaultPartUDPPacketHeader:
+ 404 0000 00       	 .byte 0
+ 405 0001 00       	 .byte 0
+ 406 0002 00       	 .byte 0
+ 407 0003 00       	 .byte 0
+ 408 0004 00       	 .byte 0
+ 409 0005 00       	 .byte 0
+ 410 0006 08       	 .byte 8
+ 411 0007 00       	 .byte 0
+ 412 0008 45       	 .byte 69
+ 413 0009 00       	 .byte 0
+ 414 000a 00       	 .byte 0
+ 415 000b 00       	 .byte 0
+ 416 000c 00       	 .byte 0
+ 417 000d 00       	 .byte 0
+ 418 000e 00       	 .byte 0
+ 419 000f 00       	 .byte 0
+ 420 0010 80       	 .byte -128
+ 421 0011 11       	 .byte 17
+ 422 0012 00       	 .byte 0
+ 423 0013 00       	 .byte 0
+ 424 0014 00       	 .byte 0
+ 425 0015 00       	 .byte 0
+ 426 0016 00       	 .byte 0
+ 427 0017 00       	 .byte 0
+ 428              	 .text
+ 429              	.Letext0:
+ 430              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 431              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 432              	 .file 5 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\lib\\gcc\\arm-none-eabi\\4.9.3\\include\\stddef.h"
+ 433              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/list.h"
+ 434              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP.h"
+ 435              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/event_groups.h"
+ 436              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP_Private.h"
+ 437              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_Stream_Buffer.h"
+ 438              	 .file 11 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_TCP_WIN.h"
+ 439              	 .file 12 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_Sockets.h"
+ 440              	 .file 13 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_ARP.h"
+ 441              	 .file 14 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/NetworkInterface.h"
+ 442              	 .file 15 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/NetworkBufferManagement.h"
+ 443              	 .file 16 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/task.h"
+ 444              	 .file 17 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_DNS.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 FreeRTOS_UDP_IP.c
+    {standard input}:19     .text.vProcessGeneratedUDPPacket:00000000 $t
+    {standard input}:24     .text.vProcessGeneratedUDPPacket:00000000 vProcessGeneratedUDPPacket
+    {standard input}:206    .text.vProcessGeneratedUDPPacket:000000f4 $d
+    {standard input}:211    .text.xProcessReceivedUDPPacket:00000000 $t
+    {standard input}:216    .text.xProcessReceivedUDPPacket:00000000 xProcessReceivedUDPPacket
+    {standard input}:373    .data.xDefaultPartRAWPacketHeader:00000000 xDefaultPartRAWPacketHeader
+    {standard input}:403    .data.xDefaultPartUDPPacketHeader:00000000 xDefaultPartUDPPacketHeader
+    {standard input}:370    .data.xDefaultPartRAWPacketHeader:00000000 $d
+    {standard input}:399    .data.xDefaultPartUDPPacketHeader:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.stddef.h.39.fb88e218f22ad7a0ab38f3d93c6eb3e4
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.65.7c7009d79fb33c27bcf8e2214c76b343
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+                           .group:00000000 wm4.queue.h.66.45d4a3cf5de24cde7e732f8dad25383c
+                           .group:00000000 wm4.semphr.h.38.96f44691bfa19eb833944d3a35b81e54
+                           .group:00000000 wm4.FreeRTOSIPConfig.h.37.3f9c1db988571ff1f3dec4c7e54978d6
+                           .group:00000000 wm4.FreeRTOS_errno_TCP.h.27.708877b341d0e6bcb4ba112b2ad8082a
+                           .group:00000000 wm4.FreeRTOSIPConfigDefaults.h.41.f972b11d9b1eba5383080cfaef1fd740
+                           .group:00000000 wm4.IPTraceMacroDefaults.h.31.69642530b5a79c93e762c9b09ac0d1d5
+                           .group:00000000 wm4.FreeRTOS_IP.h.59.3f5e36f6612bd0c66747c6093da47335
+                           .group:00000000 wm4.FreeRTOS_IP.h.179.e5077063e624bc5d3f02542470d6ea94
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.timers.h.29.025d268d6baf57298309e7b498ee1cc7
+                           .group:00000000 wm4.FreeRTOS_Sockets.h.58.61d472da32c0e0f5bc49c368f15d0ac5
+                           .group:00000000 wm4.FreeRTOS_TCP_WIN.h.32.f3cfab69924f28284deb16cc1a30fb93
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.52.551f932b14473cea139893dda31b3fa0
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.328.b5788f8d626a4cf16b8282f9399f3f55
+                           .group:00000000 wm4.FreeRTOS_DNS.h.27.8432bc3440a9cfc56281e07613f9ce59
+
+UNDEFINED SYMBOLS
+eARPGetCacheEntry
+usGenerateChecksum
+usGenerateProtocolChecksum
+vARPRefreshCacheEntry
+vARPGenerateRequestPacket
+xNetworkInterfaceOutput
+vReleaseNetworkBufferAndDescriptor
+pxUDPSocketLookup
+vTaskSuspendAll
+vPortEnterCritical
+vListInsertEnd
+vPortExitCritical
+xTaskResumeAll
+xEventGroupSetBits
+ulDNSHandlePacket

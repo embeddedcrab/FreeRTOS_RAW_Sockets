@@ -1,0 +1,767 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "dri_uart_conf.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.USIC0_2_IRQHandler,"ax",%progbits
+  19              	 .align 2
+  20              	 .global USIC0_2_IRQHandler
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	USIC0_2_IRQHandler:
+  25              	.LFB228:
+  26              	 .file 1 "../Driver/UART/cfg/src/dri_uart_conf.c"
+   1:../Driver/UART/cfg/src/dri_uart_conf.c **** /*****************************************************************************
+   2:../Driver/UART/cfg/src/dri_uart_conf.c **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../Driver/UART/cfg/src/dri_uart_conf.c **** *
+   4:../Driver/UART/cfg/src/dri_uart_conf.c **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../Driver/UART/cfg/src/dri_uart_conf.c **** *
+   6:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+   7:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+   8:../Driver/UART/cfg/src/dri_uart_conf.c **** * Title:		UART Configuration Source
+   9:../Driver/UART/cfg/src/dri_uart_conf.c **** * Filename:		dri_uart_conf.cpp
+  10:../Driver/UART/cfg/src/dri_uart_conf.c **** * Author:		HS
+  11:../Driver/UART/cfg/src/dri_uart_conf.c **** * Origin Date:	09/29/2019
+  12:../Driver/UART/cfg/src/dri_uart_conf.c **** * Version:		1.0.0
+  13:../Driver/UART/cfg/src/dri_uart_conf.c **** * Notes:
+  14:../Driver/UART/cfg/src/dri_uart_conf.c **** *
+  15:../Driver/UART/cfg/src/dri_uart_conf.c **** * Change History
+  16:../Driver/UART/cfg/src/dri_uart_conf.c **** * --------------
+  17:../Driver/UART/cfg/src/dri_uart_conf.c **** *
+  18:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+  19:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  20:../Driver/UART/cfg/src/dri_uart_conf.c **** /** @file:	dri_uart_conf.c
+  21:../Driver/UART/cfg/src/dri_uart_conf.c ****  *  @brief:	This source file contains configuration function definitions for
+  22:../Driver/UART/cfg/src/dri_uart_conf.c ****  *  		UART on USIC channel
+  23:../Driver/UART/cfg/src/dri_uart_conf.c ****  */
+  24:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  25:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  26:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+  27:../Driver/UART/cfg/src/dri_uart_conf.c **** * Includes
+  28:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+  29:../Driver/UART/cfg/src/dri_uart_conf.c **** #include <dri_uart.h>
+  30:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  31:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  32:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+  33:../Driver/UART/cfg/src/dri_uart_conf.c **** * Preprocessor Constants
+  34:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+  35:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  36:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  37:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+  38:../Driver/UART/cfg/src/dri_uart_conf.c **** * Configuration Constants
+  39:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+  40:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  41:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  42:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+  43:../Driver/UART/cfg/src/dri_uart_conf.c **** * Macros
+  44:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+  45:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  46:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  47:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+  48:../Driver/UART/cfg/src/dri_uart_conf.c **** * Typedefs
+  49:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+  50:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  51:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  52:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+  53:../Driver/UART/cfg/src/dri_uart_conf.c **** * Variables
+  54:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+  55:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  56:../Driver/UART/cfg/src/dri_uart_conf.c **** /*
+  57:../Driver/UART/cfg/src/dri_uart_conf.c ****  * @brief	UART API functions
+  58:../Driver/UART/cfg/src/dri_uart_conf.c ****  *
+  59:../Driver/UART/cfg/src/dri_uart_conf.c ****  * \par<b>Description:</b><br>
+  60:../Driver/UART/cfg/src/dri_uart_conf.c ****  * 			This is data structure for UART API functions to be used by Application
+  61:../Driver/UART/cfg/src/dri_uart_conf.c ****  */
+  62:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Api UART_Api_Functions =
+  63:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+  64:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fp_init = &UART_init,
+  65:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fp_set_baud = &UART_set_baud,
+  66:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fp_transmit = &UART_transmit,
+  67:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fp_receive = &UART_receive,
+  68:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fp_abort = &UART_abort
+  69:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+  70:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  71:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  72:../Driver/UART/cfg/src/dri_uart_conf.c **** /* Callback handler for user */
+  73:../Driver/UART/cfg/src/dri_uart_conf.c **** #if ( UART_CALLBACK_HANDLER_USED == 1U )
+  74:../Driver/UART/cfg/src/dri_uart_conf.c **** extern void UART_callback_handler( const eUART_Channel channel, unsigned char *p_data, const eUART_
+  75:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+  76:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  77:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  78:../Driver/UART/cfg/src/dri_uart_conf.c **** /** Configurations for UART Channels **/
+  79:../Driver/UART/cfg/src/dri_uart_conf.c **** #if (UART_CHANNELS_USED > 0)
+  80:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+  81:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 0 usage */
+  82:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_CHANNEL_0_USED
+  83:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 0 Configurations Data Structure */
+  84:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Configuartion UART_Channel_0_Configuration =
+  85:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+  86:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_channel_context = (XMC_USIC_CH_t *) XMC_UART0_CH0,
+  87:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_cfg =
+  88:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+  89:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.baudrate = 115200,
+  90:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.data_bits = 8U,
+  91:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.frame_length = 8U,
+  92:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.stop_bits = 1U,
+  93:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.oversampling = 16U,
+  94:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.parity_mode = XMC_USIC_CH_PARITY_MODE_NONE
+  95:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+  96:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#if( UART_INTERRUPT_USED == 1U )
+  97:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.isr_config =
+  98:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+  99:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_sr = UART_0_TX_SR,
+ 100:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_sr = UART_0_RX_SR,
+ 101:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_PROTOCOL_EVENT_USED
+ 102:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.protocol_events = ((unsigned long)XMC_UART_CH_EVENT_RECEIVER_NOISE |
+ 103:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_COLLISION |
+ 104:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_FORMAT_ERROR |
+ 105:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_SYNCHRONIZATION_BREAK
+ 106:../Driver/UART/cfg/src/dri_uart_conf.c **** 							),
+ 107:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_sr = UART_0_TX_SR - 2,
+ 108:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_irq = { .irq_num = USIC0_0_IRQn, .irq_priority = 50 },
+ 109:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 110:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_TX_INTERRUPT_USED
+ 111:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_irq = { .irq_num = USIC0_2_IRQn, .irq_priority = 50 },
+ 112:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 113:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_RX_INTERRUPT_USED
+ 114:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_irq = { .irq_num = USIC0_1_IRQn, .irq_priority = 49 }
+ 115:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 116:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 117:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 118:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fifo_cfg =
+ 119:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 120:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_fifo_size = XMC_USIC_CH_FIFO_SIZE_64WORDS,
+ 121:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_fifo_size = XMC_USIC_CH_FIFO_SIZE_2WORDS
+ 122:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 123:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input = XMC_USIC_CH_INPUT_DX0,
+ 124:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input_source = 1
+ 125:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 126:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 0 Control Data Structure */
+ 127:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Control UART_Channel_0_Control =
+ 128:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 129:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_tx_data = NULL,
+ 130:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_rx_data = NULL,
+ 131:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_index = 0,
+ 132:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_count = 0,
+ 133:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_index = 0,
+ 134:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_count = 0,
+ 135:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.state = { .state_value = 0 }
+ 136:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 137:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 138:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 139:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 140:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Callbacks UART_Channel_0_Callbacks = { .fp_callback = &UART_callback_handler };
+ 141:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CALLBACK_HANDLER_USED */
+ 142:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 143:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 0 Instance Data Structure */
+ 144:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Channel UART_Channel_0 =
+ 145:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 146:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_config = &UART_Channel_0_Configuration,
+ 147:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_control = &UART_Channel_0_Control
+ 148:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 149:../Driver/UART/cfg/src/dri_uart_conf.c **** 	,.p_callback = &UART_Channel_0_Callbacks
+ 150:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+ 151:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 152:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CHANNEL_0_USED */
+ 153:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 154:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 1 usage */
+ 155:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_CHANNEL_1_USED
+ 156:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 0 Configurations Data Structure */
+ 157:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Configuartion UART_Channel_1_Configuration =
+ 158:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 159:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_channel_context = (XMC_USIC_CH_t *) XMC_UART0_CH1,
+ 160:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_cfg =
+ 161:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 162:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.baudrate = 115200,
+ 163:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.data_bits = 8U,
+ 164:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.frame_length = 8U,
+ 165:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.stop_bits = 1U,
+ 166:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.oversampling = 16U,
+ 167:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.parity_mode = XMC_USIC_CH_PARITY_MODE_NONE
+ 168:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 169:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#if( UART_INTERRUPT_USED == 1U )
+ 170:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.isr_config =
+ 171:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 172:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_sr = UART_1_TX_SR,
+ 173:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_sr = UART_1_RX_SR,
+ 174:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_PROTOCOL_EVENT_USED
+ 175:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.protocol_events = ((unsigned long)XMC_UART_CH_EVENT_RECEIVER_NOISE |
+ 176:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_COLLISION |
+ 177:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_FORMAT_ERROR |
+ 178:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_SYNCHRONIZATION_BREAK
+ 179:../Driver/UART/cfg/src/dri_uart_conf.c **** 							),
+ 180:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_sr = UART_1_TX_SR - 2,
+ 181:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_irq = { .irq_num = USIC0_3_IRQn, .irq_priority = 58 },
+ 182:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 183:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_TX_INTERRUPT_USED
+ 184:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_irq = { .irq_num = USIC0_5_IRQn, .irq_priority = 60 },
+ 185:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 186:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_RX_INTERRUPT_USED
+ 187:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_irq = { .irq_num = USIC0_4_IRQn, .irq_priority = 59 }
+ 188:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 189:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 190:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 191:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fifo_cfg =
+ 192:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 193:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_fifo_size = XMC_USIC_CH_FIFO_SIZE_64WORDS,
+ 194:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_fifo_size = XMC_USIC_CH_FIFO_SIZE_2WORDS
+ 195:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 196:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input = ,/* Update according to pins */
+ 197:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input_source =
+ 198:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 199:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 1 Control Data Structure */
+ 200:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Control UART_Channel_1_Control =
+ 201:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 202:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_tx_data = NULL,
+ 203:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_rx_data = NULL,
+ 204:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_index = 0,
+ 205:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_count = 0,
+ 206:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_index = 0,
+ 207:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_count = 0,
+ 208:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.state = { .state_value = 0 }
+ 209:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 210:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 211:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 212:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 213:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Callbacks UART_Channel_1_Callbacks = { .fp_callback = &UART_callback_handler };
+ 214:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CALLBACK_HANDLER_USED */
+ 215:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 216:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 1 Instance Data Structure */
+ 217:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Channel UART_Channel_1 =
+ 218:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 219:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_config = &UART_Channel_1_Configuration,
+ 220:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_control = &UART_Channel_1_Control
+ 221:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 222:../Driver/UART/cfg/src/dri_uart_conf.c **** 	,.p_callback = &UART_Channel_1_Callbacks
+ 223:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+ 224:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 225:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CHANNEL_1_USED */
+ 226:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 227:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 228:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 2 usage */
+ 229:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_CHANNEL_2_USED
+ 230:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 2 Configurations Data Structure */
+ 231:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Configuartion UART_Channel_2_Configuration =
+ 232:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 233:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_channel_context = (XMC_USIC_CH_t *) XMC_UART1_CH0,
+ 234:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_cfg =
+ 235:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 236:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.baudrate = 115200,
+ 237:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.data_bits = 8U,
+ 238:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.frame_length = 8U,
+ 239:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.stop_bits = 1U,
+ 240:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.oversampling = 16U,
+ 241:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.parity_mode = XMC_USIC_CH_PARITY_MODE_NONE
+ 242:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 243:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#if( UART_INTERRUPT_USED == 1U )
+ 244:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.isr_config =
+ 245:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 246:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_sr = UART_2_TX_SR,
+ 247:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_sr = UART_2_RX_SR,
+ 248:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_PROTOCOL_EVENT_USED
+ 249:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.protocol_events = ((unsigned long)XMC_UART_CH_EVENT_RECEIVER_NOISE |
+ 250:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_COLLISION |
+ 251:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_FORMAT_ERROR |
+ 252:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_SYNCHRONIZATION_BREAK
+ 253:../Driver/UART/cfg/src/dri_uart_conf.c **** 							),
+ 254:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_sr = UART_2_TX_SR - 2,
+ 255:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_irq = { .irq_num = USIC1_0_IRQn, .irq_priority = 50 },
+ 256:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 257:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_TX_INTERRUPT_USED
+ 258:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_irq = { .irq_num = USIC1_2_IRQn, .irq_priority = 48 },
+ 259:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 260:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_RX_INTERRUPT_USED
+ 261:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_irq = { .irq_num = USIC1_1_IRQn, .irq_priority = 47 }
+ 262:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 263:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 264:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 265:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fifo_cfg =
+ 266:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 267:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_fifo_size = XMC_USIC_CH_FIFO_SIZE_64WORDS,
+ 268:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_fifo_size = XMC_USIC_CH_FIFO_SIZE_2WORDS
+ 269:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 270:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input = XMC_USIC_CH_INPUT_DX0,
+ 271:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input_source = 2
+ 272:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 273:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 274:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 275:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Callbacks UART_Channel_2_Callbacks = { .fp_callback = &UART_callback_handler };
+ 276:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CALLBACK_HANDLER_USED */
+ 277:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 278:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 2 Control Data Structure */
+ 279:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Control UART_Channel_2_Control =
+ 280:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 281:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_tx_data = NULL,
+ 282:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_rx_data = NULL,
+ 283:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_index = 0,
+ 284:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_count = 0,
+ 285:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_index = 0,
+ 286:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_count = 0,
+ 287:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.state = { .state_value = 0 }
+ 288:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 289:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 2 Instance Data Structure */
+ 290:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Channel UART_Channel_2 =
+ 291:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 292:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_config = &UART_Channel_2_Configuration,
+ 293:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_control = &UART_Channel_2_Control
+ 294:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 295:../Driver/UART/cfg/src/dri_uart_conf.c **** 	,.p_callback = &UART_Channel_2_Callbacks
+ 296:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+ 297:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 298:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CHANNEL_2_USED */
+ 299:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 300:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 301:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 3 usage */
+ 302:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_CHANNEL_3_USED
+ 303:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 3 Configurations Data Structure */
+ 304:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Configuartion UART_Channel_3_Configuration =
+ 305:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 306:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_channel_context = (XMC_USIC_CH_t *) XMC_UART1_CH1,
+ 307:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_cfg =
+ 308:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 309:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.baudrate = 115200,
+ 310:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.data_bits = 8U,
+ 311:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.frame_length = 8U,
+ 312:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.stop_bits = 1U,
+ 313:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.oversampling = 16U,
+ 314:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.parity_mode = XMC_USIC_CH_PARITY_MODE_NONE
+ 315:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 316:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#if( UART_INTERRUPT_USED == 1U )
+ 317:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.isr_config =
+ 318:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 319:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_sr = UART_3_TX_SR,
+ 320:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_sr = UART_3_RX_SR,
+ 321:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_PROTOCOL_EVENT_USED
+ 322:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.protocol_events = ((unsigned long)XMC_UART_CH_EVENT_RECEIVER_NOISE |
+ 323:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_COLLISION |
+ 324:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_FORMAT_ERROR |
+ 325:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_SYNCHRONIZATION_BREAK
+ 326:../Driver/UART/cfg/src/dri_uart_conf.c **** 							),
+ 327:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_sr = UART_3_TX_SR - 2,
+ 328:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_irq = { .irq_num = USIC1_3_IRQn, .irq_priority = 58 },
+ 329:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 330:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_TX_INTERRUPT_USED
+ 331:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_irq = { .irq_num = USIC1_5_IRQn, .irq_priority = 60 },
+ 332:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 333:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_RX_INTERRUPT_USED
+ 334:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_irq = { .irq_num = USIC1_4_IRQn, .irq_priority = 59 }
+ 335:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 336:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 337:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 338:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fifo_cfg =
+ 339:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 340:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_fifo_size = XMC_USIC_CH_FIFO_SIZE_64WORDS,
+ 341:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_fifo_size = XMC_USIC_CH_FIFO_SIZE_2WORDS
+ 342:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 343:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input = XMC_USIC_CH_INPUT_DX0,
+ 344:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input_source = 3
+ 345:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 346:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 347:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 348:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Callbacks UART_Channel_3_Callbacks = { .fp_callback = &UART_callback_handler };
+ 349:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CALLBACK_HANDLER_USED */
+ 350:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 351:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 3 Control Data Structure */
+ 352:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Control UART_Channel_3_Control =
+ 353:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 354:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_tx_data = NULL,
+ 355:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_rx_data = NULL,
+ 356:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_index = 0,
+ 357:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_count = 0,
+ 358:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_index = 0,
+ 359:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_count = 0,
+ 360:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.state = { .state_value = 0 }
+ 361:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 362:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 3 Instance Data Structure */
+ 363:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Channel UART_Channel_3 =
+ 364:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 365:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_config = &UART_Channel_3_Configuration,
+ 366:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_control = &UART_Channel_3_Control
+ 367:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 368:../Driver/UART/cfg/src/dri_uart_conf.c **** 	,.p_callback = &UART_Channel_3_Callbacks
+ 369:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+ 370:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 371:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CHANNEL_3_USED */
+ 372:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 373:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 374:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 4 usage */
+ 375:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_CHANNEL_4_USED
+ 376:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 4 Configurations Data Structure */
+ 377:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Configuartion UART_Channel_4_Configuration =
+ 378:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 379:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_channel_context = (XMC_USIC_CH_t *) XMC_UART2_CH0,
+ 380:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_cfg =
+ 381:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 382:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.baudrate = 115200,
+ 383:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.data_bits = 8U,
+ 384:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.frame_length = 8U,
+ 385:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.stop_bits = 1U,
+ 386:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.oversampling = 16U,
+ 387:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.parity_mode = XMC_USIC_CH_PARITY_MODE_NONE
+ 388:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 389:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#if( UART_INTERRUPT_USED == 1U )
+ 390:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.isr_config =
+ 391:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 392:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_sr = UART_4_TX_SR,
+ 393:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_sr = UART_4_RX_SR,
+ 394:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_PROTOCOL_EVENT_USED
+ 395:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.protocol_events = ((unsigned long)XMC_UART_CH_EVENT_RECEIVER_NOISE |
+ 396:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_COLLISION |
+ 397:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_FORMAT_ERROR |
+ 398:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_SYNCHRONIZATION_BREAK
+ 399:../Driver/UART/cfg/src/dri_uart_conf.c **** 							),
+ 400:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_sr = UART_4_TX_SR - 2,
+ 401:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_irq = { .irq_num = USIC2_0_IRQn, .irq_priority = 58 },
+ 402:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 403:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_TX_INTERRUPT_USED
+ 404:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_irq = { .irq_num = USIC2_2_IRQn, .irq_priority = 60 },
+ 405:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 406:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_RX_INTERRUPT_USED
+ 407:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_irq = { .irq_num = USIC2_1_IRQn, .irq_priority = 59 }
+ 408:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 409:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 410:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 411:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fifo_cfg =
+ 412:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 413:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_fifo_size = XMC_USIC_CH_FIFO_SIZE_64WORDS,
+ 414:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_fifo_size = XMC_USIC_CH_FIFO_SIZE_2WORDS
+ 415:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 416:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input = XMC_USIC_CH_INPUT_DX0,
+ 417:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input_source = 0
+ 418:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 419:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 420:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 421:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Callbacks UART_Channel_4_Callbacks = { .fp_callback = &UART_callback_handler };
+ 422:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CALLBACK_HANDLER_USED */
+ 423:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 424:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 4 Control Data Structure */
+ 425:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Control UART_Channel_4_Control =
+ 426:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 427:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_tx_data = NULL,
+ 428:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_rx_data = NULL,
+ 429:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_index = 0,
+ 430:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_count = 0,
+ 431:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_index = 0,
+ 432:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_count = 0,
+ 433:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.state = { .state_value = 0 }
+ 434:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 435:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 4 Instance Data Structure */
+ 436:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Channel UART_Channel_4 =
+ 437:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 438:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_config = &UART_Channel_4_Configuration,
+ 439:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_control = &UART_Channel_4_Control
+ 440:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 441:../Driver/UART/cfg/src/dri_uart_conf.c **** 	,.p_callback = &UART_Channel_4_Callbacks
+ 442:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+ 443:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 444:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CHANNEL_4_USED */
+ 445:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 446:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 447:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 5 usage */
+ 448:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_CHANNEL_5_USED
+ 449:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 5 Configurations Data Structure */
+ 450:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Configuartion UART_Channel_5_Configuration =
+ 451:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 452:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_channel_context = (XMC_USIC_CH_t *) XMC_UART2_CH1,
+ 453:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_cfg =
+ 454:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 455:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.baudrate = 115200,
+ 456:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.data_bits = 8U,
+ 457:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.frame_length = 8U,
+ 458:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.stop_bits = 1U,
+ 459:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.oversampling = 16U,
+ 460:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.parity_mode = XMC_USIC_CH_PARITY_MODE_NONE
+ 461:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 462:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#if( UART_INTERRUPT_USED == 1U )
+ 463:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.isr_config =
+ 464:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 465:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_sr = UART_5_TX_SR,
+ 466:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_sr = UART_5_RX_SR,
+ 467:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_PROTOCOL_EVENT_USED
+ 468:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.protocol_events = ((unsigned long)XMC_UART_CH_EVENT_RECEIVER_NOISE |
+ 469:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_COLLISION |
+ 470:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_FORMAT_ERROR |
+ 471:../Driver/UART/cfg/src/dri_uart_conf.c **** 							(unsigned long)XMC_UART_CH_EVENT_SYNCHRONIZATION_BREAK
+ 472:../Driver/UART/cfg/src/dri_uart_conf.c **** 							),
+ 473:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_sr = UART_5_TX_SR - 2,
+ 474:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.event_irq = { .irq_num = USIC2_3_IRQn, .irq_priority = 58 },
+ 475:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 476:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_TX_INTERRUPT_USED
+ 477:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_irq = { .irq_num = USIC2_5_IRQn, .irq_priority = 60 },
+ 478:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 479:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#ifdef UART_RX_INTERRUPT_USED
+ 480:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_irq = { .irq_num = USIC2_4_IRQn, .irq_priority = 59 }
+ 481:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 482:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 483:../Driver/UART/cfg/src/dri_uart_conf.c **** 	#endif
+ 484:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.fifo_cfg =
+ 485:../Driver/UART/cfg/src/dri_uart_conf.c **** 	{
+ 486:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.tx_fifo_size = XMC_USIC_CH_FIFO_SIZE_64WORDS,
+ 487:../Driver/UART/cfg/src/dri_uart_conf.c **** 		.rx_fifo_size = XMC_USIC_CH_FIFO_SIZE_2WORDS
+ 488:../Driver/UART/cfg/src/dri_uart_conf.c **** 	},
+ 489:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input = ,	/* According to pins */
+ 490:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.channel_input_source =
+ 491:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 492:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 493:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 494:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Callbacks UART_Channel_5_Callbacks = { .fp_callback = &UART_callback_handler };
+ 495:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CALLBACK_HANDLER_USED */
+ 496:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 497:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 4 Control Data Structure */
+ 498:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Control UART_Channel_5_Control =
+ 499:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 500:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_tx_data = NULL,
+ 501:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_rx_data = NULL,
+ 502:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_index = 0,
+ 503:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.tx_data_count = 0,
+ 504:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_index = 0,
+ 505:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.rx_data_count = 0,
+ 506:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.state = { .state_value = 0 }
+ 507:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 508:../Driver/UART/cfg/src/dri_uart_conf.c **** /* UART Channel 5 Instance Data Structure */
+ 509:../Driver/UART/cfg/src/dri_uart_conf.c **** tStUART_Channel UART_Channel_5 =
+ 510:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+ 511:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_config = &UART_Channel_5_Configuration,
+ 512:../Driver/UART/cfg/src/dri_uart_conf.c **** 	.p_control = &UART_Channel_5_Control
+ 513:../Driver/UART/cfg/src/dri_uart_conf.c **** #if( UART_CALLBACK_HANDLER_USED == 1U )
+ 514:../Driver/UART/cfg/src/dri_uart_conf.c **** 	,.p_callback = &UART_Channel_5_Callbacks
+ 515:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+ 516:../Driver/UART/cfg/src/dri_uart_conf.c **** };
+ 517:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_CHANNEL_5_USED */
+ 518:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 519:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 520:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* (UART_CHANNELS_USED > 0) */
+ 521:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 522:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 523:../Driver/UART/cfg/src/dri_uart_conf.c **** /******************************************************************************
+ 524:../Driver/UART/cfg/src/dri_uart_conf.c **** * Function Definitions
+ 525:../Driver/UART/cfg/src/dri_uart_conf.c **** *******************************************************************************/
+ 526:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 527:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 528:../Driver/UART/cfg/src/dri_uart_conf.c **** #if (defined(UART_TX_INTERRUPT_USED) ||\
+ 529:../Driver/UART/cfg/src/dri_uart_conf.c **** 	defined(UART_RX_INTERRUPT_USED) || \
+ 530:../Driver/UART/cfg/src/dri_uart_conf.c **** 	defined(UART_PROTOCOL_EVENT_USED))
+ 531:../Driver/UART/cfg/src/dri_uart_conf.c **** extern void UART_isr_entry( void * p_channel, const eUART_InterruptOperation );
+ 532:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif
+ 533:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 534:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 535:../Driver/UART/cfg/src/dri_uart_conf.c **** /******* ISR Handlers for UART channel 0 *******/
+ 536:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 537:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_0_TX_HANDLER
+ 538:../Driver/UART/cfg/src/dri_uart_conf.c **** /**
+ 539:../Driver/UART/cfg/src/dri_uart_conf.c ****  * @function	UART_0_TX_HANDLER
+ 540:../Driver/UART/cfg/src/dri_uart_conf.c ****  *
+ 541:../Driver/UART/cfg/src/dri_uart_conf.c ****  * @brief		UART4 tx handler
+ 542:../Driver/UART/cfg/src/dri_uart_conf.c ****  *
+ 543:../Driver/UART/cfg/src/dri_uart_conf.c ****  * <i>Imp Note:</i>
+ 544:../Driver/UART/cfg/src/dri_uart_conf.c ****  *
+ 545:../Driver/UART/cfg/src/dri_uart_conf.c ****  */
+ 546:../Driver/UART/cfg/src/dri_uart_conf.c **** void UART_0_TX_HANDLER( void )
+ 547:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+  27              	 .loc 1 547 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31 0000 08B5     	 push {r3,lr}
+  32              	.LCFI0:
+  33              	 .cfi_def_cfa_offset 8
+  34              	 .cfi_offset 3,-8
+  35              	 .cfi_offset 14,-4
+ 548:../Driver/UART/cfg/src/dri_uart_conf.c **** 	/* Call ISR entry function */
+ 549:../Driver/UART/cfg/src/dri_uart_conf.c **** 	UART_isr_entry( &UART_Channel_0, UART_INTERRUPT_OPERATION_TX );
+  36              	 .loc 1 549 0
+  37 0002 0248     	 ldr r0,.L3
+  38 0004 0021     	 movs r1,#0
+  39 0006 FFF7FEFF 	 bl UART_isr_entry
+  40              	.LVL0:
+  41 000a 08BD     	 pop {r3,pc}
+  42              	.L4:
+  43              	 .align 2
+  44              	.L3:
+  45 000c 00000000 	 .word .LANCHOR0
+  46              	 .cfi_endproc
+  47              	.LFE228:
+  49              	 .section .text.USIC0_1_IRQHandler,"ax",%progbits
+  50              	 .align 2
+  51              	 .global USIC0_1_IRQHandler
+  52              	 .thumb
+  53              	 .thumb_func
+  55              	USIC0_1_IRQHandler:
+  56              	.LFB229:
+ 550:../Driver/UART/cfg/src/dri_uart_conf.c **** }
+ 551:../Driver/UART/cfg/src/dri_uart_conf.c **** #endif	/* UART_0_TX_HANDLER */
+ 552:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 553:../Driver/UART/cfg/src/dri_uart_conf.c **** 
+ 554:../Driver/UART/cfg/src/dri_uart_conf.c **** #ifdef UART_0_RX_HANDLER
+ 555:../Driver/UART/cfg/src/dri_uart_conf.c **** /**
+ 556:../Driver/UART/cfg/src/dri_uart_conf.c ****  * @function	UART_0_RX_HANDLER
+ 557:../Driver/UART/cfg/src/dri_uart_conf.c ****  *
+ 558:../Driver/UART/cfg/src/dri_uart_conf.c ****  * @brief		UART4 rx handler
+ 559:../Driver/UART/cfg/src/dri_uart_conf.c ****  *
+ 560:../Driver/UART/cfg/src/dri_uart_conf.c ****  * <i>Imp Note:</i>
+ 561:../Driver/UART/cfg/src/dri_uart_conf.c ****  *
+ 562:../Driver/UART/cfg/src/dri_uart_conf.c ****  */
+ 563:../Driver/UART/cfg/src/dri_uart_conf.c **** void UART_0_RX_HANDLER( void )
+ 564:../Driver/UART/cfg/src/dri_uart_conf.c **** {
+  57              	 .loc 1 564 0
+  58              	 .cfi_startproc
+  59              	 
+  60              	 
+  61 0000 08B5     	 push {r3,lr}
+  62              	.LCFI1:
+  63              	 .cfi_def_cfa_offset 8
+  64              	 .cfi_offset 3,-8
+  65              	 .cfi_offset 14,-4
+ 565:../Driver/UART/cfg/src/dri_uart_conf.c **** 	/* Call ISR entry function */
+ 566:../Driver/UART/cfg/src/dri_uart_conf.c **** 	UART_isr_entry( &UART_Channel_0, UART_INTERRUPT_OPERATION_RX );
+  66              	 .loc 1 566 0
+  67 0002 0248     	 ldr r0,.L7
+  68 0004 0121     	 movs r1,#1
+  69 0006 FFF7FEFF 	 bl UART_isr_entry
+  70              	.LVL1:
+  71 000a 08BD     	 pop {r3,pc}
+  72              	.L8:
+  73              	 .align 2
+  74              	.L7:
+  75 000c 00000000 	 .word .LANCHOR0
+  76              	 .cfi_endproc
+  77              	.LFE229:
+  79              	 .global UART_Channel_0
+  80              	 .global UART_Channel_0_Callbacks
+  81              	 .global UART_Channel_0_Control
+  82              	 .global UART_Channel_0_Configuration
+  83              	 .global UART_Api_Functions
+  84              	 .section .data.UART_Channel_0_Configuration,"aw",%progbits
+  85              	 .align 2
+  88              	UART_Channel_0_Configuration:
+  89 0000 00000340 	 .word 1073938432
+  90 0004 00C20100 	 .word 115200
+  91 0008 08       	 .byte 8
+  92 0009 08       	 .byte 8
+  93 000a 01       	 .byte 1
+  94 000b 10       	 .byte 16
+  95 000c 0000     	 .short 0
+  96 000e 0000     	 .space 2
+  97 0010 02000000 	 .word 2
+  98 0014 01000000 	 .word 1
+  99 0018 56       	 .byte 86
+ 100 0019 32       	 .byte 50
+ 101 001a 55       	 .byte 85
+ 102 001b 31       	 .byte 49
+ 103 001c 06       	 .byte 6
+ 104 001d 01       	 .byte 1
+ 105 001e 00       	 .byte 0
+ 106 001f 01       	 .byte 1
+ 107              	 .section .data.UART_Channel_0,"aw",%progbits
+ 108              	 .align 2
+ 109              	 .set .LANCHOR0,.+0
+ 112              	UART_Channel_0:
+ 113 0000 00000000 	 .word UART_Channel_0_Configuration
+ 114 0004 00000000 	 .word UART_Channel_0_Control
+ 115 0008 00000000 	 .word UART_Channel_0_Callbacks
+ 116              	 .section .data.UART_Channel_0_Callbacks,"aw",%progbits
+ 117              	 .align 2
+ 120              	UART_Channel_0_Callbacks:
+ 121 0000 00000000 	 .word UART_callback_handler
+ 122              	 .section .data.UART_Api_Functions,"aw",%progbits
+ 123              	 .align 2
+ 126              	UART_Api_Functions:
+ 127 0000 00000000 	 .word UART_init
+ 128 0004 00000000 	 .word UART_set_baud
+ 129 0008 00000000 	 .word UART_transmit
+ 130 000c 00000000 	 .word UART_receive
+ 131 0010 00000000 	 .word UART_abort
+ 132              	 .section .bss.UART_Channel_0_Control,"aw",%nobits
+ 133              	 .align 2
+ 136              	UART_Channel_0_Control:
+ 137 0000 00000000 	 .space 28
+ 137      00000000 
+ 137      00000000 
+ 137      00000000 
+ 137      00000000 
+ 138              	 .text
+ 139              	.Letext0:
+ 140              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 141              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 142              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_usic.h"
+ 143              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_uart.h"
+ 144              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/inc/dri_types.h"
+ 145              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/UART/cfg/inc/dri_uart_types.h"
+ 146              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 147              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 dri_uart_conf.c
+    {standard input}:19     .text.USIC0_2_IRQHandler:00000000 $t
+    {standard input}:24     .text.USIC0_2_IRQHandler:00000000 USIC0_2_IRQHandler
+    {standard input}:45     .text.USIC0_2_IRQHandler:0000000c $d
+    {standard input}:50     .text.USIC0_1_IRQHandler:00000000 $t
+    {standard input}:55     .text.USIC0_1_IRQHandler:00000000 USIC0_1_IRQHandler
+    {standard input}:75     .text.USIC0_1_IRQHandler:0000000c $d
+    {standard input}:112    .data.UART_Channel_0:00000000 UART_Channel_0
+    {standard input}:120    .data.UART_Channel_0_Callbacks:00000000 UART_Channel_0_Callbacks
+    {standard input}:136    .bss.UART_Channel_0_Control:00000000 UART_Channel_0_Control
+    {standard input}:88     .data.UART_Channel_0_Configuration:00000000 UART_Channel_0_Configuration
+    {standard input}:126    .data.UART_Api_Functions:00000000 UART_Api_Functions
+    {standard input}:85     .data.UART_Channel_0_Configuration:00000000 $d
+    {standard input}:108    .data.UART_Channel_0:00000000 $d
+    {standard input}:117    .data.UART_Channel_0_Callbacks:00000000 $d
+    {standard input}:123    .data.UART_Api_Functions:00000000 $d
+    {standard input}:133    .bss.UART_Channel_0_Control:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc_usic.h.128.f7fc4a60af138bbf45352fd08f8352ab
+                           .group:00000000 wm4.xmc4_usic_map.h.58.c72ca24cddd51bff3428962310391fa9
+                           .group:00000000 wm4.xmc_uart.h.104.72a141d26ba50140527ac9d7b989eee6
+                           .group:00000000 wm4.dri_uart_conf.h.20.c752d5b610b0d48f8289f114c3c21572
+                           .group:00000000 wm4.xmc_gpio.h.51.99a4c0bd520ffa931ac6d8600dce89c4
+                           .group:00000000 wm4.xmc4_gpio_map.h.74.66e9110cf801b78826ef5354da51c32f
+                           .group:00000000 wm4.xmc4_gpio.h.79.ce6c49508b5a7769c66e7e3c21dcdfe4
+                           .group:00000000 wm4.dri_types.h.39.161f94b021468f2f6263340b954bb37f
+
+UNDEFINED SYMBOLS
+UART_isr_entry
+UART_callback_handler
+UART_init
+UART_set_baud
+UART_transmit
+UART_receive
+UART_abort

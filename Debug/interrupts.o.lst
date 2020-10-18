@@ -1,0 +1,764 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "interrupts.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.BusFault_Handler,"ax",%progbits
+  19              	 .align 2
+  20              	 .global BusFault_Handler
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	BusFault_Handler:
+  25              	.LFB191:
+  26              	 .file 1 "../interrupts.c"
+   1:../interrupts.c **** /******************************************************************************
+   2:../interrupts.c **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../interrupts.c **** *
+   4:../interrupts.c **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../interrupts.c **** *
+   6:../interrupts.c **** *******************************************************************************/
+   7:../interrupts.c **** /******************************************************************************
+   8:../interrupts.c **** * Title:		Interrupt Handlers Source
+   9:../interrupts.c **** * Filename:		interrupts.c
+  10:../interrupts.c **** * Author:		HS
+  11:../interrupts.c **** * Origin Date:
+  12:../interrupts.c **** * Version:
+  13:../interrupts.c **** * Notes:
+  14:../interrupts.c **** *
+  15:../interrupts.c **** * Change History
+  16:../interrupts.c **** * --------------
+  17:../interrupts.c **** *
+  18:../interrupts.c **** *******************************************************************************/
+  19:../interrupts.c **** 
+  20:../interrupts.c **** /** @file:	interrupts.c
+  21:../interrupts.c ****  *  @brief:	This source file contains Exception handlers
+  22:../interrupts.c ****  */
+  23:../interrupts.c **** 
+  24:../interrupts.c **** 
+  25:../interrupts.c **** /******************************************************************************
+  26:../interrupts.c **** * Includes
+  27:../interrupts.c **** *******************************************************************************/
+  28:../interrupts.c **** 
+  29:../interrupts.c **** /* Include SCU Header */
+  30:../interrupts.c **** #include <xmc_scu.h>
+  31:../interrupts.c **** #include <xmc_gpio.h>
+  32:../interrupts.c **** 
+  33:../interrupts.c **** /* Include Peripherals Headers */
+  34:../interrupts.c **** #include <dri_scu_extern.h>
+  35:../interrupts.c **** 
+  36:../interrupts.c **** 
+  37:../interrupts.c **** /******************************************************************************
+  38:../interrupts.c **** * Preprocessor Constants
+  39:../interrupts.c **** *******************************************************************************/
+  40:../interrupts.c **** 
+  41:../interrupts.c **** #define EXCEPTION_HANDLER_DEBUG_ON			0U
+  42:../interrupts.c **** 
+  43:../interrupts.c **** 
+  44:../interrupts.c **** /******************************************************************************
+  45:../interrupts.c **** * Configuration Constants
+  46:../interrupts.c **** *******************************************************************************/
+  47:../interrupts.c **** 
+  48:../interrupts.c **** 
+  49:../interrupts.c **** /******************************************************************************
+  50:../interrupts.c **** * Variables
+  51:../interrupts.c **** *******************************************************************************/
+  52:../interrupts.c **** 
+  53:../interrupts.c **** 
+  54:../interrupts.c **** /******************************************************************************
+  55:../interrupts.c **** * Functions Declarations
+  56:../interrupts.c **** *******************************************************************************/
+  57:../interrupts.c **** 
+  58:../interrupts.c **** /* Exception Handling functions */
+  59:../interrupts.c **** #if (EXCEPTION_HANDLER_DEBUG_ON == 1U)
+  60:../interrupts.c **** void get_registers_from_stack( unsigned long *pulFaultStackAddress );
+  61:../interrupts.c **** #endif	/* EXCEPTION_HANDLER_DEBUG_ON */
+  62:../interrupts.c **** 
+  63:../interrupts.c **** void BusFault_Handler( void );
+  64:../interrupts.c **** void HardFault_Handler( void );
+  65:../interrupts.c **** void MemManage_Handler( void );
+  66:../interrupts.c **** void UsageFault_Handler( void );
+  67:../interrupts.c **** 
+  68:../interrupts.c **** 
+  69:../interrupts.c **** void NMI_Handler( void );
+  70:../interrupts.c **** 
+  71:../interrupts.c **** 
+  72:../interrupts.c **** 
+  73:../interrupts.c **** /******************************************************************************/
+  74:../interrupts.c **** 
+  75:../interrupts.c **** /******************************************************************************
+  76:../interrupts.c **** * Functions Definitions
+  77:../interrupts.c **** *******************************************************************************/
+  78:../interrupts.c **** 
+  79:../interrupts.c **** 
+  80:../interrupts.c **** #if (EXCEPTION_HANDLER_DEBUG_ON == 1U)
+  81:../interrupts.c **** 
+  82:../interrupts.c **** void get_registers_from_stack( unsigned long *pulFaultStackAddress )
+  83:../interrupts.c **** {
+  84:../interrupts.c **** 	/* These are volatile to try and prevent the compiler/linker optimizing them
+  85:../interrupts.c **** 	 away as the variables never actually get used.  If the debugger won't show the
+  86:../interrupts.c **** 	 values of the variables, make them global my moving their declaration outside
+  87:../interrupts.c **** 	 of this function. */
+  88:../interrupts.c **** 	volatile unsigned long r0;
+  89:../interrupts.c **** 	volatile unsigned long r1;
+  90:../interrupts.c **** 	volatile unsigned long r2;
+  91:../interrupts.c **** 	volatile unsigned long r3;
+  92:../interrupts.c **** 	volatile unsigned long r12;
+  93:../interrupts.c **** 	volatile unsigned long lr;	/**< Link register. */
+  94:../interrupts.c **** 	volatile unsigned long pc;	/**< Program counter. */
+  95:../interrupts.c **** 	volatile unsigned long psr;	/**< Program status register. */
+  96:../interrupts.c **** 
+  97:../interrupts.c **** 	/* Assign Register values into local variables */
+  98:../interrupts.c **** 	r0 = pulFaultStackAddress[0];
+  99:../interrupts.c **** 	r1 = pulFaultStackAddress[1];
+ 100:../interrupts.c **** 	r2 = pulFaultStackAddress[2];
+ 101:../interrupts.c **** 	r3 = pulFaultStackAddress[3];
+ 102:../interrupts.c **** 
+ 103:../interrupts.c **** 	r12 = pulFaultStackAddress[4];
+ 104:../interrupts.c **** 	lr = pulFaultStackAddress[5];
+ 105:../interrupts.c **** 	pc = pulFaultStackAddress[6];
+ 106:../interrupts.c **** 	psr = pulFaultStackAddress[7];
+ 107:../interrupts.c **** 
+ 108:../interrupts.c **** 	/* When the following line is hit, the variables contain the register values. */
+ 109:../interrupts.c **** 	for( ; ; );
+ 110:../interrupts.c **** 
+ 111:../interrupts.c **** 	/* Avoid compiler warnings */
+ 112:../interrupts.c **** 	(void) r0; (void) r1; (void) r2; (void) r3; (void) r12;
+ 113:../interrupts.c **** 	(void) lr; (void) pc; (void) psr;
+ 114:../interrupts.c **** }
+ 115:../interrupts.c **** 
+ 116:../interrupts.c **** #endif	/* EXCEPTION_HANDLER_DEBUG_ON */
+ 117:../interrupts.c **** 
+ 118:../interrupts.c **** void BusFault_Handler(void)
+ 119:../interrupts.c **** {
+  27              	 .loc 1 119 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+  32              	 
+  33              	.L2:
+ 120:../interrupts.c **** #if (EXCEPTION_HANDLER_DEBUG_ON == 1U)
+ 121:../interrupts.c **** 	__asm volatile
+ 122:../interrupts.c **** 	(
+ 123:../interrupts.c **** 			" tst lr, #4                                                \n"
+ 124:../interrupts.c **** 			" ite eq                                                    \n"
+ 125:../interrupts.c **** 			" mrseq r0, msp                                             \n"
+ 126:../interrupts.c **** 			" mrsne r0, psp                                             \n"
+ 127:../interrupts.c **** 			" ldr r1, [r0, #24]                                         \n"
+ 128:../interrupts.c **** 			" ldr r2, bus_fault_handler_address_const                   \n"
+ 129:../interrupts.c **** 			" bx r2                                                     \n"
+ 130:../interrupts.c **** 			" bus_fault_handler_address_const: .word get_registers_from_stack    \n"
+ 131:../interrupts.c **** 	);
+ 132:../interrupts.c **** #endif
+ 133:../interrupts.c **** 	for( ; ; );
+  34              	 .loc 1 133 0 discriminator 1
+  35 0000 FEE7     	 b .L2
+  36              	 .cfi_endproc
+  37              	.LFE191:
+  39 0002 00BF     	 .section .text.HardFault_Handler,"ax",%progbits
+  40              	 .align 2
+  41              	 .global HardFault_Handler
+  42              	 .thumb
+  43              	 .thumb_func
+  45              	HardFault_Handler:
+  46              	.LFB192:
+ 134:../interrupts.c **** }
+ 135:../interrupts.c **** 
+ 136:../interrupts.c **** void HardFault_Handler(void)
+ 137:../interrupts.c **** {
+  47              	 .loc 1 137 0
+  48              	 .cfi_startproc
+  49              	 
+  50              	 
+  51              	 
+  52              	 
+  53              	.L4:
+ 138:../interrupts.c **** #if (EXCEPTION_HANDLER_DEBUG_ON == 1U)
+ 139:../interrupts.c **** 	__asm volatile
+ 140:../interrupts.c **** 	(
+ 141:../interrupts.c **** 			" tst lr, #4                                                \n"
+ 142:../interrupts.c **** 			" ite eq                                                    \n"
+ 143:../interrupts.c **** 			" mrseq r0, msp                                             \n"
+ 144:../interrupts.c **** 			" mrsne r0, psp                                             \n"
+ 145:../interrupts.c **** 			" ldr r1, [r0, #24]                                         \n"
+ 146:../interrupts.c **** 			" ldr r2, hard_fault_handler_address_const                  \n"
+ 147:../interrupts.c **** 			" bx r2                                                     \n"
+ 148:../interrupts.c **** 			" hard_fault_handler_address_const: .word get_registers_from_stack    \n"
+ 149:../interrupts.c **** 	);
+ 150:../interrupts.c **** #endif	/* EXCEPTION_HANDLER_DEBUG_ON */
+ 151:../interrupts.c **** 	for( ; ; );
+  54              	 .loc 1 151 0 discriminator 1
+  55 0000 FEE7     	 b .L4
+  56              	 .cfi_endproc
+  57              	.LFE192:
+  59 0002 00BF     	 .section .text.MemManage_Handler,"ax",%progbits
+  60              	 .align 2
+  61              	 .global MemManage_Handler
+  62              	 .thumb
+  63              	 .thumb_func
+  65              	MemManage_Handler:
+  66              	.LFB193:
+ 152:../interrupts.c **** }
+ 153:../interrupts.c **** 
+ 154:../interrupts.c **** void MemManage_Handler(void)
+ 155:../interrupts.c **** {
+  67              	 .loc 1 155 0
+  68              	 .cfi_startproc
+  69              	 
+  70              	 
+  71              	 
+  72              	 
+  73              	.L6:
+ 156:../interrupts.c **** #if (EXCEPTION_HANDLER_DEBUG_ON == 1U)
+ 157:../interrupts.c ****     __asm volatile
+ 158:../interrupts.c ****         (
+ 159:../interrupts.c ****          " tst lr, #4                                                \n"
+ 160:../interrupts.c ****          " ite eq                                                    \n"
+ 161:../interrupts.c ****          " mrseq r0, msp                                             \n"
+ 162:../interrupts.c ****          " mrsne r0, psp                                             \n"
+ 163:../interrupts.c ****          " ldr r1, [r0, #24]                                         \n"
+ 164:../interrupts.c ****          " ldr r2, mem_manage_handler_address_const                  \n"
+ 165:../interrupts.c ****          " bx r2                                                     \n"
+ 166:../interrupts.c ****          " mem_manage_handler_address_const: .word get_registers_from_stack    \n"
+ 167:../interrupts.c ****         );
+ 168:../interrupts.c **** #endif	/* EXCEPTION_HANDLER_DEBUG_ON */
+ 169:../interrupts.c ****     for( ; ; );
+  74              	 .loc 1 169 0 discriminator 1
+  75 0000 FEE7     	 b .L6
+  76              	 .cfi_endproc
+  77              	.LFE193:
+  79 0002 00BF     	 .section .text.UsageFault_Handler,"ax",%progbits
+  80              	 .align 2
+  81              	 .global UsageFault_Handler
+  82              	 .thumb
+  83              	 .thumb_func
+  85              	UsageFault_Handler:
+  86              	.LFB194:
+ 170:../interrupts.c **** }
+ 171:../interrupts.c **** 
+ 172:../interrupts.c **** 
+ 173:../interrupts.c **** void UsageFault_Handler(void)
+ 174:../interrupts.c **** {
+  87              	 .loc 1 174 0
+  88              	 .cfi_startproc
+  89              	 
+  90              	 
+  91              	 
+  92              	 
+  93              	.L8:
+ 175:../interrupts.c **** #if (EXCEPTION_HANDLER_DEBUG_ON == 1U)
+ 176:../interrupts.c ****     __asm volatile
+ 177:../interrupts.c ****         (
+ 178:../interrupts.c ****          " tst lr, #4                                                \n"
+ 179:../interrupts.c ****          " ite eq                                                    \n"
+ 180:../interrupts.c ****          " mrseq r0, msp                                             \n"
+ 181:../interrupts.c ****          " mrsne r0, psp                                             \n"
+ 182:../interrupts.c ****          " ldr r1, [r0, #24]                                         \n"
+ 183:../interrupts.c ****          " ldr r2, usage_fault_handler_address_const                  \n"
+ 184:../interrupts.c ****          " bx r2                                                     \n"
+ 185:../interrupts.c ****          " usage_fault_handler_address_const: .word get_registers_from_stack    \n"
+ 186:../interrupts.c ****         );
+ 187:../interrupts.c **** #endif	/* EXCEPTION_HANDLER_DEBUG_ON */
+ 188:../interrupts.c ****     for( ; ; );
+  94              	 .loc 1 188 0 discriminator 1
+  95 0000 FEE7     	 b .L8
+  96              	 .cfi_endproc
+  97              	.LFE194:
+  99 0002 00BF     	 .section .text.NMI_Handler,"ax",%progbits
+ 100              	 .align 2
+ 101              	 .global NMI_Handler
+ 102              	 .thumb
+ 103              	 .thumb_func
+ 105              	NMI_Handler:
+ 106              	.LFB195:
+ 189:../interrupts.c **** }
+ 190:../interrupts.c **** 
+ 191:../interrupts.c **** 
+ 192:../interrupts.c **** 
+ 193:../interrupts.c **** /** NMI Handler for NMI Traps **/
+ 194:../interrupts.c **** void NMI_Handler( void )
+ 195:../interrupts.c **** {
+ 107              	 .loc 1 195 0
+ 108              	 .cfi_startproc
+ 109              	 
+ 110              	 
+ 111 0000 08B5     	 push {r3,lr}
+ 112              	.LCFI0:
+ 113              	 .cfi_def_cfa_offset 8
+ 114              	 .cfi_offset 3,-8
+ 115              	 .cfi_offset 14,-4
+ 116              	.LVL0:
+ 196:../interrupts.c **** 	/* Local Variables */
+ 197:../interrupts.c **** 	unsigned long status_l = 0;
+ 198:../interrupts.c **** 
+ 199:../interrupts.c **** 	#if (USING_BROWN_OUT_DETECT == 1U)
+ 200:../interrupts.c **** 	float power_l = XMC_SCU_POWER_GetEVR33Voltage();
+ 117              	 .loc 1 200 0
+ 118 0002 FFF7FEFF 	 bl XMC_SCU_POWER_GetEVR33Voltage
+ 119              	.LVL1:
+ 201:../interrupts.c **** 	/* Check System Power */
+ 202:../interrupts.c **** 	if( power_l < BROWN_OUT_DETECT_VOLTAGE )
+ 120              	 .loc 1 202 0
+ 121 0006 DFED0E7A 	 flds s15,.L16
+ 122 000a B4EEE70A 	 fcmpes s0,s15
+ 123 000e F1EE10FA 	 fmstat
+ 124 0012 06D5     	 bpl .L10
+ 125              	.LVL2:
+ 126              	.LBB4:
+ 127              	.LBB5:
+ 128              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_gpio.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @file xmc_gpio.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @date 2015-06-20
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @cond
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  **************************************************************************************************
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * All rights reserved.                        
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *                                             
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * following conditions are met:   
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *                                                                              
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * disclaimer.                        
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * 
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * 
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * products derived from this software without specific prior written permission.                  
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *                                                                              
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *                                                                              
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  **************************************************************************************************
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Change History
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * --------------
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * 2015-02-20:
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *     - Initial draft<br>
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *     - Documentation improved <br>
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *      
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * 2015-06-20:
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *     - Removed version macros and declaration of GetDriverVersion API
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @endcond
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #ifndef XMC_GPIO_H
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #define XMC_GPIO_H
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**************************************************************************************************
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * HEADER FILES
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  **************************************************************************************************
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #include "xmc_common.h"
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @addtogroup XMClib XMC Peripheral Library
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @{
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @addtogroup GPIO
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @brief General Purpose Input Output (GPIO) driver for the XMC microcontroller family.
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * GPIO driver provide a generic and very flexible software interface for all standard digital I/O 
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Each port slice has individual interfaces for the operation as General Purpose I/O and it furthe
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * connectivity to the on-chip periphery and the control for the pad characteristics. 
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * The driver is divided into Input and Output mode.
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Input mode features:
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * -# Configuration structure XMC_GPIO_CONFIG_t and initialization function XMC_GPIO_Init()
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * -# Allows the selection of weak pull-up or pull-down device. Configuration structure XMC_GPIO_MO
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \if XMC1
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * -# Allows the selection of input hysteresis. XMC_GPIO_SetInputHysteresis()
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \endif
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * 
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Output mode features:
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * -# Allows the selection of push pull/open drain and Alternate output. Configuration structure XM
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \if XMC4
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * -# Allows the selection of pad driver strength. Configuration structure XMC_GPIO_OUTPUT_STRENGTH
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \endif
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * -# Allows the selection of initial output level. Configuration structure XMC_GPIO_OUTPUT_LEVEL_t
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *@{
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**************************************************************************************************
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * MACROS
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  **************************************************************************************************
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #define PORT_IOCR_PC_Pos PORT0_IOCR0_PC0_Pos
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #define PORT_IOCR_PC_Msk PORT0_IOCR0_PC0_Msk
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #define PORT_IOCR_PC_Size 				(8U)
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 											
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #define XMC_GPIO_CHECK_OUTPUT_LEVEL(level) ((level == XMC_GPIO_OUTPUT_LEVEL_LOW) || \
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****                                             (level == XMC_GPIO_OUTPUT_LEVEL_HIGH))
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****                                             
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #define XMC_GPIO_CHECK_HWCTRL(hwctrl) ((hwctrl == XMC_GPIO_HWCTRL_DISABLED) || \
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****                                        (hwctrl == XMC_GPIO_HWCTRL_PERIPHERAL1) || \
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****                                        (hwctrl == XMC_GPIO_HWCTRL_PERIPHERAL2))                    
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****                                             
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**************************************************************************************************
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * ENUMS
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  **************************************************************************************************
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Defines output level of a pin. Use type \a XMC_GPIO_OUTPUT_LEVEL_t for this enum.
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** typedef enum XMC_GPIO_OUTPUT_LEVEL
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** {
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_GPIO_OUTPUT_LEVEL_LOW  = 0x10000U, /**<  Reset bit */
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_GPIO_OUTPUT_LEVEL_HIGH = 0x1U, 	/**< Set bit  */
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** } XMC_GPIO_OUTPUT_LEVEL_t;
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Defines direct hardware control characteristics of the pin . Use type \a XMC_GPIO_HWCTRL_t for t
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** typedef enum XMC_GPIO_HWCTRL
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** {
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_GPIO_HWCTRL_DISABLED     = 0x0U, /**<  Software control only */
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_GPIO_HWCTRL_PERIPHERAL1  = 0x1U, /**<  HWI0/HWO0 control path can override the software confi
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_GPIO_HWCTRL_PERIPHERAL2  = 0x2U  /**<  HWI1/HWO1 control path can override the software confi
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** } XMC_GPIO_HWCTRL_t;
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**************************************************************************************************
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * DEVICE FAMILY EXTENSIONS
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  **************************************************************************************************
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  #if UC_FAMILY == XMC1
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #include "xmc1_gpio.h"
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #elif UC_FAMILY == XMC4
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #include "xmc4_gpio.h"
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #else
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #error "xmc_gpio.h: family device not supported"
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #endif
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**************************************************************************************************
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * API PROTOTYPES
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  **************************************************************************************************
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #ifdef __cplusplus
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** extern "C" {
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** #endif
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  port	  Constant pointer pointing to GPIO port, to access port registers like Pn_OUT,Pn_O
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  pin	  Port pin number.
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  config GPIO configuration data structure. Refer data structure @ref XMC_GPIO_CONFIG_t fo
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @return None
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Description:</b><br>
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \if XMC1
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Initializes input / output mode settings like, pull up / pull down devices,hysteresis, push pull
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Also configures alternate function outputs and clears hardware port control for a selected \a po
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \a config provides selected I/O settings. It configures hardware registers Pn_IOCR,Pn_OUT, Pn_OM
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \endif
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \if XMC4
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Initializes input / output mode settings like, pull up / pull down devices,push pull /open drain
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Also configures alternate function outputs and clears hardware port control for selected \a port
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * It configures hardware registers Pn_IOCR,Pn_OUT,Pn_OMR,Pn_PDISC and Pn_PDR.\n
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \endif
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Related APIs:</b><BR>
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *  None
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Note:</b><br>
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * This API is called in definition of DAVE_init by code generation and therefore should not be exp
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * for the normal operation. Use other APIs only after DAVE_init is called successfully (returns DA
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** void XMC_GPIO_Init(XMC_GPIO_PORT_t *const port, const uint8_t pin, const XMC_GPIO_CONFIG_t *const c
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  port	Constant pointer pointing to GPIO port, to access hardware register Pn_IOCR.
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  pin	Port pin number.
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  mode input / output functionality selection. Refer @ref XMC_GPIO_MODE_t for valid values
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @return None
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Description:</b><br>
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Sets digital input and output driver functionality and characteristics of a GPIO port pin. It co
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * registers Pn_IOCR. \a mode is initially configured during initialization in XMC_GPIO_Init(). Cal
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * the port direction functionality as needed later in the program.
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Related APIs:</b><BR>
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *  None
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** void XMC_GPIO_SetMode(XMC_GPIO_PORT_t *const port, const uint8_t pin, const XMC_GPIO_MODE_t mode);
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  port	 Constant pointer pointing to GPIO port, to access hardware register Pn_OMR.
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  pin	 Port pin number.
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  level output level selection. Refer @ref XMC_GPIO_OUTPUT_LEVEL_t for valid values.
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @return None
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Description:</b><br>
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Set port pin output level to high or low.It configures hardware registers Pn_OMR.\a level is ini
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * configured during initialization in XMC_GPIO_Init(). Call this API to alter output level as need
+ 219:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 220:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Related APIs:</b><BR>
+ 221:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *  XMC_GPIO_SetOutputHigh(), XMC_GPIO_SetOutputLow().
+ 222:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 223:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Note:</b><br>
+ 224:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Prior to this api, user has to configure port pin to output mode using XMC_GPIO_SetMode().
+ 225:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 226:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 227:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 228:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 229:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** __STATIC_INLINE void XMC_GPIO_SetOutputLevel(XMC_GPIO_PORT_t *const port, const uint8_t pin, const 
+ 230:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** {
+ 231:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_ASSERT("XMC_GPIO_SetOutputLevel: Invalid port", XMC_GPIO_CHECK_OUTPUT_PORT(port));
+ 232:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_ASSERT("XMC_GPIO_SetOutputLevel: Invalid output level", XMC_GPIO_CHECK_OUTPUT_LEVEL(level));
+ 233:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   
+ 234:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   port->OMR = (uint32_t)level << pin;
+ 235:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** }
+ 236:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 237:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 238:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 239:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  port constant pointer pointing to GPIO port, to access hardware register Pn_OMR.
+ 240:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  pin	Port pin number.
+ 241:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 242:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @return None
+ 243:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 244:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Description:</b><br>
+ 245:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *  Sets port pin output to high. It configures hardware registers Pn_OMR.
+ 246:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 247:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *  \par<b>Related APIs:</b><BR>
+ 248:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *  XMC_GPIO_SetOutputLow()
+ 249:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 250:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Note:</b><br>
+ 251:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Prior to this api, user has to configure port pin to output mode using XMC_GPIO_SetMode().\n
+ 252:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Register Pn_OMR is virtual and does not contain any flip-flop. A read action delivers the value 
+ 253:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 254:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 255:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 256:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** __STATIC_INLINE void XMC_GPIO_SetOutputHigh(XMC_GPIO_PORT_t *const port, const uint8_t pin)
+ 257:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** {
+ 258:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_ASSERT("XMC_GPIO_SetOutputHigh: Invalid port", XMC_GPIO_CHECK_OUTPUT_PORT(port));
+ 259:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 260:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   port->OMR = (uint32_t)0x1U << pin;
+ 261:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** }
+ 262:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 263:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 264:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 265:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  port	constant pointer pointing to GPIO port, to access hardware register Pn_OMR.
+ 266:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param  pin	port pin number.
+ 267:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 268:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @return  None
+ 269:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 270:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *\par<b>Description:</b><br>
+ 271:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Sets port pin output to low. It configures hardware registers Pn_OMR.\n
+ 272:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 273:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Related APIs:</b><BR>>
+ 274:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * XMC_GPIO_SetOutputHigh()
+ 275:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 276:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *\par<b>Note:</b><br>
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Prior to this api, user has to configure port pin to output mode using XMC_GPIO_SetMode().
+ 278:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Register Pn_OMR is virtual and does not contain any flip-flop. A read action delivers the value 
+ 279:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 280:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 281:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 282:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** __STATIC_INLINE void XMC_GPIO_SetOutputLow(XMC_GPIO_PORT_t *const port, const uint8_t pin)
+ 283:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** {
+ 284:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_ASSERT("XMC_GPIO_SetOutputLow: Invalid port", XMC_GPIO_CHECK_OUTPUT_PORT(port));
+ 285:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 286:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   port->OMR = 0x10000U << pin;
+ 287:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** }
+ 288:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 289:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** /**
+ 290:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 291:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param port constant pointer pointing to GPIO port, to access hardware register Pn_OMR.
+ 292:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @param pin  port pin number.
+ 293:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 294:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * @return None
+ 295:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 296:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Description:</b><br>
+ 297:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Configures port pin output to Toggle. It configures hardware registers Pn_OMR.
+ 298:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 299:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Related APIs:</b><BR>
+ 300:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * XMC_GPIO_SetOutputHigh(), XMC_GPIO_SetOutputLow().
+ 301:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 302:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * \par<b>Note:</b><br>
+ 303:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * Prior to this api, user has to configure port pin to output mode using XMC_GPIO_SetMode(). Regis
+ 304:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  * and does not contain any flip-flop. A read action delivers the value of 0.
+ 305:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  *
+ 306:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****  */
+ 307:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 308:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** __STATIC_INLINE void XMC_GPIO_ToggleOutput(XMC_GPIO_PORT_t *const port, const uint8_t pin)
+ 309:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** {
+ 310:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   XMC_ASSERT("XMC_GPIO_ToggleOutput: Invalid port", XMC_GPIO_CHECK_OUTPUT_PORT(port));
+ 311:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h **** 
+ 312:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_gpio.h ****   port->OMR = 0x10001U << pin;
+ 129              	 .loc 2 312 0
+ 130 0014 4FF00212 	 mov r2,#131074
+ 131 0018 0A4B     	 ldr r3,.L16+4
+ 132 001a 5A60     	 str r2,[r3,#4]
+ 133              	.LBE5:
+ 134              	.LBE4:
+ 203:../interrupts.c **** 	{
+ 204:../interrupts.c **** 		XMC_GPIO_ToggleOutput( (XMC_GPIO_PORT_t *)XMC_GPIO_PORT1, 1 );
+ 205:../interrupts.c **** 		/* We have got a Brown-Out trap, clear it for now! */
+ 206:../interrupts.c **** 		XMC_SCU_TRAP_ClearStatus( status_l );
+ 135              	 .loc 1 206 0
+ 136 001c 0020     	 movs r0,#0
+ 137 001e FFF7FEFF 	 bl XMC_SCU_TRAP_ClearStatus
+ 138              	.LVL3:
+ 139              	.L10:
+ 207:../interrupts.c **** 	}
+ 208:../interrupts.c **** 	#endif	/* USING_BROWN_OUT_DETECT */
+ 209:../interrupts.c **** 
+ 210:../interrupts.c **** 	/* Get SCU Interrupt status */
+ 211:../interrupts.c **** 	status_l = XMC_SCU_INTERUPT_GetEventStatus();
+ 140              	 .loc 1 211 0
+ 141 0022 FFF7FEFF 	 bl XMC_SCU_INTERUPT_GetEventStatus
+ 142              	.LVL4:
+ 212:../interrupts.c **** 	/* Watchdog Trap Pre-Warn occured */
+ 213:../interrupts.c **** 	if( status_l & SCU_INTERRUPT_SRRAW_PRWARN_Msk )
+ 143              	 .loc 1 213 0
+ 144 0026 10F0010F 	 tst r0,#1
+ 145 002a 00D0     	 beq .L12
+ 214:../interrupts.c **** 	{
+ 215:../interrupts.c **** 		__asm("NOP");
+ 146              	 .loc 1 215 0
+ 147              	
+ 148 002c 00BF     	 NOP
+ 149              	
+ 150              	 .thumb
+ 151              	.L12:
+ 216:../interrupts.c **** 	}
+ 217:../interrupts.c **** 	/* RTC Alarm has occured */
+ 218:../interrupts.c **** 	if( status_l & SCU_INTERRUPT_SRRAW_AI_Msk )
+ 152              	 .loc 1 218 0
+ 153 002e 10F0040F 	 tst r0,#4
+ 154 0032 02D0     	 beq .L13
+ 219:../interrupts.c **** 	{
+ 220:../interrupts.c **** 		/* TODO: (Update) Ring a Bell using DAC, LED used for test indication (not to be used in projects
+ 221:../interrupts.c **** //		XMC_GPIO_SetOutputLevel( (XMC_GPIO_PORT_t *)XMC_GPIO_PORT1, 1, XMC_GPIO_OUTPUT_LEVEL_HIGH );
+ 222:../interrupts.c **** 		XMC_SCU_INTERRUPT_ClearEventStatus( XMC_SCU_NMIREQ_RTC_AI );
+ 155              	 .loc 1 222 0
+ 156 0034 0420     	 movs r0,#4
+ 157              	.LVL5:
+ 158 0036 FFF7FEFF 	 bl XMC_SCU_INTERRUPT_ClearEventStatus
+ 159              	.LVL6:
+ 160              	.L13:
+ 223:../interrupts.c **** 	}
+ 224:../interrupts.c **** 
+ 225:../interrupts.c **** 	/* Get SCU Trap status register, check specific trap status */
+ 226:../interrupts.c **** 	status_l = XMC_SCU_TRAP_GetStatus();
+ 161              	 .loc 1 226 0
+ 162 003a FFF7FEFF 	 bl XMC_SCU_TRAP_GetStatus
+ 163              	.LVL7:
+ 164 003e 08BD     	 pop {r3,pc}
+ 165              	.L17:
+ 166              	 .align 2
+ 167              	.L16:
+ 168 0040 33333340 	 .word 1077097267
+ 169 0044 00810248 	 .word 1208123648
+ 170              	 .cfi_endproc
+ 171              	.LFE195:
+ 173              	 .text
+ 174              	.Letext0:
+ 175              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 176              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 177              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_scu.h"
+ 178              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_gpio.h"
+ 179              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 180              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+ 181              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_scu.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 interrupts.c
+    {standard input}:19     .text.BusFault_Handler:00000000 $t
+    {standard input}:24     .text.BusFault_Handler:00000000 BusFault_Handler
+    {standard input}:40     .text.HardFault_Handler:00000000 $t
+    {standard input}:45     .text.HardFault_Handler:00000000 HardFault_Handler
+    {standard input}:60     .text.MemManage_Handler:00000000 $t
+    {standard input}:65     .text.MemManage_Handler:00000000 MemManage_Handler
+    {standard input}:80     .text.UsageFault_Handler:00000000 $t
+    {standard input}:85     .text.UsageFault_Handler:00000000 UsageFault_Handler
+    {standard input}:100    .text.NMI_Handler:00000000 $t
+    {standard input}:105    .text.NMI_Handler:00000000 NMI_Handler
+    {standard input}:168    .text.NMI_Handler:00000040 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc4_scu.h.106.b7d8d773976d331f6820948fe093a27d
+                           .group:00000000 wm4.xmc_gpio.h.51.99a4c0bd520ffa931ac6d8600dce89c4
+                           .group:00000000 wm4.xmc4_gpio_map.h.74.66e9110cf801b78826ef5354da51c32f
+                           .group:00000000 wm4.xmc4_gpio.h.79.ce6c49508b5a7769c66e7e3c21dcdfe4
+                           .group:00000000 wm4.dri_scu_conf.h.21.447831c60738f37a7a045a7ec569f015
+                           .group:00000000 wm4.dri_types.h.20.1d2c5a5f8f0adc822c47fd75576d27ce
+
+UNDEFINED SYMBOLS
+XMC_SCU_POWER_GetEVR33Voltage
+XMC_SCU_TRAP_ClearStatus
+XMC_SCU_INTERUPT_GetEventStatus
+XMC_SCU_INTERRUPT_ClearEventStatus
+XMC_SCU_TRAP_GetStatus

@@ -1,0 +1,404 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "rtos_hooks.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.vApplicationStackOverflowHook,"ax",%progbits
+  19              	 .align 2
+  20              	 .global vApplicationStackOverflowHook
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	vApplicationStackOverflowHook:
+  25              	.LFB5:
+  26              	 .file 1 "../rtos_hooks.c"
+   1:../rtos_hooks.c **** /******************************************************************************
+   2:../rtos_hooks.c **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../rtos_hooks.c **** *
+   4:../rtos_hooks.c **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../rtos_hooks.c **** *
+   6:../rtos_hooks.c **** *******************************************************************************/
+   7:../rtos_hooks.c **** /******************************************************************************
+   8:../rtos_hooks.c **** * Title:		RTOS Hooks Source
+   9:../rtos_hooks.c **** * Filename:		rtos_hooks.c
+  10:../rtos_hooks.c **** * Author:		HS
+  11:../rtos_hooks.c **** * Origin Date:
+  12:../rtos_hooks.c **** * Version:
+  13:../rtos_hooks.c **** * Notes:
+  14:../rtos_hooks.c **** *
+  15:../rtos_hooks.c **** * Change History
+  16:../rtos_hooks.c **** * --------------
+  17:../rtos_hooks.c **** *
+  18:../rtos_hooks.c **** *******************************************************************************/
+  19:../rtos_hooks.c **** 
+  20:../rtos_hooks.c **** /** @file:	rtos_hooks.c
+  21:../rtos_hooks.c ****  *  @brief:	This source file contains callback functions of RTOS
+  22:../rtos_hooks.c ****  */
+  23:../rtos_hooks.c **** 
+  24:../rtos_hooks.c **** 
+  25:../rtos_hooks.c **** /******************************************************************************
+  26:../rtos_hooks.c **** * Includes
+  27:../rtos_hooks.c **** *******************************************************************************/
+  28:../rtos_hooks.c **** 
+  29:../rtos_hooks.c **** /* Include FreeRTOS Headers */
+  30:../rtos_hooks.c **** #include <FreeRTOS.h>
+  31:../rtos_hooks.c **** #include <task.h>
+  32:../rtos_hooks.c **** 
+  33:../rtos_hooks.c **** 
+  34:../rtos_hooks.c **** /******************************************************************************
+  35:../rtos_hooks.c **** * Functions
+  36:../rtos_hooks.c **** *******************************************************************************/
+  37:../rtos_hooks.c **** 
+  38:../rtos_hooks.c **** 
+  39:../rtos_hooks.c **** /*-----------------------------------------------------------*/
+  40:../rtos_hooks.c **** 
+  41:../rtos_hooks.c **** #if(  configCHECK_FOR_STACK_OVERFLOW > 0 )
+  42:../rtos_hooks.c **** void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName );
+  43:../rtos_hooks.c **** void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+  44:../rtos_hooks.c **** {
+  27              	 .loc 1 44 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+  32              	.LVL0:
+  33 0000 7047     	 bx lr
+  34              	 .cfi_endproc
+  35              	.LFE5:
+  37 0002 00BF     	 .section .text.vApplicationIdleHook,"ax",%progbits
+  38              	 .align 2
+  39              	 .global vApplicationIdleHook
+  40              	 .thumb
+  41              	 .thumb_func
+  43              	vApplicationIdleHook:
+  44              	.LFB6:
+  45:../rtos_hooks.c ****     (void) xTask;
+  46:../rtos_hooks.c ****     (void) pcTaskName;
+  47:../rtos_hooks.c ****     /* Check for Stack Overflow cause */
+  48:../rtos_hooks.c **** 
+  49:../rtos_hooks.c ****     /* For Debugging only */
+  50:../rtos_hooks.c **** 	#if (DEBUG_ == 1U)
+  51:../rtos_hooks.c ****     for( ; ; )
+  52:../rtos_hooks.c ****     {
+  53:../rtos_hooks.c ****     	/* Halt here */
+  54:../rtos_hooks.c ****     	__asm("NOP");
+  55:../rtos_hooks.c ****     }
+  56:../rtos_hooks.c **** 	#endif
+  57:../rtos_hooks.c **** }
+  58:../rtos_hooks.c **** 
+  59:../rtos_hooks.c **** #endif
+  60:../rtos_hooks.c **** 
+  61:../rtos_hooks.c **** /*-----------------------------------------------------------*/
+  62:../rtos_hooks.c **** 
+  63:../rtos_hooks.c **** #if( configUSE_TICK_HOOK > 0 )
+  64:../rtos_hooks.c **** void vApplicationTickHook( void );
+  65:../rtos_hooks.c **** void vApplicationTickHook( void )
+  66:../rtos_hooks.c **** {
+  67:../rtos_hooks.c ****     /* Dummy Implementation */
+  68:../rtos_hooks.c **** 	return;
+  69:../rtos_hooks.c **** }
+  70:../rtos_hooks.c **** 
+  71:../rtos_hooks.c **** #endif
+  72:../rtos_hooks.c **** 
+  73:../rtos_hooks.c **** /*-----------------------------------------------------------*/
+  74:../rtos_hooks.c **** 
+  75:../rtos_hooks.c **** #if ( configUSE_IDLE_HOOK == 1 )
+  76:../rtos_hooks.c **** void vApplicationIdleHook( void );
+  77:../rtos_hooks.c **** void vApplicationIdleHook( void )
+  78:../rtos_hooks.c **** {
+  45              	 .loc 1 78 0
+  46              	 .cfi_startproc
+  47              	 
+  48              	 
+  49              	 
+  79:../rtos_hooks.c **** 	/* It must *NOT* attempt to block.  In this case the
+  80:../rtos_hooks.c **** 	 * idle task just sleeps or yields to lower the CPU usage. */
+  81:../rtos_hooks.c **** 	portYIELD();
+  50              	 .loc 1 81 0
+  51 0000 4FF08052 	 mov r2,#268435456
+  52 0004 034B     	 ldr r3,.L3
+  53 0006 1A60     	 str r2,[r3]
+  54              	
+  55 0008 BFF34F8F 	 dsb
+  56              	
+  57              	
+  58 000c BFF36F8F 	 isb
+  59              	
+  60              	 .thumb
+  61 0010 7047     	 bx lr
+  62              	.L4:
+  63 0012 00BF     	 .align 2
+  64              	.L3:
+  65 0014 04ED00E0 	 .word -536810236
+  66              	 .cfi_endproc
+  67              	.LFE6:
+  69              	 .section .text.vApplicationMallocFailedHook,"ax",%progbits
+  70              	 .align 2
+  71              	 .global vApplicationMallocFailedHook
+  72              	 .thumb
+  73              	 .thumb_func
+  75              	vApplicationMallocFailedHook:
+  76              	.LFB7:
+  82:../rtos_hooks.c **** }
+  83:../rtos_hooks.c **** 
+  84:../rtos_hooks.c **** #endif
+  85:../rtos_hooks.c **** 
+  86:../rtos_hooks.c **** /*-----------------------------------------------------------*/
+  87:../rtos_hooks.c **** 
+  88:../rtos_hooks.c **** #if( configUSE_MALLOC_FAILED_HOOK == 1 )
+  89:../rtos_hooks.c **** void vApplicationMallocFailedHook( void );
+  90:../rtos_hooks.c **** void vApplicationMallocFailedHook( void )
+  91:../rtos_hooks.c **** {
+  77              	 .loc 1 91 0
+  78              	 .cfi_startproc
+  79              	 
+  80              	 
+  81              	 
+  82              	 
+  83              	.L6:
+  92:../rtos_hooks.c **** 	/* Called if a call to pvPortMalloc() fails because there is insufficient
+  93:../rtos_hooks.c **** 	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+  94:../rtos_hooks.c **** 	internally by FreeRTOS API functions that create tasks, queues, software
+  95:../rtos_hooks.c **** 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
+  96:../rtos_hooks.c **** 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+  97:../rtos_hooks.c **** 
+  98:../rtos_hooks.c ****     /* Report malloc failed hook */
+  99:../rtos_hooks.c **** 	for( ; ; )
+ 100:../rtos_hooks.c **** 	{
+ 101:../rtos_hooks.c **** 		__asm("NOP");
+  84              	 .loc 1 101 0 discriminator 1
+  85              	
+  86 0000 00BF     	 NOP
+  87              	
+ 102:../rtos_hooks.c **** 	}
+  88              	 .loc 1 102 0 discriminator 1
+  89              	 .thumb
+  90 0002 FDE7     	 b .L6
+  91              	 .cfi_endproc
+  92              	.LFE7:
+  94              	 .section .text.uxRand,"ax",%progbits
+  95              	 .align 2
+  96              	 .global uxRand
+  97              	 .thumb
+  98              	 .thumb_func
+ 100              	uxRand:
+ 101              	.LFB8:
+ 103:../rtos_hooks.c **** }
+ 104:../rtos_hooks.c **** 
+ 105:../rtos_hooks.c **** #endif  /* #if( configUSE_MALLOC_FAILED_HOOK == 1 ) */
+ 106:../rtos_hooks.c **** 
+ 107:../rtos_hooks.c **** /*-----------------------------------------------------------*/
+ 108:../rtos_hooks.c **** 
+ 109:../rtos_hooks.c **** /* Use by the pseudo random number generator. */
+ 110:../rtos_hooks.c **** static UBaseType_t ulNextRand;
+ 111:../rtos_hooks.c **** 
+ 112:../rtos_hooks.c **** UBaseType_t uxRand( void );
+ 113:../rtos_hooks.c **** UBaseType_t uxRand( void )
+ 114:../rtos_hooks.c **** {
+ 102              	 .loc 1 114 0
+ 103              	 .cfi_startproc
+ 104              	 
+ 105              	 
+ 106              	 
+ 107              	.LVL1:
+ 115:../rtos_hooks.c **** const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
+ 116:../rtos_hooks.c **** 
+ 117:../rtos_hooks.c **** 	/* Utility function to generate a pseudo random number. */
+ 118:../rtos_hooks.c **** 
+ 119:../rtos_hooks.c **** 	ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
+ 108              	 .loc 1 119 0
+ 109 0000 044A     	 ldr r2,.L8
+ 110 0002 1068     	 ldr r0,[r2]
+ 111 0004 044B     	 ldr r3,.L8+4
+ 112 0006 03FB00F0 	 mul r0,r3,r0
+ 113 000a 0130     	 adds r0,r0,#1
+ 114 000c 1060     	 str r0,[r2]
+ 120:../rtos_hooks.c **** 	return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
+ 121:../rtos_hooks.c **** }
+ 115              	 .loc 1 121 0
+ 116 000e C0F30E40 	 ubfx r0,r0,#16,#15
+ 117 0012 7047     	 bx lr
+ 118              	.L9:
+ 119              	 .align 2
+ 120              	.L8:
+ 121 0014 00000000 	 .word .LANCHOR0
+ 122 0018 354E5A01 	 .word 22695477
+ 123              	 .cfi_endproc
+ 124              	.LFE8:
+ 126              	 .section .text.vLoggingPrintf,"ax",%progbits
+ 127              	 .align 2
+ 128              	 .global vLoggingPrintf
+ 129              	 .thumb
+ 130              	 .thumb_func
+ 132              	vLoggingPrintf:
+ 133              	.LFB9:
+ 122:../rtos_hooks.c **** 
+ 123:../rtos_hooks.c **** /*-----------------------------------------------------------*/
+ 124:../rtos_hooks.c **** void vLoggingPrintf( const char *pcFormat, ... );
+ 125:../rtos_hooks.c **** void vLoggingPrintf( const char *pcFormat, ... )
+ 126:../rtos_hooks.c **** {
+ 134              	 .loc 1 126 0
+ 135              	 .cfi_startproc
+ 136              	 
+ 137              	 
+ 138              	 
+ 139              	.LVL2:
+ 140 0000 0FB4     	 push {r0,r1,r2,r3}
+ 141              	.LCFI0:
+ 142              	 .cfi_def_cfa_offset 16
+ 143              	 .cfi_offset 0,-16
+ 144              	 .cfi_offset 1,-12
+ 145              	 .cfi_offset 2,-8
+ 146              	 .cfi_offset 3,-4
+ 127:../rtos_hooks.c ****     /* Dummy implementation */
+ 128:../rtos_hooks.c ****     (void) pcFormat;
+ 129:../rtos_hooks.c **** }
+ 147              	 .loc 1 129 0
+ 148 0002 04B0     	 add sp,sp,#16
+ 149              	.LCFI1:
+ 150              	 .cfi_restore 3
+ 151              	 .cfi_restore 2
+ 152              	 .cfi_restore 1
+ 153              	 .cfi_restore 0
+ 154              	 .cfi_def_cfa_offset 0
+ 155 0004 7047     	 bx lr
+ 156              	 .cfi_endproc
+ 157              	.LFE9:
+ 159 0006 00BF     	 .section .text.ulApplicationGetNextSequenceNumber,"ax",%progbits
+ 160              	 .align 2
+ 161              	 .global ulApplicationGetNextSequenceNumber
+ 162              	 .thumb
+ 163              	 .thumb_func
+ 165              	ulApplicationGetNextSequenceNumber:
+ 166              	.LFB10:
+ 130:../rtos_hooks.c **** 
+ 131:../rtos_hooks.c **** 
+ 132:../rtos_hooks.c **** /*
+ 133:../rtos_hooks.c **** * Callback that provides the inputs necessary to generate a randomized TCP
+ 134:../rtos_hooks.c **** * Initial Sequence Number per RFC 6528.  In this case just a psuedo random
+ 135:../rtos_hooks.c **** * number is used so THIS IS NOT RECOMMENDED FOR PRODUCTION SYSTEMS.
+ 136:../rtos_hooks.c **** */
+ 137:../rtos_hooks.c **** uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
+ 138:../rtos_hooks.c **** uint16_t usSourcePort, uint32_t ulDestinationAddress, uint16_t usDestinationPort );
+ 139:../rtos_hooks.c **** uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress, uint16_t usSourcePort,
+ 140:../rtos_hooks.c **** 						uint32_t ulDestinationAddress, uint16_t usDestinationPort
+ 141:../rtos_hooks.c **** 						)
+ 142:../rtos_hooks.c **** {
+ 167              	 .loc 1 142 0
+ 168              	 .cfi_startproc
+ 169              	 
+ 170              	 
+ 171              	.LVL3:
+ 172 0000 08B5     	 push {r3,lr}
+ 173              	.LCFI2:
+ 174              	 .cfi_def_cfa_offset 8
+ 175              	 .cfi_offset 3,-8
+ 176              	 .cfi_offset 14,-4
+ 143:../rtos_hooks.c ****      ( void ) ulSourceAddress;
+ 144:../rtos_hooks.c ****      ( void ) usSourcePort;
+ 145:../rtos_hooks.c ****      ( void ) ulDestinationAddress;
+ 146:../rtos_hooks.c ****      ( void ) usDestinationPort;
+ 147:../rtos_hooks.c **** 
+ 148:../rtos_hooks.c ****      return uxRand();
+ 177              	 .loc 1 148 0
+ 178 0002 FFF7FEFF 	 bl uxRand
+ 179              	.LVL4:
+ 149:../rtos_hooks.c **** }
+ 180              	 .loc 1 149 0
+ 181 0006 08BD     	 pop {r3,pc}
+ 182              	 .cfi_endproc
+ 183              	.LFE10:
+ 185              	 .section .text.xApplicationGetRandomNumber,"ax",%progbits
+ 186              	 .align 2
+ 187              	 .global xApplicationGetRandomNumber
+ 188              	 .thumb
+ 189              	 .thumb_func
+ 191              	xApplicationGetRandomNumber:
+ 192              	.LFB11:
+ 150:../rtos_hooks.c **** 
+ 151:../rtos_hooks.c **** 
+ 152:../rtos_hooks.c **** BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber );
+ 153:../rtos_hooks.c **** BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber )
+ 154:../rtos_hooks.c **** {
+ 193              	 .loc 1 154 0
+ 194              	 .cfi_startproc
+ 195              	 
+ 196              	 
+ 197              	.LVL5:
+ 198 0000 10B5     	 push {r4,lr}
+ 199              	.LCFI3:
+ 200              	 .cfi_def_cfa_offset 8
+ 201              	 .cfi_offset 4,-8
+ 202              	 .cfi_offset 14,-4
+ 203 0002 0446     	 mov r4,r0
+ 155:../rtos_hooks.c **** 	*pulNumber = uxRand();
+ 204              	 .loc 1 155 0
+ 205 0004 FFF7FEFF 	 bl uxRand
+ 206              	.LVL6:
+ 207 0008 2060     	 str r0,[r4]
+ 156:../rtos_hooks.c **** 	return pdTRUE;
+ 157:../rtos_hooks.c **** }
+ 208              	 .loc 1 157 0
+ 209 000a 0120     	 movs r0,#1
+ 210 000c 10BD     	 pop {r4,pc}
+ 211              	 .cfi_endproc
+ 212              	.LFE11:
+ 214 000e 00BF     	 .section .bss.ulNextRand,"aw",%nobits
+ 215              	 .align 2
+ 216              	 .set .LANCHOR0,.+0
+ 219              	ulNextRand:
+ 220 0000 00000000 	 .space 4
+ 221              	 .text
+ 222              	.Letext0:
+ 223              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 224              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 225              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 226              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/task.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 rtos_hooks.c
+    {standard input}:19     .text.vApplicationStackOverflowHook:00000000 $t
+    {standard input}:24     .text.vApplicationStackOverflowHook:00000000 vApplicationStackOverflowHook
+    {standard input}:38     .text.vApplicationIdleHook:00000000 $t
+    {standard input}:43     .text.vApplicationIdleHook:00000000 vApplicationIdleHook
+    {standard input}:65     .text.vApplicationIdleHook:00000014 $d
+    {standard input}:70     .text.vApplicationMallocFailedHook:00000000 $t
+    {standard input}:75     .text.vApplicationMallocFailedHook:00000000 vApplicationMallocFailedHook
+    {standard input}:95     .text.uxRand:00000000 $t
+    {standard input}:100    .text.uxRand:00000000 uxRand
+    {standard input}:121    .text.uxRand:00000014 $d
+    {standard input}:127    .text.vLoggingPrintf:00000000 $t
+    {standard input}:132    .text.vLoggingPrintf:00000000 vLoggingPrintf
+    {standard input}:160    .text.ulApplicationGetNextSequenceNumber:00000000 $t
+    {standard input}:165    .text.ulApplicationGetNextSequenceNumber:00000000 ulApplicationGetNextSequenceNumber
+    {standard input}:186    .text.xApplicationGetRandomNumber:00000000 $t
+    {standard input}:191    .text.xApplicationGetRandomNumber:00000000 xApplicationGetRandomNumber
+    {standard input}:215    .bss.ulNextRand:00000000 $d
+    {standard input}:219    .bss.ulNextRand:00000000 ulNextRand
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+
+NO UNDEFINED SYMBOLS

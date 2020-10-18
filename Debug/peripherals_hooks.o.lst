@@ -1,0 +1,438 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "peripherals_hooks.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.UART_callback_handler,"ax",%progbits
+  19              	 .align 2
+  20              	 .global UART_callback_handler
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	UART_callback_handler:
+  25              	.LFB339:
+  26              	 .file 1 "../peripherals_hooks.c"
+   1:../peripherals_hooks.c **** /******************************************************************************
+   2:../peripherals_hooks.c **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../peripherals_hooks.c **** *
+   4:../peripherals_hooks.c **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../peripherals_hooks.c **** *
+   6:../peripherals_hooks.c **** *******************************************************************************/
+   7:../peripherals_hooks.c **** /******************************************************************************
+   8:../peripherals_hooks.c **** * Title:		Peripherals Hooks Source
+   9:../peripherals_hooks.c **** * Filename:		peripherals_hooks.c
+  10:../peripherals_hooks.c **** * Author:		HS
+  11:../peripherals_hooks.c **** * Origin Date:
+  12:../peripherals_hooks.c **** * Version:
+  13:../peripherals_hooks.c **** * Notes:
+  14:../peripherals_hooks.c **** *
+  15:../peripherals_hooks.c **** * Change History
+  16:../peripherals_hooks.c **** * --------------
+  17:../peripherals_hooks.c **** *
+  18:../peripherals_hooks.c **** *******************************************************************************/
+  19:../peripherals_hooks.c **** 
+  20:../peripherals_hooks.c **** /** @file:	peripherals_hooks.c
+  21:../peripherals_hooks.c ****  *  @brief:	This source file contains callback functions for peripherals
+  22:../peripherals_hooks.c ****  */
+  23:../peripherals_hooks.c **** 
+  24:../peripherals_hooks.c **** 
+  25:../peripherals_hooks.c **** /******************************************************************************
+  26:../peripherals_hooks.c **** * Includes
+  27:../peripherals_hooks.c **** *******************************************************************************/
+  28:../peripherals_hooks.c **** 
+  29:../peripherals_hooks.c **** /* Include peripherals files*/
+  30:../peripherals_hooks.c **** #include <dri_uart_extern.h>
+  31:../peripherals_hooks.c **** #include <dri_can_extern.h>
+  32:../peripherals_hooks.c **** #include <dri_rtc_extern.h>
+  33:../peripherals_hooks.c **** #include <dri_scu_extern.h>
+  34:../peripherals_hooks.c **** 
+  35:../peripherals_hooks.c **** 
+  36:../peripherals_hooks.c **** /* Include Standard Headers */
+  37:../peripherals_hooks.c **** #include <dri_mem.h>
+  38:../peripherals_hooks.c **** 
+  39:../peripherals_hooks.c **** 
+  40:../peripherals_hooks.c **** 
+  41:../peripherals_hooks.c **** /******************************************************************************
+  42:../peripherals_hooks.c **** * Preprocessor Constants
+  43:../peripherals_hooks.c **** *******************************************************************************/
+  44:../peripherals_hooks.c **** 
+  45:../peripherals_hooks.c **** 
+  46:../peripherals_hooks.c **** /******************************************************************************
+  47:../peripherals_hooks.c **** * Configuration Constants
+  48:../peripherals_hooks.c **** *******************************************************************************/
+  49:../peripherals_hooks.c **** 
+  50:../peripherals_hooks.c **** 
+  51:../peripherals_hooks.c **** /******************************************************************************
+  52:../peripherals_hooks.c **** * Variables
+  53:../peripherals_hooks.c **** *******************************************************************************/
+  54:../peripherals_hooks.c **** 
+  55:../peripherals_hooks.c **** 
+  56:../peripherals_hooks.c **** /******************************************************************************
+  57:../peripherals_hooks.c **** * Functions
+  58:../peripherals_hooks.c **** *******************************************************************************/
+  59:../peripherals_hooks.c **** 
+  60:../peripherals_hooks.c **** #if (UART_CALLBACK_HANDLER_USED == 1U)
+  61:../peripherals_hooks.c **** /* UART Callback handler */
+  62:../peripherals_hooks.c **** void UART_callback_handler( const eUART_Channel channel, unsigned char *p_data, const eUART_Event e
+  63:../peripherals_hooks.c **** void UART_callback_handler( const eUART_Channel channel, unsigned char *p_data, const eUART_Event e
+  64:../peripherals_hooks.c **** {
+  27              	 .loc 1 64 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  65:../peripherals_hooks.c **** 	/* Local variables */
+  66:../peripherals_hooks.c **** 	unsigned char * p_data_l = p_data;
+  67:../peripherals_hooks.c **** 
+  68:../peripherals_hooks.c **** 	/* Check events */
+  69:../peripherals_hooks.c **** 	switch( event )
+  32              	 .loc 1 69 0
+  33 0000 062A     	 cmp r2,#6
+  34 0002 08D0     	 beq .L3
+  35 0004 082A     	 cmp r2,#8
+  36 0006 02D0     	 beq .L4
+  70:../peripherals_hooks.c **** 	{
+  71:../peripherals_hooks.c **** 		default:
+  72:../peripherals_hooks.c **** 		case UART_EVENT_TX_COMPLETE:
+  73:../peripherals_hooks.c **** 			if( UART_CHANNEL_0 == channel )
+  37              	 .loc 1 73 0
+  38 0008 00B9     	 cbnz r0,.L8
+  74:../peripherals_hooks.c **** 			{
+  75:../peripherals_hooks.c **** 				/* Transmission successful! */
+  76:../peripherals_hooks.c **** 				__asm("NOP");
+  39              	 .loc 1 76 0
+  40              	
+  41 000a 00BF     	 NOP
+  42              	
+  43              	 .thumb
+  44              	.L8:
+  45 000c 7047     	 bx lr
+  46              	.L4:
+  77:../peripherals_hooks.c **** 			}
+  78:../peripherals_hooks.c **** 			break;
+  79:../peripherals_hooks.c **** 
+  80:../peripherals_hooks.c **** 		case UART_EVENT_RX_COMPLETE:
+  81:../peripherals_hooks.c **** 			if( UART_CHANNEL_0 == channel )
+  47              	 .loc 1 81 0
+  48 000e 0028     	 cmp r0,#0
+  49 0010 FCD1     	 bne .L8
+  82:../peripherals_hooks.c **** 			{
+  83:../peripherals_hooks.c **** 				/* Reception successful! */
+  84:../peripherals_hooks.c **** 				__asm("NOP");
+  50              	 .loc 1 84 0
+  51              	
+  52 0012 00BF     	 NOP
+  53              	
+  54              	 .thumb
+  55 0014 7047     	 bx lr
+  56              	.L3:
+  85:../peripherals_hooks.c **** 			}
+  86:../peripherals_hooks.c **** 			break;
+  87:../peripherals_hooks.c **** 		case UART_EVENT_RX_CHAR:
+  88:../peripherals_hooks.c **** 			switch( channel )
+  57              	 .loc 1 88 0
+  58 0016 0228     	 cmp r0,#2
+  59 0018 F8D0     	 beq .L8
+  64:../peripherals_hooks.c **** 	/* Local variables */
+  60              	 .loc 1 64 0
+  61 001a 08B5     	 push {r3,lr}
+  62              	.LCFI0:
+  63              	 .cfi_def_cfa_offset 8
+  64              	 .cfi_offset 3,-8
+  65              	 .cfi_offset 14,-4
+  89:../peripherals_hooks.c **** 			{
+  90:../peripherals_hooks.c **** 			default:
+  91:../peripherals_hooks.c **** 			case UART_CHANNEL_0:
+  92:../peripherals_hooks.c **** 				/* Reception successfull, transmit received data */
+  93:../peripherals_hooks.c **** 				UART_Api_Functions.fp_transmit( &UART_Channel_0, p_data_l, 1 );
+  66              	 .loc 1 93 0
+  67 001c 024B     	 ldr r3,.L9
+  68 001e 9B68     	 ldr r3,[r3,#8]
+  69 0020 0248     	 ldr r0,.L9+4
+  70              	.LVL1:
+  71 0022 0122     	 movs r2,#1
+  72              	.LVL2:
+  73 0024 9847     	 blx r3
+  74              	.LVL3:
+  75 0026 08BD     	 pop {r3,pc}
+  76              	.L10:
+  77              	 .align 2
+  78              	.L9:
+  79 0028 00000000 	 .word UART_Api_Functions
+  80 002c 00000000 	 .word UART_Channel_0
+  81              	 .cfi_endproc
+  82              	.LFE339:
+  84              	 .section .text.CAN_callback_handler,"ax",%progbits
+  85              	 .align 2
+  86              	 .global CAN_callback_handler
+  87              	 .thumb
+  88              	 .thumb_func
+  90              	CAN_callback_handler:
+  91              	.LFB340:
+  94:../peripherals_hooks.c **** 				break;
+  95:../peripherals_hooks.c **** 			case UART_CHANNEL_2:
+  96:../peripherals_hooks.c **** 				/* Reception successfull, transmit received data */
+  97:../peripherals_hooks.c **** 				break;
+  98:../peripherals_hooks.c **** 			}
+  99:../peripherals_hooks.c **** 
+ 100:../peripherals_hooks.c **** 			break;
+ 101:../peripherals_hooks.c **** 	}
+ 102:../peripherals_hooks.c **** }
+ 103:../peripherals_hooks.c **** #endif	/* UART_CALLBACK_HANDLER_USED */
+ 104:../peripherals_hooks.c **** 
+ 105:../peripherals_hooks.c **** 
+ 106:../peripherals_hooks.c **** /* CAN Callback Handler */
+ 107:../peripherals_hooks.c **** #if (CAN_CALLBACK_HANDLER_USED == 1U)
+ 108:../peripherals_hooks.c **** void CAN_callback_handler( void * p_channel, const eCAN_EventType event_type, const eCAN_Event even
+ 109:../peripherals_hooks.c **** void CAN_callback_handler( void * p_channel, const eCAN_EventType event_type, const eCAN_Event even
+ 110:../peripherals_hooks.c **** {
+  92              	 .loc 1 110 0
+  93              	 .cfi_startproc
+  94              	 
+  95              	 
+  96              	.LVL4:
+ 111:../peripherals_hooks.c **** 	DRIVER_ASSERT_NRET( NULL == p_channel );
+  97              	 .loc 1 111 0
+  98 0000 00B9     	 cbnz r0,.L12
+  99              	.L17:
+ 100              	 .loc 1 111 0 is_stmt 0 discriminator 1
+ 101 0002 FEE7     	 b .L17
+ 102              	.L12:
+ 110:../peripherals_hooks.c **** 	DRIVER_ASSERT_NRET( NULL == p_channel );
+ 103              	 .loc 1 110 0 is_stmt 1
+ 104 0004 10B5     	 push {r4,lr}
+ 105              	.LCFI1:
+ 106              	 .cfi_def_cfa_offset 8
+ 107              	 .cfi_offset 4,-8
+ 108              	 .cfi_offset 14,-4
+ 112:../peripherals_hooks.c **** 	/* Local Variables */
+ 113:../peripherals_hooks.c **** 	tStCAN_NodeConfiguartion * const p_config_l = ((tStCAN_Node *)p_channel)->p_config;
+ 109              	 .loc 1 113 0
+ 110 0006 0168     	 ldr r1,[r0]
+ 111              	.LVL5:
+ 114:../peripherals_hooks.c **** 	tStCAN_Control * const p_control_l = ((tStCAN_Node *)p_channel)->p_control;
+ 112              	 .loc 1 114 0
+ 113 0008 4468     	 ldr r4,[r0,#4]
+ 114              	.LVL6:
+ 115:../peripherals_hooks.c **** 
+ 116:../peripherals_hooks.c **** 	/* Check Event Type */
+ 117:../peripherals_hooks.c **** 	switch( event_type )
+ 118:../peripherals_hooks.c **** 	{
+ 119:../peripherals_hooks.c **** 	default:
+ 120:../peripherals_hooks.c **** 		case CAN_EVENT_TYPE_NODE_TRANSFER:
+ 121:../peripherals_hooks.c **** 		/* Check Node Transfer event */
+ 122:../peripherals_hooks.c **** 		switch( event )
+ 115              	 .loc 1 122 0
+ 116 000a 012A     	 cmp r2,#1
+ 117 000c 0CD0     	 beq .L15
+ 123:../peripherals_hooks.c **** 		{
+ 124:../peripherals_hooks.c **** 		default:
+ 125:../peripherals_hooks.c **** 			case CAN_EVENT_NODE_TRANSFER_TRANSMIT:
+ 126:../peripherals_hooks.c **** 				if( (1 == p_control_l->state.init) && (1 == p_control_l->state.tx_busy) )
+ 118              	 .loc 1 126 0
+ 119 000e 2368     	 ldr r3,[r4]
+ 120 0010 13F0010F 	 tst r3,#1
+ 121 0014 17D0     	 beq .L11
+ 122              	 .loc 1 126 0 is_stmt 0 discriminator 1
+ 123 0016 2368     	 ldr r3,[r4]
+ 124 0018 13F0020F 	 tst r3,#2
+ 125 001c 13D0     	 beq .L11
+ 127:../peripherals_hooks.c **** 				{
+ 128:../peripherals_hooks.c **** 					p_control_l->state.tx_busy = 0;
+ 126              	 .loc 1 128 0 is_stmt 1
+ 127 001e 2368     	 ldr r3,[r4]
+ 128 0020 23F00203 	 bic r3,r3,#2
+ 129 0024 2360     	 str r3,[r4]
+ 130 0026 10BD     	 pop {r4,pc}
+ 131              	.LVL7:
+ 132              	.L15:
+ 129:../peripherals_hooks.c **** 				}
+ 130:../peripherals_hooks.c **** 			break;
+ 131:../peripherals_hooks.c **** 			case CAN_EVENT_NODE_TRANSFER_RECEIVE:
+ 132:../peripherals_hooks.c **** 				if( (1 == p_control_l->state.init) && (0 == p_control_l->state.rx_busy) )
+ 133              	 .loc 1 132 0
+ 134 0028 2368     	 ldr r3,[r4]
+ 135 002a 13F0010F 	 tst r3,#1
+ 136 002e 0AD0     	 beq .L11
+ 137              	 .loc 1 132 0 is_stmt 0 discriminator 1
+ 138 0030 2368     	 ldr r3,[r4]
+ 139 0032 13F0040F 	 tst r3,#4
+ 140 0036 06D1     	 bne .L11
+ 133:../peripherals_hooks.c **** 				{
+ 134:../peripherals_hooks.c **** 					XMC_CAN_MO_ReceiveData( p_config_l->p_message_rx );
+ 141              	 .loc 1 134 0 is_stmt 1
+ 142 0038 C868     	 ldr r0,[r1,#12]
+ 143              	.LVL8:
+ 144 003a FFF7FEFF 	 bl XMC_CAN_MO_ReceiveData
+ 145              	.LVL9:
+ 135:../peripherals_hooks.c **** 					p_control_l->state.rx_busy = 0;
+ 146              	 .loc 1 135 0
+ 147 003e 2368     	 ldr r3,[r4]
+ 148 0040 23F00403 	 bic r3,r3,#4
+ 149 0044 2360     	 str r3,[r4]
+ 150              	.L11:
+ 151 0046 10BD     	 pop {r4,pc}
+ 152              	 .cfi_endproc
+ 153              	.LFE340:
+ 155              	 .section .text.SCU_callback_handler,"ax",%progbits
+ 156              	 .align 2
+ 157              	 .global SCU_callback_handler
+ 158              	 .thumb
+ 159              	 .thumb_func
+ 161              	SCU_callback_handler:
+ 162              	.LFB341:
+ 136:../peripherals_hooks.c **** 				}
+ 137:../peripherals_hooks.c **** 				else/* Direct Read Data from CAN Node in a common Mo */
+ 138:../peripherals_hooks.c **** 				{
+ 139:../peripherals_hooks.c **** 				}
+ 140:../peripherals_hooks.c **** 			break;
+ 141:../peripherals_hooks.c **** 		}
+ 142:../peripherals_hooks.c **** 		break;	/* CAN_EVENT_TYPE_NODE_TRANSFER */
+ 143:../peripherals_hooks.c **** 	}
+ 144:../peripherals_hooks.c **** }
+ 145:../peripherals_hooks.c **** #endif
+ 146:../peripherals_hooks.c **** 
+ 147:../peripherals_hooks.c **** 
+ 148:../peripherals_hooks.c **** /* SCU Callback Handler */
+ 149:../peripherals_hooks.c **** #if (SCU_CALLBACK_HANDLER_USED == 1U)
+ 150:../peripherals_hooks.c **** void SCU_callback_handler( void );
+ 151:../peripherals_hooks.c **** void SCU_callback_handler( void )
+ 152:../peripherals_hooks.c **** {
+ 163              	 .loc 1 152 0
+ 164              	 .cfi_startproc
+ 165              	 
+ 166              	 
+ 167              	 
+ 153:../peripherals_hooks.c **** 	__asm("NOP");
+ 168              	 .loc 1 153 0
+ 169              	
+ 170 0000 00BF     	 NOP
+ 171              	
+ 172              	 .thumb
+ 173 0002 7047     	 bx lr
+ 174              	 .cfi_endproc
+ 175              	.LFE341:
+ 177              	 .section .text.RTC_callback_handler,"ax",%progbits
+ 178              	 .align 2
+ 179              	 .global RTC_callback_handler
+ 180              	 .thumb
+ 181              	 .thumb_func
+ 183              	RTC_callback_handler:
+ 184              	.LFB342:
+ 154:../peripherals_hooks.c **** }
+ 155:../peripherals_hooks.c **** #endif
+ 156:../peripherals_hooks.c **** 
+ 157:../peripherals_hooks.c **** 
+ 158:../peripherals_hooks.c **** /* RTC Callback Handler */
+ 159:../peripherals_hooks.c **** #if (RTC_CALLBACK_HANDLER_USED == 1U)
+ 160:../peripherals_hooks.c **** void RTC_callback_handler( void * p_channel, const eRTC_Events event );
+ 161:../peripherals_hooks.c **** void RTC_callback_handler( void * p_channel, const eRTC_Events event )
+ 162:../peripherals_hooks.c **** {
+ 185              	 .loc 1 162 0
+ 186              	 .cfi_startproc
+ 187              	 
+ 188              	 
+ 189              	 
+ 190              	.LVL10:
+ 191 0000 7047     	 bx lr
+ 192              	 .cfi_endproc
+ 193              	.LFE342:
+ 195 0002 00BF     	 .text
+ 196              	.Letext0:
+ 197              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 198              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 199              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+ 200              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_usic.h"
+ 201              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_uart.h"
+ 202              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/inc/dri_types.h"
+ 203              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/UART/cfg/inc/dri_uart_types.h"
+ 204              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_can.h"
+ 205              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/CAN/cfg/inc/dri_can_types.h"
+ 206              	 .file 11 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/RTC/cfg/inc/dri_rtc_types.h"
+ 207              	 .file 12 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 208              	 .file 13 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/config/FreeRTOSConfig.h"
+ 209              	 .file 14 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/UART/inc/dri_uart_extern.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 peripherals_hooks.c
+    {standard input}:19     .text.UART_callback_handler:00000000 $t
+    {standard input}:24     .text.UART_callback_handler:00000000 UART_callback_handler
+    {standard input}:79     .text.UART_callback_handler:00000028 $d
+    {standard input}:85     .text.CAN_callback_handler:00000000 $t
+    {standard input}:90     .text.CAN_callback_handler:00000000 CAN_callback_handler
+    {standard input}:156    .text.SCU_callback_handler:00000000 $t
+    {standard input}:161    .text.SCU_callback_handler:00000000 SCU_callback_handler
+    {standard input}:178    .text.RTC_callback_handler:00000000 $t
+    {standard input}:183    .text.RTC_callback_handler:00000000 RTC_callback_handler
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc_usic.h.128.f7fc4a60af138bbf45352fd08f8352ab
+                           .group:00000000 wm4.xmc4_usic_map.h.58.c72ca24cddd51bff3428962310391fa9
+                           .group:00000000 wm4.xmc_uart.h.104.72a141d26ba50140527ac9d7b989eee6
+                           .group:00000000 wm4.dri_uart_conf.h.20.c752d5b610b0d48f8289f114c3c21572
+                           .group:00000000 wm4.xmc_gpio.h.51.99a4c0bd520ffa931ac6d8600dce89c4
+                           .group:00000000 wm4.xmc4_gpio_map.h.74.66e9110cf801b78826ef5354da51c32f
+                           .group:00000000 wm4.xmc4_gpio.h.79.ce6c49508b5a7769c66e7e3c21dcdfe4
+                           .group:00000000 wm4.dri_types.h.39.161f94b021468f2f6263340b954bb37f
+                           .group:00000000 wm4.xmc4_scu.h.83.0449f5880ac071460ec1a8072311ea51
+                           .group:00000000 wm4.xmc_can_map.h.53.acf344f754863d08777806bac8258159
+                           .group:00000000 wm4.xmc_can.h.165.b8cbf26258050f21ae0d7187b2c799e4
+                           .group:00000000 wm4.dri_can_conf.h.20.eb4c579fd7daa502d40dc524de831fe0
+                           .group:00000000 wm4.time.h.8.2930fe070f4a8096b07db9159698c8e3
+                           .group:00000000 wm4.time.h.2.9857e62ad6ac99431e29d58067232314
+                           .group:00000000 wm4.time.h.24.3660bbb2d0a4c7457ff52ba3ada4c166
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.time.h.135.a144f22f40ef3cf15447b8562982e06e
+                           .group:00000000 wm4.dri_rtc_conf.h.20.ddb35dd4479cf4677ef8293c7ca1947c
+                           .group:00000000 wm4.xmc_wdt.h.52.70bee31186d14b8e38aa3e962a374468
+                           .group:00000000 wm4.dri_scu_conf.h.21.447831c60738f37a7a045a7ec569f015
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.c97deff1eee1cecd0dd8656d96151fe8
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+
+UNDEFINED SYMBOLS
+UART_Api_Functions
+UART_Channel_0
+XMC_CAN_MO_ReceiveData

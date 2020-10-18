@@ -1,0 +1,655 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "client_task.cpp"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text._ZN12ClientTask__11client_bodyEPv,"ax",%progbits
+  19              	 .align 2
+  20              	 .global _ZN12ClientTask__11client_bodyEPv
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	_ZN12ClientTask__11client_bodyEPv:
+  25              	.LFB64:
+  26              	 .file 1 "../App/src/client_task.cpp"
+   1:../App/src/client_task.cpp **** /******************************************************************************
+   2:../App/src/client_task.cpp **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../App/src/client_task.cpp **** *
+   4:../App/src/client_task.cpp **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../App/src/client_task.cpp **** *
+   6:../App/src/client_task.cpp **** *******************************************************************************/
+   7:../App/src/client_task.cpp **** /******************************************************************************
+   8:../App/src/client_task.cpp **** * Title:		Client Task Source
+   9:../App/src/client_task.cpp **** * Filename:		client_task.cpp
+  10:../App/src/client_task.cpp **** * Author:		HS
+  11:../App/src/client_task.cpp **** * Origin Date:	01/18/2020
+  12:../App/src/client_task.cpp **** * Version:		1.0.0
+  13:../App/src/client_task.cpp **** * Notes:
+  14:../App/src/client_task.cpp **** *
+  15:../App/src/client_task.cpp **** * Change History
+  16:../App/src/client_task.cpp **** * --------------
+  17:../App/src/client_task.cpp **** *
+  18:../App/src/client_task.cpp **** *******************************************************************************/
+  19:../App/src/client_task.cpp **** 
+  20:../App/src/client_task.cpp **** /** @file:	client_task.cpp
+  21:../App/src/client_task.cpp ****  *  @brief:	This source file contains function definitions for
+  22:../App/src/client_task.cpp ****  *  		client task class.
+  23:../App/src/client_task.cpp ****  */
+  24:../App/src/client_task.cpp **** 
+  25:../App/src/client_task.cpp **** 
+  26:../App/src/client_task.cpp **** /******************************************************************************
+  27:../App/src/client_task.cpp **** * Includes
+  28:../App/src/client_task.cpp **** *******************************************************************************/
+  29:../App/src/client_task.cpp **** #include <client_task.h>
+  30:../App/src/client_task.cpp **** 
+  31:../App/src/client_task.cpp **** /* Shall not be included directly into application */
+  32:../App/src/client_task.cpp **** #include <FreeRTOS_IP_Private.h>
+  33:../App/src/client_task.cpp **** 
+  34:../App/src/client_task.cpp **** 
+  35:../App/src/client_task.cpp **** /******************************************************************************
+  36:../App/src/client_task.cpp **** * Preprocessor Constants
+  37:../App/src/client_task.cpp **** *******************************************************************************/
+  38:../App/src/client_task.cpp **** 
+  39:../App/src/client_task.cpp **** //#define USING_RAW_UDP_CLIENT
+  40:../App/src/client_task.cpp **** #define USING_RAW_CLIENT
+  41:../App/src/client_task.cpp **** 
+  42:../App/src/client_task.cpp **** /* Note: I am not using both for testing, you can update the code and do it */
+  43:../App/src/client_task.cpp **** #if defined(USING_RAW_UDP_CLIENT) && defined(USING_RAW_CLIENT)
+  44:../App/src/client_task.cpp **** #error "Cannot use both at same time"
+  45:../App/src/client_task.cpp **** #endif
+  46:../App/src/client_task.cpp **** 
+  47:../App/src/client_task.cpp **** 
+  48:../App/src/client_task.cpp **** /******************************************************************************
+  49:../App/src/client_task.cpp **** * Configuration Constants
+  50:../App/src/client_task.cpp **** *******************************************************************************/
+  51:../App/src/client_task.cpp **** 
+  52:../App/src/client_task.cpp **** #define CLIENT_DATA_LENGTH				( 14 )
+  53:../App/src/client_task.cpp **** 
+  54:../App/src/client_task.cpp **** 
+  55:../App/src/client_task.cpp **** /******************************************************************************
+  56:../App/src/client_task.cpp **** * Macros
+  57:../App/src/client_task.cpp **** *******************************************************************************/
+  58:../App/src/client_task.cpp **** 
+  59:../App/src/client_task.cpp **** 
+  60:../App/src/client_task.cpp **** /******************************************************************************
+  61:../App/src/client_task.cpp **** * Typedefs
+  62:../App/src/client_task.cpp **** *******************************************************************************/
+  63:../App/src/client_task.cpp **** 
+  64:../App/src/client_task.cpp **** 
+  65:../App/src/client_task.cpp **** /******************************************************************************
+  66:../App/src/client_task.cpp **** * Variables
+  67:../App/src/client_task.cpp **** *******************************************************************************/
+  68:../App/src/client_task.cpp **** 
+  69:../App/src/client_task.cpp **** 
+  70:../App/src/client_task.cpp **** /******************************************************************************
+  71:../App/src/client_task.cpp **** * Function Definitions
+  72:../App/src/client_task.cpp **** *******************************************************************************/
+  73:../App/src/client_task.cpp **** 
+  74:../App/src/client_task.cpp **** 
+  75:../App/src/client_task.cpp **** /******* Public Member function for ClientTask__ class *******/
+  76:../App/src/client_task.cpp **** 
+  77:../App/src/client_task.cpp **** /**
+  78:../App/src/client_task.cpp ****  * @function
+  79:../App/src/client_task.cpp ****  *
+  80:../App/src/client_task.cpp ****  * @brief
+  81:../App/src/client_task.cpp ****  *
+  82:../App/src/client_task.cpp ****  * <i>Imp Note:</i>
+  83:../App/src/client_task.cpp ****  */
+  84:../App/src/client_task.cpp **** void ClientTask__ :: client_body( void *pvParameters )
+  85:../App/src/client_task.cpp **** {
+  27              	 .loc 1 85 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 2DE9F041 	 push {r4,r5,r6,r7,r8,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 24
+  35              	 .cfi_offset 4,-24
+  36              	 .cfi_offset 5,-20
+  37              	 .cfi_offset 6,-16
+  38              	 .cfi_offset 7,-12
+  39              	 .cfi_offset 8,-8
+  40              	 .cfi_offset 14,-4
+  41 0004 92B0     	 sub sp,sp,#72
+  42              	.LCFI1:
+  43              	 .cfi_def_cfa_offset 96
+  44              	.LBB6:
+  86:../App/src/client_task.cpp ****     (void) pvParameters;
+  87:../App/src/client_task.cpp **** 	/* Local variables */
+  88:../App/src/client_task.cpp **** 	struct freertos_sockaddr xServerAddress;
+  89:../App/src/client_task.cpp **** 	Socket_t xClientSocket;
+  90:../App/src/client_task.cpp **** 	constexpr TickType_t xSendTimeOut = pdMS_TO_TICKS( 5000 );
+  45              	 .loc 1 90 0
+  46 0006 41F28833 	 movw r3,#5000
+  47 000a 0393     	 str r3,[sp,#12]
+  48              	.LVL1:
+  91:../App/src/client_task.cpp ****     TickType_t xTimeOnShutdown = 0;
+  92:../App/src/client_task.cpp **** 
+  93:../App/src/client_task.cpp **** #ifdef USING_RAW_CLIENT
+  94:../App/src/client_task.cpp ****     unsigned long data_len = sizeof(struct xIP_PACKET) + CLIENT_DATA_LENGTH;
+  95:../App/src/client_task.cpp ****     char buffer_l[sizeof(struct xIP_PACKET) + CLIENT_DATA_LENGTH] = {};
+  49              	 .loc 1 95 0
+  50 000c 0023     	 movs r3,#0
+  51 000e 0693     	 str r3,[sp,#24]
+  52 0010 0793     	 str r3,[sp,#28]
+  53 0012 0893     	 str r3,[sp,#32]
+  54 0014 0993     	 str r3,[sp,#36]
+  55 0016 0A93     	 str r3,[sp,#40]
+  56 0018 0B93     	 str r3,[sp,#44]
+  57 001a 0C93     	 str r3,[sp,#48]
+  58 001c 0D93     	 str r3,[sp,#52]
+  59 001e 0E93     	 str r3,[sp,#56]
+  60 0020 0F93     	 str r3,[sp,#60]
+  61 0022 1093     	 str r3,[sp,#64]
+  62 0024 1193     	 str r3,[sp,#68]
+  96:../App/src/client_task.cpp **** #elif defined(USING_RAW_UDP_CLIENT)
+  97:../App/src/client_task.cpp ****     unsigned long data_len = sizeof(struct xUDP_PACKET) + CLIENT_DATA_LENGTH;
+  98:../App/src/client_task.cpp ****     char buffer_l[sizeof(struct xUDP_PACKET) + CLIENT_DATA_LENGTH] = {};
+  99:../App/src/client_task.cpp **** #endif
+ 100:../App/src/client_task.cpp **** 
+ 101:../App/src/client_task.cpp **** 	/* Configure server details */
+ 102:../App/src/client_task.cpp **** #ifdef USING_RAW_CLIENT
+ 103:../App/src/client_task.cpp **** 	xServerAddress.sin_port = FreeRTOS_htons( 0/*5901*/ );
+  63              	 .loc 1 103 0
+  64 0026 ADF81230 	 strh r3,[sp,#18]
+ 104:../App/src/client_task.cpp **** #elif defined(USING_RAW_UDP_CLIENT)
+ 105:../App/src/client_task.cpp **** 	xServerAddress.sin_port = FreeRTOS_htons( 5901 );
+ 106:../App/src/client_task.cpp **** #endif
+ 107:../App/src/client_task.cpp **** 	xServerAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.7" );/* For RAW it will become 0.0.0.0, l
+  65              	 .loc 1 107 0
+  66 002a 3248     	 ldr r0,.L11
+  67              	.LVL2:
+  68 002c FFF7FEFF 	 bl FreeRTOS_inet_addr
+  69              	.LVL3:
+  70 0030 0590     	 str r0,[sp,#20]
+  71              	.LVL4:
+ 108:../App/src/client_task.cpp **** 
+ 109:../App/src/client_task.cpp **** 	/* Fill in the packet information
+ 110:../App/src/client_task.cpp **** 	 * Note: You can fill packet information in any way as you like,
+ 111:../App/src/client_task.cpp **** 	 * I have filled information using the existing method provided in FreeRTOS+Plus, and quite handy 
+ 112:../App/src/client_task.cpp **** 	char *pxIpSrcAddrOffset = ( char *) ( & (buffer_l[sizeof( MACAddress_t )]) );
+ 113:../App/src/client_task.cpp **** #ifdef USING_RAW_CLIENT
+ 114:../App/src/client_task.cpp **** 	( void ) memcpy( ( void * ) pxIpSrcAddrOffset, ( const void * ) ( xDefaultPartRAWPacketHeader.ucBy
+  72              	 .loc 1 114 0
+  73 0032 314C     	 ldr r4,.L11+4
+  74 0034 0FCC     	 ldmia r4!,{r0,r1,r2,r3}
+  75 0036 CDF81E00 	 str r0,[sp,#30]
+  76 003a CDF82210 	 str r1,[sp,#34]
+  77 003e CDF82620 	 str r2,[sp,#38]
+  78 0042 CDF82A30 	 str r3,[sp,#42]
+  79 0046 03CC     	 ldmia r4!,{r0,r1}
+  80 0048 CDF82E00 	 str r0,[sp,#46]
+  81 004c CDF83210 	 str r1,[sp,#50]
+  82              	.LVL5:
+ 115:../App/src/client_task.cpp **** 	pxIpSrcAddrOffset = ( char *) ( & (buffer_l[sizeof(xIP_PACKET)]) );
+ 116:../App/src/client_task.cpp **** #elif defined(USING_RAW_UDP_CLIENT)
+ 117:../App/src/client_task.cpp **** 	( void ) memcpy( ( void * ) pxIpSrcAddrOffset, ( const void * ) ( xDefaultPartUDPPacketHeader.ucBy
+ 118:../App/src/client_task.cpp **** 	pxIpSrcAddrOffset = ( char *) ( & (buffer_l[sizeof(xUDP_PACKET)]) );
+ 119:../App/src/client_task.cpp **** #endif
+ 120:../App/src/client_task.cpp **** 	( void ) memcpy( ( void * ) pxIpSrcAddrOffset, (char *)"Hella Server\r\n", CLIENT_DATA_LENGTH );
+  83              	 .loc 1 120 0
+  84 0050 2A4B     	 ldr r3,.L11+8
+  85 0052 07CB     	 ldmia r3!,{r0,r1,r2}
+  86 0054 CDF83A00 	 str r0,[sp,#58]
+  87 0058 CDF83E10 	 str r1,[sp,#62]
+  88 005c CDF84220 	 str r2,[sp,#66]
+  89 0060 1B88     	 ldrh r3,[r3]
+  90 0062 ADF84630 	 strh r3,[sp,#70]
+ 121:../App/src/client_task.cpp **** 
+ 122:../App/src/client_task.cpp **** 	/* Connect to a server and create a task for client */
+ 123:../App/src/client_task.cpp **** 	for(  ; ; )
+ 124:../App/src/client_task.cpp **** 	{
+ 125:../App/src/client_task.cpp **** 		/* Attempt to open the socket. */
+ 126:../App/src/client_task.cpp **** #ifdef USING_RAW_CLIENT
+ 127:../App/src/client_task.cpp **** 		xClientSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_RAW, FREERTOS_IPPROTO_RAW );
+  91              	 .loc 1 127 0
+  92 0066 4FF00208 	 mov r8,#2
+  93              	.LVL6:
+  94              	.L8:
+  95 006a 4046     	 mov r0,r8
+  96 006c 0321     	 movs r1,#3
+  97 006e FF22     	 movs r2,#255
+  98 0070 FFF7FEFF 	 bl FreeRTOS_socket
+  99              	.LVL7:
+ 100 0074 0446     	 mov r4,r0
+ 101              	.LVL8:
+ 128:../App/src/client_task.cpp **** #elif defined(USING_RAW_UDP_CLIENT)
+ 129:../App/src/client_task.cpp **** 		xClientSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_RAW, FREERTOS_IPPROTO_UDP );
+ 130:../App/src/client_task.cpp **** #endif
+ 131:../App/src/client_task.cpp **** 		configASSERT( xClientSocket != FREERTOS_INVALID_SOCKET );
+ 102              	 .loc 1 131 0
+ 103 0076 B0F1FF3F 	 cmp r0,#-1
+ 104 007a 08D1     	 bne .L2
+ 105              	.LBB7:
+ 106              	.LBB8:
+ 107              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * FreeRTOS Kernel V10.4.1
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * this software and associated documentation files (the "Software"), to deal in
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * the Software without restriction, including without limitation the rights to
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * the Software, and to permit persons to whom the Software is furnished to do so,
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * subject to the following conditions:
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * The above copyright notice and this permission notice shall be included in all
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * copies or substantial portions of the Software.
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * https://www.FreeRTOS.org
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * https://github.com/FreeRTOS
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * 1 tab == 4 spaces!
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  */
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** #ifndef PORTMACRO_H
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define PORTMACRO_H
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifdef __cplusplus
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         extern "C" {
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Port specific definitions.
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * The settings in this file configure FreeRTOS correctly for the
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * given hardware and compiler.
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * These settings should not be altered.
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *-----------------------------------------------------------
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  */
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Type definitions. */
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portCHAR          char
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portFLOAT         float
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDOUBLE        double
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portLONG          long
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSHORT         short
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSTACK_TYPE    uint32_t
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portBASE_TYPE     long
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef portSTACK_TYPE   StackType_t;
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef long             BaseType_t;
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef unsigned long    UBaseType_t;
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #if ( configUSE_16_BIT_TICKS == 1 )
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         typedef uint16_t     TickType_t;
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portMAX_DELAY              ( TickType_t ) 0xffff
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #else
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         typedef uint32_t     TickType_t;
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portMAX_DELAY              ( TickType_t ) 0xffffffffUL
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * not need to be guarded with a critical section. */
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portTICK_TYPE_IS_ATOMIC    1
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Architecture specifics. */
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSTACK_GROWTH      ( -1 )
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portBYTE_ALIGNMENT    8
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDONT_DISCARD      __attribute__( ( used ) )
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Scheduler utilities. */
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portYIELD()                                 \
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {                                                   \
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Set a PendSV to request a context switch. */ \
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT; \
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****                                                         \
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Barriers are normally not required but do ensure the code is completely \
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****          * within the specified behaviour for the architecture. */ \
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "dsb" ::: "memory" );                     \
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "isb" );                                  \
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     }
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNVIC_INT_CTRL_REG     ( *( ( volatile uint32_t * ) 0xe000ed04 ) )
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNVIC_PENDSVSET_BIT    ( 1UL << 28UL )
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portEND_SWITCHING_ISR( xSwitchRequired )    if( xSwitchRequired != pdFALSE ) portYIELD(
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portYIELD_FROM_ISR( x )                     portEND_SWITCHING_ISR( x )
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Critical section management. */
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     extern void vPortEnterCritical( void );
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     extern void vPortExitCritical( void );
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSET_INTERRUPT_MASK_FROM_ISR()         ulPortRaiseBASEPRI()
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x )    vPortSetBASEPRI( x )
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDISABLE_INTERRUPTS()                  vPortRaiseBASEPRI()
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portENABLE_INTERRUPTS()                   vPortSetBASEPRI( 0 )
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portENTER_CRITICAL()                      vPortEnterCritical()
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portEXIT_CRITICAL()                       vPortExitCritical()
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Task function macros as described on the FreeRTOS.org WEB site.  These are
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * not necessary for to use this port.  They are defined so the common demo files
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * (which build with all the ports) will build. */
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParamete
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParamete
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Tickless idle/low power functionality. */
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef portSUPPRESS_TICKS_AND_SLEEP
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         extern void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime )    vPortSuppressTicksAndSleep( xE
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Architecture specific optimisations. */
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define configUSE_PORT_OPTIMISED_TASK_SELECTION    1
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Generic helper function. */
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __attribute__( ( always_inline ) ) static inline uint8_t ucPortCountLeadingZeros( uint32_t 
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             uint8_t ucReturn;
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             __asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) : "memory" );
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             return ucReturn;
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Check the configuration. */
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #if ( configMAX_PRIORITIES > 32 )
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             #error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIO
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #endif
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Store/clear the ready priorities in a bit map. */
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities )    ( uxReadyPriorities )
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities )     ( uxReadyPriorities )
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    uxTopPriority = ( 3
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifdef configASSERT
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         void vPortValidateInterruptPriority( void );
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()    vPortValidateInterruptPriority()
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* portNOP() is not required by this port. */
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNOP()
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portINLINE              __inline
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef portFORCE_INLINE
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portFORCE_INLINE    inline __attribute__( ( always_inline ) )
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         uint32_t ulCurrentInterrupt;
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         BaseType_t xReturn;
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Obtain the number of the currently executing interrupt. */
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "mrs %0, ipsr" : "=r" ( ulCurrentInterrupt )::"memory" );
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         if( ulCurrentInterrupt == 0 )
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             xReturn = pdFALSE;
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         else
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             xReturn = pdTRUE;
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         return xReturn;
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     }
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         uint32_t ulNewBASEPRI;
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         (
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	mov %0, %1												\n"\
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	msr basepri, %0											\n"\
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	isb														\n"\
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	dsb														\n"\
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             : "=r" ( ulNewBASEPRI ) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         );
+ 108              	 .loc 2 204 0
+ 109              	
+ 110 007c 4FF01403 	 mov r3,#20
+ 111 0080 83F31188 	 msr basepri,r3
+ 112 0084 BFF36F8F 	 isb 
+ 113 0088 BFF34F8F 	 dsb 
+ 114              	
+ 115              	
+ 116              	.LVL9:
+ 117              	 .thumb
+ 118              	.L3:
+ 119              	.LBE8:
+ 120              	.LBE7:
+ 121              	 .loc 1 131 0 discriminator 1
+ 122 008c FEE7     	 b .L3
+ 123              	.L2:
+ 132:../App/src/client_task.cpp **** 
+ 133:../App/src/client_task.cpp **** 		FreeRTOS_setsockopt( xClientSocket, 0, FREERTOS_SO_SNDTIMEO, &xSendTimeOut, sizeof( xSendTimeOut 
+ 124              	 .loc 1 133 0
+ 125 008e 0423     	 movs r3,#4
+ 126 0090 0093     	 str r3,[sp]
+ 127 0092 0021     	 movs r1,#0
+ 128 0094 0122     	 movs r2,#1
+ 129 0096 03AB     	 add r3,sp,#12
+ 130 0098 FFF7FEFF 	 bl FreeRTOS_setsockopt
+ 131              	.LVL10:
+ 134:../App/src/client_task.cpp **** 
+ 135:../App/src/client_task.cpp **** 		/* Start processing */
+ 136:../App/src/client_task.cpp **** 		for( ; ; )
+ 137:../App/src/client_task.cpp **** 		{
+ 138:../App/src/client_task.cpp ****             if( 0 == FreeRTOS_sendto( xClientSocket, buffer_l, data_len, FREERTOS_MSG_DONTWAIT, &xS
+ 132              	 .loc 1 138 0
+ 133 009c 04AE     	 add r6,sp,#16
+ 134 009e 0825     	 movs r5,#8
+ 135              	.L5:
+ 136 00a0 0096     	 str r6,[sp]
+ 137 00a2 0195     	 str r5,[sp,#4]
+ 138 00a4 2046     	 mov r0,r4
+ 139 00a6 06A9     	 add r1,sp,#24
+ 140 00a8 3022     	 movs r2,#48
+ 141 00aa 1023     	 movs r3,#16
+ 142 00ac FFF7FEFF 	 bl FreeRTOS_sendto
+ 143              	.LVL11:
+ 144 00b0 20B1     	 cbz r0,.L4
+ 139:../App/src/client_task.cpp ****             {
+ 140:../App/src/client_task.cpp ****                 /* Break loop to recreate the client socket */
+ 141:../App/src/client_task.cpp ****                 break;
+ 142:../App/src/client_task.cpp ****             }
+ 143:../App/src/client_task.cpp ****             else
+ 144:../App/src/client_task.cpp ****             {
+ 145:../App/src/client_task.cpp ****                 vTaskDelay( pdMS_TO_TICKS(1000) );
+ 145              	 .loc 1 145 0
+ 146 00b2 4FF47A70 	 mov r0,#1000
+ 147 00b6 FFF7FEFF 	 bl vTaskDelay
+ 148              	.LVL12:
+ 146:../App/src/client_task.cpp ****             }
+ 147:../App/src/client_task.cpp ****         }
+ 148:../App/src/client_task.cpp **** 
+ 149:../App/src/client_task.cpp ****         /* Initiate a shutdown in case it has not already been initiated. */
+ 150:../App/src/client_task.cpp ****         FreeRTOS_shutdown( xClientSocket, FREERTOS_SHUT_RDWR );
+ 151:../App/src/client_task.cpp **** 
+ 152:../App/src/client_task.cpp ****         /* Wait for the shutdown to take effect, indicated by FreeRTOS_recv()
+ 153:../App/src/client_task.cpp ****          * returning an error. */
+ 154:../App/src/client_task.cpp ****         xTimeOnShutdown = xTaskGetTickCount();
+ 155:../App/src/client_task.cpp ****         do
+ 156:../App/src/client_task.cpp ****         {
+ 157:../App/src/client_task.cpp ****             if( FreeRTOS_recv( xClientSocket, buffer_l, sizeof(buffer_l), 0 ) < 0 )
+ 158:../App/src/client_task.cpp ****             {
+ 159:../App/src/client_task.cpp ****                 break;
+ 160:../App/src/client_task.cpp ****             }
+ 161:../App/src/client_task.cpp ****         } while( ( xTaskGetTickCount() - xTimeOnShutdown ) < pdMS_TO_TICKS(1000) );
+ 162:../App/src/client_task.cpp **** 
+ 163:../App/src/client_task.cpp ****         /* Close socket */
+ 164:../App/src/client_task.cpp ****         FreeRTOS_closesocket( xClientSocket );
+ 165:../App/src/client_task.cpp **** 	}
+ 166:../App/src/client_task.cpp **** 
+ 167:../App/src/client_task.cpp **** 	vTaskDelete( NULL );
+ 149              	 .loc 1 167 0
+ 150 00ba F1E7     	 b .L5
+ 151              	.L4:
+ 150:../App/src/client_task.cpp **** 
+ 152              	 .loc 1 150 0
+ 153 00bc 2046     	 mov r0,r4
+ 154 00be 4146     	 mov r1,r8
+ 155 00c0 FFF7FEFF 	 bl FreeRTOS_shutdown
+ 156              	.LVL13:
+ 154:../App/src/client_task.cpp ****         do
+ 157              	 .loc 1 154 0
+ 158 00c4 FFF7FEFF 	 bl xTaskGetTickCount
+ 159              	.LVL14:
+ 160 00c8 0746     	 mov r7,r0
+ 161              	.LVL15:
+ 157:../App/src/client_task.cpp ****             {
+ 162              	 .loc 1 157 0
+ 163 00ca 3026     	 movs r6,#48
+ 164 00cc 0025     	 movs r5,#0
+ 165              	.LVL16:
+ 166              	.L7:
+ 167 00ce 2046     	 mov r0,r4
+ 168 00d0 06A9     	 add r1,sp,#24
+ 169 00d2 3246     	 mov r2,r6
+ 170 00d4 2B46     	 mov r3,r5
+ 171 00d6 FFF7FEFF 	 bl FreeRTOS_recv
+ 172              	.LVL17:
+ 173 00da 0028     	 cmp r0,#0
+ 174 00dc 05DB     	 blt .L6
+ 161:../App/src/client_task.cpp **** 
+ 175              	 .loc 1 161 0
+ 176 00de FFF7FEFF 	 bl xTaskGetTickCount
+ 177              	.LVL18:
+ 178 00e2 C01B     	 subs r0,r0,r7
+ 155:../App/src/client_task.cpp ****         {
+ 179              	 .loc 1 155 0
+ 180 00e4 B0F57A7F 	 cmp r0,#1000
+ 181 00e8 F1D3     	 bcc .L7
+ 182              	.L6:
+ 164:../App/src/client_task.cpp **** 	}
+ 183              	 .loc 1 164 0
+ 184 00ea 2046     	 mov r0,r4
+ 185 00ec FFF7FEFF 	 bl FreeRTOS_closesocket
+ 186              	.LVL19:
+ 187              	 .loc 1 167 0
+ 188 00f0 BBE7     	 b .L8
+ 189              	.L12:
+ 190 00f2 00BF     	 .align 2
+ 191              	.L11:
+ 192 00f4 00000000 	 .word .LC0
+ 193 00f8 00000000 	 .word xDefaultPartRAWPacketHeader
+ 194 00fc 0C000000 	 .word .LC1
+ 195              	.LBE6:
+ 196              	 .cfi_endproc
+ 197              	.LFE64:
+ 199              	 .section .rodata.str1.4,"aMS",%progbits,1
+ 200              	 .align 2
+ 201              	.LC0:
+ 202 0000 3139322E 	 .ascii "192.168.1.7\000"
+ 202      3136382E 
+ 202      312E3700 
+ 203              	.LC1:
+ 204 000c 48656C6C 	 .ascii "Hella Server\015\012\000"
+ 204      61205365 
+ 204      72766572 
+ 204      0D0A00
+ 205 001b 00       	 .text
+ 206              	.Letext0:
+ 207              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\lib\\gcc\\arm-none-eabi\\4.9.3\\include\\stddef.h"
+ 208              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 209              	 .file 5 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 210              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/list.h"
+ 211              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/task.h"
+ 212              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP.h"
+ 213              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/event_groups.h"
+ 214              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_Sockets.h"
+ 215              	 .file 11 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP_Private.h"
+ 216              	 .file 12 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_Stream_Buffer.h"
+ 217              	 .file 13 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_TCP_WIN.h"
+ 218              	 .file 14 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc/client_task.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 client_task.cpp
+    {standard input}:19     .text._ZN12ClientTask__11client_bodyEPv:00000000 $t
+    {standard input}:24     .text._ZN12ClientTask__11client_bodyEPv:00000000 _ZN12ClientTask__11client_bodyEPv
+    {standard input}:192    .text._ZN12ClientTask__11client_bodyEPv:000000f4 $d
+    {standard input}:200    .rodata.str1.4:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.e7c5b1e8b8fe0dcc15cf6d98a7950411
+                           .group:00000000 wm4.stddef.h.39.499c3e455b0ee3cbd031c0eac4c946b3
+                           .group:00000000 wm4.stdint.h.4.659be5aa44c4ab4eb7c7cc2b24d8ceee
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+                           .group:00000000 wm4.queue.h.66.45d4a3cf5de24cde7e732f8dad25383c
+                           .group:00000000 wm4.semphr.h.38.96f44691bfa19eb833944d3a35b81e54
+                           .group:00000000 wm4.timers.h.29.025d268d6baf57298309e7b498ee1cc7
+                           .group:00000000 wm4.FreeRTOSIPConfig.h.37.3f9c1db988571ff1f3dec4c7e54978d6
+                           .group:00000000 wm4.FreeRTOS_errno_TCP.h.27.708877b341d0e6bcb4ba112b2ad8082a
+                           .group:00000000 wm4.FreeRTOSIPConfigDefaults.h.41.f972b11d9b1eba5383080cfaef1fd740
+                           .group:00000000 wm4.IPTraceMacroDefaults.h.31.69642530b5a79c93e762c9b09ac0d1d5
+                           .group:00000000 wm4.FreeRTOS_IP.h.59.3f5e36f6612bd0c66747c6093da47335
+                           .group:00000000 wm4.FreeRTOS_IP.h.179.e5077063e624bc5d3f02542470d6ea94
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.1ee1144430bedaab1a14c7b57a6c8384
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.e57d9a24f6f3b6eaa274e44743a335a7
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.ef1f74da16cdd7cc7d09e79a2291769d
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.bfd00fa34c523ce50423876e66a2d374
+                           .group:00000000 wm4.FreeRTOS_Sockets.h.58.61d472da32c0e0f5bc49c368f15d0ac5
+                           .group:00000000 wm4.FreeRTOS_TCP_WIN.h.32.f3cfab69924f28284deb16cc1a30fb93
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.52.551f932b14473cea139893dda31b3fa0
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.328.b5788f8d626a4cf16b8282f9399f3f55
+
+UNDEFINED SYMBOLS
+FreeRTOS_inet_addr
+FreeRTOS_socket
+FreeRTOS_setsockopt
+FreeRTOS_sendto
+vTaskDelay
+FreeRTOS_shutdown
+xTaskGetTickCount
+FreeRTOS_recv
+FreeRTOS_closesocket
+xDefaultPartRAWPacketHeader

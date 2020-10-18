@@ -1,0 +1,1070 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "FreeRTOS_Stream_Buffer.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.uxStreamBufferAdd,"ax",%progbits
+  19              	 .align 2
+  20              	 .global uxStreamBufferAdd
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	uxStreamBufferAdd:
+  25              	.LFB50:
+  26              	 .file 1 "../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c"
+   1:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** /*
+   2:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * FreeRTOS+TCP V2.2.2
+   3:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+   4:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  *
+   5:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+   6:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * this software and associated documentation files (the "Software"), to deal in
+   7:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * the Software without restriction, including without limitation the rights to
+   8:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   9:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * the Software, and to permit persons to whom the Software is furnished to do so,
+  10:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * subject to the following conditions:
+  11:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  *
+  12:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * The above copyright notice and this permission notice shall be included in all
+  13:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * copies or substantial portions of the Software.
+  14:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  *
+  15:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  16:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  17:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  18:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  19:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  20:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  21:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  *
+  22:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * http://aws.amazon.com/freertos
+  23:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * http://www.FreeRTOS.org
+  24:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  */
+  25:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  26:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** /* Standard includes. */
+  27:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include <stdint.h>
+  28:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  29:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** /* FreeRTOS includes. */
+  30:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include "FreeRTOS.h"
+  31:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include "task.h"
+  32:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include "semphr.h"
+  33:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  34:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** /* FreeRTOS+TCP includes. */
+  35:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include "FreeRTOS_UDP_IP.h"
+  36:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include "FreeRTOS_IP.h"
+  37:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include "FreeRTOS_Sockets.h"
+  38:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** #include "FreeRTOS_IP_Private.h"
+  39:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  40:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** /*
+  41:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * uxStreamBufferAdd( )
+  42:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * Adds data to a stream buffer.  If uxOffset > 0, data will be written at
+  43:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * an offset from uxHead while uxHead will not be moved yet.  This possibility
+  44:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * will be used when TCP data is received while earlier data is still missing.
+  45:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * If 'pucData' equals NULL, the function is called to advance 'uxHead' only.
+  46:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  */
+  47:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** size_t uxStreamBufferAdd( StreamBuffer_t *pxBuffer, size_t uxOffset, const uint8_t *pucData, size_t
+  48:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** {
+  27              	 .loc 1 48 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 2DE9F843 	 push {r3,r4,r5,r6,r7,r8,r9,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 32
+  35              	 .cfi_offset 3,-32
+  36              	 .cfi_offset 4,-28
+  37              	 .cfi_offset 5,-24
+  38              	 .cfi_offset 6,-20
+  39              	 .cfi_offset 7,-16
+  40              	 .cfi_offset 8,-12
+  41              	 .cfi_offset 9,-8
+  42              	 .cfi_offset 14,-4
+  43              	.LVL1:
+  44              	.LBB24:
+  45              	.LBB25:
+  46              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_Stream_Buffer.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * FreeRTOS+TCP V2.2.2
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * this software and associated documentation files (the "Software"), to deal in
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * the Software without restriction, including without limitation the rights to
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * the Software, and to permit persons to whom the Software is furnished to do so,
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * subject to the following conditions:
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * The above copyright notice and this permission notice shall be included in all
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * copies or substantial portions of the Software.
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * http://aws.amazon.com/freertos
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  * http://www.FreeRTOS.org
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  */
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *	FreeRTOS_Stream_Buffer.h
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *	A cicular character buffer
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *	An implementation of a circular buffer without a length field
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *	If LENGTH defines the size of the buffer, a maximum of (LENGT-1) bytes can be stored
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  *	In order to add or read data from the buffer, memcpy() will be called at most 2 times
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h ****  */
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** #ifndef FREERTOS_STREAM_BUFFER_H
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** #define	FREERTOS_STREAM_BUFFER_H
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** #ifdef __cplusplus
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** extern "C" {
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** #endif
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** typedef struct xSTREAM_BUFFER {
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	volatile size_t uxTail;		/* next item to read */
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	volatile size_t uxMid;		/* iterator within the valid items */
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	volatile size_t uxHead;		/* next position store a new item */
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	volatile size_t uxFront;	/* iterator within the free space */
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	size_t LENGTH;				/* const value: number of reserved elements */
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	uint8_t ucArray[ sizeof( size_t ) ];
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** } StreamBuffer_t;
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE void vStreamBufferClear( StreamBuffer_t *pxBuffer );
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE void vStreamBufferClear( StreamBuffer_t *pxBuffer )
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	/* Make the circular buffer empty */
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	pxBuffer->uxHead = 0U;
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	pxBuffer->uxTail = 0U;
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	pxBuffer->uxFront = 0U;
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	pxBuffer->uxMid = 0U;
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferSpace( const StreamBuffer_t *pxBuffer, const size_t uxLower,
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferSpace( const StreamBuffer_t *pxBuffer, const size_t uxLower,
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /* Returns the space between uxLower and uxUpper, which equals to the distance minus 1 */
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxCount;
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	uxCount = pxBuffer->LENGTH + uxUpper - uxLower - 1U;
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	if( uxCount >= pxBuffer->LENGTH )
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		uxCount -= pxBuffer->LENGTH;
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	}
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	return uxCount;
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferDistance( const StreamBuffer_t *pxBuffer, const size_t uxLow
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferDistance( const StreamBuffer_t *pxBuffer, const size_t uxLow
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /* Returns the distance between uxLower and uxUpper */
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxCount;
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	uxCount = pxBuffer->LENGTH + uxUpper - uxLower;
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	if ( uxCount >= pxBuffer->LENGTH )
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		uxCount -= pxBuffer->LENGTH;
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	}
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	return uxCount;
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferGetSpace( const StreamBuffer_t *pxBuffer );
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferGetSpace( const StreamBuffer_t *pxBuffer )
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /* Returns the number of items which can still be added to uxHead
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** before hitting on uxTail */
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxHead = pxBuffer->uxHead;
+  47              	 .loc 2 99 0
+  48 0004 8768     	 ldr r7,[r0,#8]
+  49              	.LVL2:
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxTail = pxBuffer->uxTail;
+  50              	 .loc 2 100 0
+  51 0006 0568     	 ldr r5,[r0]
+  52              	.LVL3:
+  53              	.LBB26:
+  54              	.LBB27:
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	if( uxCount >= pxBuffer->LENGTH )
+  55              	 .loc 2 68 0
+  56 0008 0669     	 ldr r6,[r0,#16]
+  57 000a 3544     	 add r5,r5,r6
+  58              	.LVL4:
+  59 000c 013D     	 subs r5,r5,#1
+  60 000e EC1B     	 subs r4,r5,r7
+  61              	.LVL5:
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+  62              	 .loc 2 69 0
+  63 0010 A642     	 cmp r6,r4
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	}
+  64              	 .loc 2 71 0
+  65 0012 98BF     	 it ls
+  66 0014 A41B     	 subls r4,r4,r6
+  67              	.LVL6:
+  68              	.LBE27:
+  69              	.LBE26:
+  70              	.LBE25:
+  71              	.LBE24:
+  49:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** size_t uxSpace, uxNextHead, uxFirst;
+  50:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** size_t uxCount = uxByteCount;
+  51:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  52:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	uxSpace = uxStreamBufferGetSpace( pxBuffer );
+  53:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  54:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	/* If uxOffset > 0, items can be placed in front of uxHead */
+  55:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	if( uxSpace > uxOffset )
+  72              	 .loc 1 55 0
+  73 0016 A142     	 cmp r1,r4
+  74 0018 32D2     	 bcs .L13
+  75              	.LVL7:
+  56:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	{
+  57:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		uxSpace -= uxOffset;
+  76              	 .loc 1 57 0
+  77 001a 641A     	 subs r4,r4,r1
+  78              	.LVL8:
+  79              	.LBB28:
+  80              	.LBB29:
+  81              	 .file 3 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /*
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * FreeRTOS+TCP V2.2.2
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * this software and associated documentation files (the "Software"), to deal in
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * the Software without restriction, including without limitation the rights to
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * the Software, and to permit persons to whom the Software is furnished to do so,
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * subject to the following conditions:
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  *
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * The above copyright notice and this permission notice shall be included in all
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * copies or substantial portions of the Software.
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  *
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  *
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * http://aws.amazon.com/freertos
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * http://www.FreeRTOS.org
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  */
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #ifndef FREERTOS_IP_H
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define FREERTOS_IP_H
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #ifdef __cplusplus
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** extern "C" {
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #endif
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #include "FreeRTOS.h"
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #include "task.h"
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* Application level configuration options. */
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #include "FreeRTOSIPConfig.h"
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #include "FreeRTOSIPConfigDefaults.h"
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #include "IPTraceMacroDefaults.h"
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #ifdef __COVERITY__
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	/* Coverity static checks don't like inlined functions.
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	As it is up to the users to allow inlining, don't let
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	let Coverity know about it. */
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#ifdef portINLINE
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 		/* The usage of #undef violates the rule. */
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 		#undef portINLINE
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#endif
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#define	portINLINE
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #endif
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* Some constants defining the sizes of several parts of a packet.
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** These defines come before inlucding the configuration header files. */
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* The size of the Ethernet header is 14, meaning that 802.1Q VLAN tags
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** are not ( yet ) supported. */
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_ETH_HEADER			14U
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_IPv4_HEADER			20U
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_IGMP_HEADER			8U
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_ICMP_HEADER			8U
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_UDP_HEADER			8U
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_TCP_HEADER			20U
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_IPv4_ADDRESS			4U
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /*
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * Generate a randomized TCP Initial Sequence Number per RFC.
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  * This function must be provided by the application builder.
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  */
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* This function is defined generally by the application. */
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 													uint16_t usSourcePort,
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 													uint32_t ulDestinationAddress,
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 													uint16_t usDestinationPort );
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* The number of octets in the MAC and IP addresses respectively. */
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipMAC_ADDRESS_LENGTH_BYTES ( 6 )
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipIP_ADDRESS_LENGTH_BYTES ( 4 )
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* IP protocol definitions. */
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipPROTOCOL_ICMP			( 1U )
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipPROTOCOL_IGMP         ( 2U )
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipPROTOCOL_TCP			( 6U )
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipPROTOCOL_UDP			( 17U )
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipPROTOCOL_RAW			( 255 )
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* The character used to fill ICMP echo requests, and therefore also the
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** character expected to fill ICMP echo replies. */
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipECHO_DATA_FILL_BYTE						'x'
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* Dimensions the buffers that are filled by received Ethernet frames. */
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_ETH_CRC_BYTES					( 4UL )
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES	( 4UL )
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define ipTOTAL_ETHERNET_FRAME_SIZE				( ( ( uint32_t ) ipconfigNETWORK_MTU ) + ( ( uint32_t ) ipSI
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* Space left at the beginning of a network buffer storage area to store a
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** pointer back to the network buffer.  Should be a multiple of 8 to ensure 8 byte
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** alignment is maintained on architectures that require it.
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** In order to get a 32-bit alignment of network packets, an offset of 2 bytes
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** would be desirable, as defined by ipconfigPACKET_FILLER_SIZE.  So the malloc'd
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** buffer will have the following contents:
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint32_t pointer;	// word-aligned
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uchar_8 filler[6];
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	<< ETH-header >>	// half-word-aligned
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uchar_8 dest[6];    // start of pucEthernetBuffer
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uchar_8 dest[6];
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uchar16_t type;
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	<< IP-header >>		// word-aligned
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint8_t ucVersionHeaderLength;
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	etc
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****  */
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #if( ipconfigBUFFER_PADDING != 0 )
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****     #define ipBUFFER_PADDING    ipconfigBUFFER_PADDING
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #else
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h ****     #define ipBUFFER_PADDING    ( 8U + ipconfigPACKET_FILLER_SIZE )
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #endif
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* The structure used to store buffers and pass them around the network stack.
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** Buffers can be in use by the stack, in use by the network interface hardware
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** driver, or free (not in use). */
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** typedef struct xNETWORK_BUFFER
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** {
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	ListItem_t xBufferListItem; 	/* Used to reference the buffer form the free buffer list or a socket
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint32_t ulIPAddress;			/* Source or destination IP address, depending on usage scenario. */
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint8_t *pucEthernetBuffer; 	/* Pointer to the start of the Ethernet frame. */
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	size_t xDataLength; 			/* Starts by holding the total Ethernet frame length, then the UDP/TCP payl
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint16_t usPort;				/* Source or destination port, depending on usage scenario. */
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint16_t usBoundPort;			/* The port to which a transmitting socket is bound. */
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 		struct xNETWORK_BUFFER *pxNextBuffer; /* Possible optimisation for expert users - requires networ
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#endif
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** } NetworkBufferDescriptor_t;
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #include "pack_struct_start.h"
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** struct xMAC_ADDRESS
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** {
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint8_t ucBytes[ ipMAC_ADDRESS_LENGTH_BYTES ];
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** }
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #include "pack_struct_end.h"
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** typedef struct xMAC_ADDRESS MACAddress_t;
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** typedef enum eNETWORK_EVENTS
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** {
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	eNetworkUp,		/* The network is configured. */
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	eNetworkDown	/* The network connection has been lost. */
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** } eIPCallbackEvent_t;
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* MISRA check: some modules refer to this typedef even though
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** ipconfigSUPPORT_OUTGOING_PINGS is not enabled. */
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** typedef enum ePING_REPLY_STATUS
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** {
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	eSuccess = 0,		/* A correct reply has been received for an outgoing ping. */
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	eInvalidChecksum,	/* A reply was received for an outgoing ping but the checksum of the reply was i
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	eInvalidData		/* A reply was received to an outgoing ping but the payload of the reply was not cor
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** } ePingReplyStatus_t;
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** typedef struct xIP_TIMER
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** {
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	uint32_t
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 		bActive : 1,	/* This timer is running and must be processed. */
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 		bExpired : 1;	/* Timer has expired and a task must be processed. */
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	TimeOut_t xTimeOut;
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	TickType_t ulRemainingTime;
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	TickType_t ulReloadTime;
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** } IPTimer_t;
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** /* Endian related definitions. */
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #if( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	/* FreeRTOS_htons / FreeRTOS_htonl: some platforms might have built-in versions
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	using a single instruction so allow these versions to be overridden. */
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#ifndef FreeRTOS_htons
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 		#define FreeRTOS_htons( usIn ) ( (uint16_t) ( ( ( usIn ) << 8U ) | ( ( usIn ) >> 8U ) ) )
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#endif
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#ifndef	FreeRTOS_htonl
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 		#define FreeRTOS_htonl( ulIn ) 											\
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 			(																	\
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 				( uint32_t ) 													\
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 				( 																\
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 					( ( ( ( uint32_t ) ( ulIn ) )                ) << 24  ) | 	\
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 					( ( ( ( uint32_t ) ( ulIn ) ) & 0x0000ff00UL ) <<  8  ) | 	\
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 					( ( ( ( uint32_t ) ( ulIn ) ) & 0x00ff0000UL ) >>  8  ) | 	\
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 					( ( ( ( uint32_t ) ( ulIn ) )                ) >> 24  )  	\
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 				) 																\
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 			)
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#endif
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #else /* ipconfigBYTE_ORDER */
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#define FreeRTOS_htons( x ) ( ( uint16_t ) ( x ) )
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	#define FreeRTOS_htonl( x ) ( ( uint32_t ) ( x ) )
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #endif /* ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN */
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define FreeRTOS_ntohs( x ) FreeRTOS_htons( x )
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #define FreeRTOS_ntohl( x ) FreeRTOS_htonl( x )
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** #if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE int32_t  FreeRTOS_max_int32  (int32_t  a, int32_t  b);
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE uint32_t FreeRTOS_max_uint32 (uint32_t a, uint32_t b);
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE int32_t  FreeRTOS_min_int32  (int32_t  a, int32_t  b);
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE uint32_t FreeRTOS_min_uint32 (uint32_t a, uint32_t b);
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE uint32_t FreeRTOS_round_up   (uint32_t a, uint32_t d);
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE uint32_t FreeRTOS_round_down (uint32_t a, uint32_t d);
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE BaseType_t  FreeRTOS_min_BaseType  (BaseType_t  a, BaseType_t  b);
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE int32_t  FreeRTOS_max_int32  (int32_t  a, int32_t  b) { return ( a >= b ) ? a : 
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE uint32_t FreeRTOS_max_uint32 (uint32_t a, uint32_t b) { return ( a >= b ) ? a : 
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE int32_t  FreeRTOS_min_int32  (int32_t  a, int32_t  b) { return ( a <= b ) ? a : 
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_IP.h **** 	static portINLINE uint32_t FreeRTOS_min_uint32 (uint32_t a, uint32_t b) { return ( a <= b ) ? a : 
+  82              	 .loc 3 218 0
+  83 001c 9C42     	 cmp r4,r3
+  84 001e 28BF     	 it cs
+  85 0020 1C46     	 movcs r4,r3
+  86              	.LVL9:
+  87              	.LBE29:
+  88              	.LBE28:
+  58:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	}
+  59:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	else
+  60:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	{
+  61:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		uxSpace = 0U;
+  62:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	}
+  63:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  64:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	/* The number of bytes that can be written is the minimum of the number of
+  65:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	bytes requested and the number available. */
+  66:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	uxCount = FreeRTOS_min_uint32( uxSpace, uxCount );
+  67:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  68:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	if( uxCount != 0U )
+  89              	 .loc 1 68 0
+  90 0022 002C     	 cmp r4,#0
+  91 0024 4DD0     	 beq .L14
+  92 0026 9146     	 mov r9,r2
+  93 0028 8846     	 mov r8,r1
+  94 002a 0546     	 mov r5,r0
+  95              	.LVL10:
+  69:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	{
+  70:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		uxNextHead = pxBuffer->uxHead;
+  96              	 .loc 1 70 0
+  97 002c 8768     	 ldr r7,[r0,#8]
+  98              	.LVL11:
+  71:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  72:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		if( uxOffset != 0U )
+  99              	 .loc 1 72 0
+ 100 002e 49B3     	 cbz r1,.L4
+  73:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+  74:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* ( uxOffset > 0 ) means: write in front if the uxHead marker */
+  75:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			uxNextHead += uxOffset;
+ 101              	 .loc 1 75 0
+ 102 0030 0F44     	 add r7,r7,r1
+ 103              	.LVL12:
+  76:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			if( uxNextHead >= pxBuffer->LENGTH )
+ 104              	 .loc 1 76 0
+ 105 0032 B742     	 cmp r7,r6
+ 106 0034 28D3     	 bcc .L5
+  77:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+  78:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				uxNextHead -= pxBuffer->LENGTH;
+ 107              	 .loc 1 78 0
+ 108 0036 BF1B     	 subs r7,r7,r6
+ 109              	.LVL13:
+ 110 0038 26E0     	 b .L5
+ 111              	.LVL14:
+ 112              	.L12:
+  79:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			}
+  80:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		}
+  81:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  82:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		if( pucData != NULL )
+  83:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+  84:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* Calculate the number of bytes that can be added in the first
+  85:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			write - which may be less than the total number of bytes that need
+  86:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			to be added if the buffer will wrap back to the beginning. */
+  87:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			uxFirst = FreeRTOS_min_uint32( pxBuffer->LENGTH - uxNextHead, uxCount );
+  88:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  89:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* Write as many bytes as can be written in the first write. */
+  90:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			( void ) memcpy( &( pxBuffer->ucArray[ uxNextHead ] ), pucData, uxFirst );
+  91:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+  92:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* If the number of bytes written was less than the number that
+  93:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			could be written in the first write... */
+  94:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			if( uxCount > uxFirst )
+  95:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+  96:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				/* ...then write the remaining bytes to the start of the
+  97:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				buffer. */
+  98:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				( void ) memcpy( pxBuffer->ucArray, &( pucData[ uxFirst ] ), uxCount - uxFirst );
+ 113              	 .loc 1 98 0
+ 114 003a 05F11400 	 add r0,r5,#20
+ 115 003e 09EB0601 	 add r1,r9,r6
+ 116 0042 A21B     	 subs r2,r4,r6
+ 117 0044 FFF7FEFF 	 bl memcpy
+ 118              	.LVL15:
+  99:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			}
+ 100:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		}
+ 101:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 102:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		if( uxOffset == 0U )
+ 119              	 .loc 1 102 0
+ 120 0048 B8F1000F 	 cmp r8,#0
+ 121 004c 05D1     	 bne .L6
+ 122              	.LVL16:
+ 123              	.L11:
+ 103:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+ 104:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* ( uxOffset == 0 ) means: write at uxHead position */
+ 105:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			uxNextHead += uxCount;
+ 124              	 .loc 1 105 0
+ 125 004e 2744     	 add r7,r7,r4
+ 126              	.LVL17:
+ 106:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			if( uxNextHead >= pxBuffer->LENGTH )
+ 127              	 .loc 1 106 0
+ 128 0050 2B69     	 ldr r3,[r5,#16]
+ 129 0052 9F42     	 cmp r7,r3
+ 107:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+ 108:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				uxNextHead -= pxBuffer->LENGTH;
+ 130              	 .loc 1 108 0
+ 131 0054 28BF     	 it cs
+ 132 0056 FF1A     	 subcs r7,r7,r3
+ 133              	.LVL18:
+ 109:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			}
+ 110:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			pxBuffer->uxHead = uxNextHead;
+ 134              	 .loc 1 110 0
+ 135 0058 AF60     	 str r7,[r5,#8]
+ 136              	.L6:
+ 111:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		}
+ 112:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 113:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		if( xStreamBufferLessThenEqual( pxBuffer, pxBuffer->uxFront, uxNextHead ) != pdFALSE )
+ 137              	 .loc 1 113 0
+ 138 005a E968     	 ldr r1,[r5,#12]
+ 139              	.LVL19:
+ 140              	.LBB31:
+ 141              	.LBB32:
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	return uxStreamBufferSpace( pxBuffer, uxHead, uxTail );
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferFrontSpace( const StreamBuffer_t *pxBuffer );
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferFrontSpace( const StreamBuffer_t *pxBuffer )
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /* Distance between uxFront and uxTail
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** or the number of items which can still be added to uxFront,
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** before hitting on uxTail */
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxFront = pxBuffer->uxFront;
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxTail = pxBuffer->uxTail;
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	return uxStreamBufferSpace( pxBuffer, uxFront, uxTail );
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferGetSize( const StreamBuffer_t *pxBuffer );
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferGetSize( const StreamBuffer_t *pxBuffer )
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /* Returns the number of items which can be read from uxTail
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** before reaching uxHead */
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxHead = pxBuffer->uxHead;
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxTail = pxBuffer->uxTail;
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	return uxStreamBufferDistance( pxBuffer, uxTail, uxHead );
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferMidSpace( const StreamBuffer_t *pxBuffer );
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE size_t uxStreamBufferMidSpace( const StreamBuffer_t *pxBuffer )
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /* Returns the distance between uxHead and uxMid */
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxHead = pxBuffer->uxHead;
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxMid = pxBuffer->uxMid;
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	return uxStreamBufferDistance( pxBuffer, uxMid, uxHead );
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE void vStreamBufferMoveMid( StreamBuffer_t *pxBuffer, size_t uxCount );
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE void vStreamBufferMoveMid( StreamBuffer_t *pxBuffer, size_t uxCount )
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /* Increment uxMid, but no further than uxHead */
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxSize = uxStreamBufferMidSpace( pxBuffer );
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxMoveCount = uxCount;
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	if( uxMoveCount > uxSize )
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		uxMoveCount = uxSize;
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	}
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	pxBuffer->uxMid += uxMoveCount;
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	if( pxBuffer->uxMid >= pxBuffer->LENGTH )
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		pxBuffer->uxMid -= pxBuffer->LENGTH;
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	}
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** }
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** /*-----------------------------------------------------------*/
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE BaseType_t xStreamBufferLessThenEqual( const StreamBuffer_t *pxBuffer, const size
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** static portINLINE BaseType_t xStreamBufferLessThenEqual( const StreamBuffer_t *pxBuffer, const size
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** {
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** BaseType_t xReturn;
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxTail = pxBuffer->uxTail;
+ 142              	 .loc 2 166 0
+ 143 005c 2B68     	 ldr r3,[r5]
+ 144              	.LVL20:
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	/* Returns true if ( uxLeft < uxRight ) */
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	if( ( ( ( uxLeft < uxTail ) ? 1U : 0U ) ^ ( ( uxRight < uxTail ) ? 1U : 0U )  ) != 0U )
+ 145              	 .loc 2 169 0
+ 146 005e 9F42     	 cmp r7,r3
+ 147 0060 2CBF     	 ite cs
+ 148 0062 0022     	 movcs r2,#0
+ 149 0064 0122     	 movcc r2,#1
+ 150 0066 9942     	 cmp r1,r3
+ 151 0068 2CBF     	 ite cs
+ 152 006a 0023     	 movcs r3,#0
+ 153              	.LVL21:
+ 154 006c 0123     	 movcc r3,#1
+ 155 006e 9342     	 cmp r3,r2
+ 156 0070 03D1     	 bne .L9
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		if( uxRight < uxTail )
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		{
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 			xReturn = pdTRUE;
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		}
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		else
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		{
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 			xReturn = pdFALSE;
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		}
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	}
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	else
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 		if( uxLeft <= uxRight )
+ 157              	 .loc 2 182 0
+ 158 0072 8F42     	 cmp r7,r1
+ 159 0074 34BF     	 ite cc
+ 160 0076 0022     	 movcc r2,#0
+ 161 0078 0122     	 movcs r2,#1
+ 162              	.L9:
+ 163              	.LVL22:
+ 164              	.LBE32:
+ 165              	.LBE31:
+ 166              	 .loc 1 113 0
+ 167 007a 12B3     	 cbz r2,.L14
+ 114:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+ 115:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* Advance the front pointer */
+ 116:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			pxBuffer->uxFront = uxNextHead;
+ 168              	 .loc 1 116 0
+ 169 007c EF60     	 str r7,[r5,#12]
+ 170 007e 20E0     	 b .L14
+ 171              	.LVL23:
+ 172              	.L13:
+ 173              	.LBB33:
+ 174              	.LBB30:
+ 175              	 .loc 3 218 0
+ 176 0080 0024     	 movs r4,#0
+ 177              	.LVL24:
+ 178 0082 1EE0     	 b .L14
+ 179              	.LVL25:
+ 180              	.L4:
+ 181              	.LBE30:
+ 182              	.LBE33:
+  82:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+ 183              	 .loc 1 82 0
+ 184 0084 82B9     	 cbnz r2,.L10
+ 185 0086 E2E7     	 b .L11
+ 186              	.L5:
+ 187 0088 B9F1000F 	 cmp r9,#0
+ 188 008c E5D0     	 beq .L6
+ 189              	.LVL26:
+  87:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 190              	 .loc 1 87 0
+ 191 008e F61B     	 subs r6,r6,r7
+ 192              	.LVL27:
+ 193              	.LBB34:
+ 194              	.LBB35:
+ 195              	 .loc 3 218 0
+ 196 0090 A642     	 cmp r6,r4
+ 197 0092 28BF     	 it cs
+ 198 0094 2646     	 movcs r6,r4
+ 199              	.LVL28:
+ 200              	.LBE35:
+ 201              	.LBE34:
+  90:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 202              	 .loc 1 90 0
+ 203 0096 E819     	 adds r0,r5,r7
+ 204              	.LVL29:
+ 205 0098 1430     	 adds r0,r0,#20
+ 206 009a 4946     	 mov r1,r9
+ 207              	.LVL30:
+ 208 009c 3246     	 mov r2,r6
+ 209              	.LVL31:
+ 210 009e FFF7FEFF 	 bl memcpy
+ 211              	.LVL32:
+  94:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+ 212              	 .loc 1 94 0
+ 213 00a2 B442     	 cmp r4,r6
+ 214 00a4 D9D9     	 bls .L6
+ 215 00a6 C8E7     	 b .L12
+ 216              	.LVL33:
+ 217              	.L10:
+  87:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 218              	 .loc 1 87 0
+ 219 00a8 F61B     	 subs r6,r6,r7
+ 220              	.LVL34:
+ 221              	.LBB37:
+ 222              	.LBB36:
+ 223              	 .loc 3 218 0
+ 224 00aa A642     	 cmp r6,r4
+ 225 00ac 28BF     	 it cs
+ 226 00ae 2646     	 movcs r6,r4
+ 227              	.LVL35:
+ 228              	.LBE36:
+ 229              	.LBE37:
+  90:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 230              	 .loc 1 90 0
+ 231 00b0 3844     	 add r0,r0,r7
+ 232              	.LVL36:
+ 233 00b2 1430     	 adds r0,r0,#20
+ 234 00b4 1146     	 mov r1,r2
+ 235              	.LVL37:
+ 236 00b6 3246     	 mov r2,r6
+ 237              	.LVL38:
+ 238 00b8 FFF7FEFF 	 bl memcpy
+ 239              	.LVL39:
+  94:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+ 240              	 .loc 1 94 0
+ 241 00bc B442     	 cmp r4,r6
+ 242 00be C6D9     	 bls .L11
+ 243 00c0 BBE7     	 b .L12
+ 244              	.LVL40:
+ 245              	.L14:
+ 117:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		}
+ 118:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	}
+ 119:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 120:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	return uxCount;
+ 121:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** }
+ 246              	 .loc 1 121 0
+ 247 00c2 2046     	 mov r0,r4
+ 248 00c4 BDE8F883 	 pop {r3,r4,r5,r6,r7,r8,r9,pc}
+ 249              	 .cfi_endproc
+ 250              	.LFE50:
+ 252              	 .section .text.uxStreamBufferGet,"ax",%progbits
+ 253              	 .align 2
+ 254              	 .global uxStreamBufferGet
+ 255              	 .thumb
+ 256              	 .thumb_func
+ 258              	uxStreamBufferGet:
+ 259              	.LFB51:
+ 122:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** /*-----------------------------------------------------------*/
+ 123:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 124:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** /*
+ 125:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * uxStreamBufferGet( )
+ 126:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * 'uxOffset' can be used to read data located at a certain offset from 'lTail'.
+ 127:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * If 'pucData' equals NULL, the function is called to advance 'lTail' only.
+ 128:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * if 'xPeek' is pdTRUE, or if 'uxOffset' is non-zero, the 'lTail' pointer will
+ 129:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  * not be advanced.
+ 130:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c ****  */
+ 131:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** size_t uxStreamBufferGet( StreamBuffer_t *pxBuffer, size_t uxOffset, uint8_t *pucData, size_t uxMax
+ 132:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** {
+ 260              	 .loc 1 132 0
+ 261              	 .cfi_startproc
+ 262              	 
+ 263              	 
+ 264              	.LVL41:
+ 265 0000 2DE9F843 	 push {r3,r4,r5,r6,r7,r8,r9,lr}
+ 266              	.LCFI1:
+ 267              	 .cfi_def_cfa_offset 32
+ 268              	 .cfi_offset 3,-32
+ 269              	 .cfi_offset 4,-28
+ 270              	 .cfi_offset 5,-24
+ 271              	 .cfi_offset 6,-20
+ 272              	 .cfi_offset 7,-16
+ 273              	 .cfi_offset 8,-12
+ 274              	 .cfi_offset 9,-8
+ 275              	 .cfi_offset 14,-4
+ 276              	.LVL42:
+ 277              	.LBB38:
+ 278              	.LBB39:
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** size_t uxTail = pxBuffer->uxTail;
+ 279              	 .loc 2 125 0
+ 280 0004 8568     	 ldr r5,[r0,#8]
+ 281              	.LVL43:
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 
+ 282              	 .loc 2 126 0
+ 283 0006 0768     	 ldr r7,[r0]
+ 284              	.LVL44:
+ 285              	.LBB40:
+ 286              	.LBB41:
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	if ( uxCount >= pxBuffer->LENGTH )
+ 287              	 .loc 2 84 0
+ 288 0008 0669     	 ldr r6,[r0,#16]
+ 289 000a 3544     	 add r5,r5,r6
+ 290              	.LVL45:
+ 291 000c EC1B     	 subs r4,r5,r7
+ 292              	.LVL46:
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	{
+ 293              	 .loc 2 85 0
+ 294 000e A642     	 cmp r6,r4
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include\FreeRTOS_Stream_Buffer.h **** 	}
+ 295              	 .loc 2 87 0
+ 296 0010 98BF     	 it ls
+ 297 0012 A41B     	 subls r4,r4,r6
+ 298              	.LVL47:
+ 299              	.LBE41:
+ 300              	.LBE40:
+ 301              	.LBE39:
+ 302              	.LBE38:
+ 133:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** size_t uxSize, uxCount, uxFirst, uxNextTail;
+ 134:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 135:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	/* How much data is available? */
+ 136:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	uxSize = uxStreamBufferGetSize( pxBuffer );
+ 137:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 138:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	if( uxSize > uxOffset )
+ 303              	 .loc 1 138 0
+ 304 0014 A142     	 cmp r1,r4
+ 305 0016 2DD2     	 bcs .L22
+ 306              	.LVL48:
+ 139:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	{
+ 140:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		uxSize -= uxOffset;
+ 307              	 .loc 1 140 0
+ 308 0018 641A     	 subs r4,r4,r1
+ 309              	.LVL49:
+ 310              	.LBB42:
+ 311              	.LBB43:
+ 312              	 .loc 3 218 0
+ 313 001a 9C42     	 cmp r4,r3
+ 314 001c 28BF     	 it cs
+ 315 001e 1C46     	 movcs r4,r3
+ 316              	.LVL50:
+ 317              	.LBE43:
+ 318              	.LBE42:
+ 141:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	}
+ 142:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	else
+ 143:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	{
+ 144:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		uxSize = 0U;
+ 145:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	}
+ 146:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 147:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	/* Use the minimum of the wanted bytes and the available bytes. */
+ 148:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	uxCount = FreeRTOS_min_uint32( uxSize, uxMaxCount );
+ 149:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 150:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	if( uxCount > 0U )
+ 319              	 .loc 1 150 0
+ 320 0020 4CB3     	 cbz r4,.L18
+ 151:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	{
+ 152:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		uxNextTail = pxBuffer->uxTail;
+ 321              	 .loc 1 152 0
+ 322 0022 0768     	 ldr r7,[r0]
+ 323              	.LVL51:
+ 153:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 154:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		if( uxOffset != 0U )
+ 324              	 .loc 1 154 0
+ 325 0024 19B1     	 cbz r1,.L19
+ 155:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+ 156:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			uxNextTail += uxOffset;
+ 326              	 .loc 1 156 0
+ 327 0026 0F44     	 add r7,r7,r1
+ 328              	.LVL52:
+ 157:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			if( uxNextTail >= pxBuffer->LENGTH )
+ 329              	 .loc 1 157 0
+ 330 0028 B742     	 cmp r7,r6
+ 158:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+ 159:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				uxNextTail -= pxBuffer->LENGTH;
+ 331              	 .loc 1 159 0
+ 332 002a 28BF     	 it cs
+ 333 002c BF1B     	 subcs r7,r7,r6
+ 334              	.LVL53:
+ 335              	.L19:
+ 336 002e 9046     	 mov r8,r2
+ 337 0030 0D46     	 mov r5,r1
+ 338 0032 8146     	 mov r9,r0
+ 160:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			}
+ 161:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		}
+ 162:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 163:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		if( pucData != NULL )
+ 339              	 .loc 1 163 0
+ 340 0034 92B1     	 cbz r2,.L20
+ 341              	.LVL54:
+ 164:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+ 165:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* Calculate the number of bytes that can be read - which may be
+ 166:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			less than the number wanted if the data wraps around to the start of
+ 167:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			the buffer. */
+ 168:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			uxFirst = FreeRTOS_min_uint32( pxBuffer->LENGTH - uxNextTail, uxCount );
+ 342              	 .loc 1 168 0
+ 343 0036 F61B     	 subs r6,r6,r7
+ 344              	.LVL55:
+ 345              	.LBB45:
+ 346              	.LBB46:
+ 347              	 .loc 3 218 0
+ 348 0038 A642     	 cmp r6,r4
+ 349 003a 28BF     	 it cs
+ 350 003c 2646     	 movcs r6,r4
+ 351              	.LVL56:
+ 352              	.LBE46:
+ 353              	.LBE45:
+ 169:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 170:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* Obtain the number of bytes it is possible to obtain in the first
+ 171:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			read. */
+ 172:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			( void ) memcpy( pucData, &( pxBuffer->ucArray[ uxNextTail ] ), uxFirst );
+ 354              	 .loc 1 172 0
+ 355 003e C119     	 adds r1,r0,r7
+ 356              	.LVL57:
+ 357 0040 1046     	 mov r0,r2
+ 358              	.LVL58:
+ 359 0042 1431     	 adds r1,r1,#20
+ 360 0044 3246     	 mov r2,r6
+ 361              	.LVL59:
+ 362 0046 FFF7FEFF 	 bl memcpy
+ 363              	.LVL60:
+ 173:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 174:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* If the total number of wanted bytes is greater than the number
+ 175:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			that could be read in the first read... */
+ 176:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			if( uxCount > uxFirst )
+ 364              	 .loc 1 176 0
+ 365 004a B442     	 cmp r4,r6
+ 366 004c 06D9     	 bls .L20
+ 177:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+ 178:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				/*...then read the remaining bytes from the start of the buffer. */
+ 179:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				( void ) memcpy( &( pucData[ uxFirst ] ), pxBuffer->ucArray, uxCount - uxFirst );
+ 367              	 .loc 1 179 0
+ 368 004e 08EB0600 	 add r0,r8,r6
+ 369 0052 09F11401 	 add r1,r9,#20
+ 370 0056 A21B     	 subs r2,r4,r6
+ 371 0058 FFF7FEFF 	 bl memcpy
+ 372              	.LVL61:
+ 373              	.L20:
+ 180:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			}
+ 181:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		}
+ 182:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 183:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		if( ( xPeek == pdFALSE ) && ( uxOffset == 0UL ) )
+ 374              	 .loc 1 183 0
+ 375 005c 089B     	 ldr r3,[sp,#32]
+ 376 005e 53B9     	 cbnz r3,.L18
+ 377              	 .loc 1 183 0 is_stmt 0 discriminator 1
+ 378 0060 4DB9     	 cbnz r5,.L18
+ 184:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		{
+ 185:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			/* Move the tail pointer to effecively remove the data read from
+ 186:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			the buffer. */
+ 187:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			uxNextTail += uxCount;
+ 379              	 .loc 1 187 0 is_stmt 1
+ 380 0062 2744     	 add r7,r7,r4
+ 381              	.LVL62:
+ 188:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 189:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			if( uxNextTail >= pxBuffer->LENGTH )
+ 382              	 .loc 1 189 0
+ 383 0064 D9F81030 	 ldr r3,[r9,#16]
+ 384 0068 9F42     	 cmp r7,r3
+ 190:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			{
+ 191:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 				uxNextTail -= pxBuffer->LENGTH;
+ 385              	 .loc 1 191 0
+ 386 006a 28BF     	 it cs
+ 387 006c FF1A     	 subcs r7,r7,r3
+ 388              	.LVL63:
+ 192:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			}
+ 193:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 194:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 			pxBuffer->uxTail = uxNextTail;
+ 389              	 .loc 1 194 0
+ 390 006e C9F80070 	 str r7,[r9]
+ 391 0072 00E0     	 b .L18
+ 392              	.LVL64:
+ 393              	.L22:
+ 394              	.LBB47:
+ 395              	.LBB44:
+ 396              	 .loc 3 218 0
+ 397 0074 0024     	 movs r4,#0
+ 398              	.LVL65:
+ 399              	.L18:
+ 400              	.LBE44:
+ 401              	.LBE47:
+ 195:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 		}
+ 196:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	}
+ 197:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 
+ 198:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** 	return uxCount;
+ 199:../FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c **** }
+ 402              	 .loc 1 199 0
+ 403 0076 2046     	 mov r0,r4
+ 404 0078 BDE8F883 	 pop {r3,r4,r5,r6,r7,r8,r9,pc}
+ 405              	 .cfi_endproc
+ 406              	.LFE51:
+ 408              	 .text
+ 409              	.Letext0:
+ 410              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 411              	 .file 5 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 412              	 .file 6 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\lib\\gcc\\arm-none-eabi\\4.9.3\\include\\stddef.h"
+ 413              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 FreeRTOS_Stream_Buffer.c
+    {standard input}:19     .text.uxStreamBufferAdd:00000000 $t
+    {standard input}:24     .text.uxStreamBufferAdd:00000000 uxStreamBufferAdd
+    {standard input}:253    .text.uxStreamBufferGet:00000000 $t
+    {standard input}:258    .text.uxStreamBufferGet:00000000 uxStreamBufferGet
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+                           .group:00000000 wm4.queue.h.66.45d4a3cf5de24cde7e732f8dad25383c
+                           .group:00000000 wm4.semphr.h.38.96f44691bfa19eb833944d3a35b81e54
+                           .group:00000000 wm4.FreeRTOSIPConfig.h.37.3f9c1db988571ff1f3dec4c7e54978d6
+                           .group:00000000 wm4.FreeRTOS_errno_TCP.h.27.708877b341d0e6bcb4ba112b2ad8082a
+                           .group:00000000 wm4.FreeRTOSIPConfigDefaults.h.41.f972b11d9b1eba5383080cfaef1fd740
+                           .group:00000000 wm4.IPTraceMacroDefaults.h.31.69642530b5a79c93e762c9b09ac0d1d5
+                           .group:00000000 wm4.FreeRTOS_IP.h.27.bae156c5eba2da2689f75aad27aa76da
+                           .group:00000000 wm4.FreeRTOS_IP.h.179.e5077063e624bc5d3f02542470d6ea94
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.timers.h.29.025d268d6baf57298309e7b498ee1cc7
+                           .group:00000000 wm4.FreeRTOS_Sockets.h.58.61d472da32c0e0f5bc49c368f15d0ac5
+                           .group:00000000 wm4.FreeRTOS_TCP_WIN.h.32.f3cfab69924f28284deb16cc1a30fb93
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.52.551f932b14473cea139893dda31b3fa0
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.328.b5788f8d626a4cf16b8282f9399f3f55
+
+UNDEFINED SYMBOLS
+memcpy

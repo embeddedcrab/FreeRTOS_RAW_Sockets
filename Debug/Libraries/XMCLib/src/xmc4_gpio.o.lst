@@ -1,0 +1,326 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "xmc4_gpio.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.XMC_GPIO_Init,"ax",%progbits
+  19              	 .align 2
+  20              	 .global XMC_GPIO_Init
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	XMC_GPIO_Init:
+  25              	.LFB145:
+  26              	 .file 1 "../Libraries/XMCLib/src/xmc4_gpio.c"
+   1:../Libraries/XMCLib/src/xmc4_gpio.c **** /**
+   2:../Libraries/XMCLib/src/xmc4_gpio.c ****  * @file xmc4_gpio.c
+   3:../Libraries/XMCLib/src/xmc4_gpio.c ****  * @date 2017-09-15
+   4:../Libraries/XMCLib/src/xmc4_gpio.c ****  *
+   5:../Libraries/XMCLib/src/xmc4_gpio.c ****  * @cond
+   6:../Libraries/XMCLib/src/xmc4_gpio.c ****  **************************************************************************************************
+   7:../Libraries/XMCLib/src/xmc4_gpio.c ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:../Libraries/XMCLib/src/xmc4_gpio.c ****  *
+   9:../Libraries/XMCLib/src/xmc4_gpio.c ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:../Libraries/XMCLib/src/xmc4_gpio.c ****  * All rights reserved.                        
+  11:../Libraries/XMCLib/src/xmc4_gpio.c ****  *                                             
+  12:../Libraries/XMCLib/src/xmc4_gpio.c ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:../Libraries/XMCLib/src/xmc4_gpio.c ****  * following conditions are met:   
+  14:../Libraries/XMCLib/src/xmc4_gpio.c ****  *                                                                              
+  15:../Libraries/XMCLib/src/xmc4_gpio.c ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:../Libraries/XMCLib/src/xmc4_gpio.c ****  * disclaimer.                        
+  17:../Libraries/XMCLib/src/xmc4_gpio.c ****  * 
+  18:../Libraries/XMCLib/src/xmc4_gpio.c ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:../Libraries/XMCLib/src/xmc4_gpio.c ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:../Libraries/XMCLib/src/xmc4_gpio.c ****  * 
+  21:../Libraries/XMCLib/src/xmc4_gpio.c ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:../Libraries/XMCLib/src/xmc4_gpio.c ****  * products derived from this software without specific prior written permission.                  
+  23:../Libraries/XMCLib/src/xmc4_gpio.c ****  *                                                                              
+  24:../Libraries/XMCLib/src/xmc4_gpio.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:../Libraries/XMCLib/src/xmc4_gpio.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:../Libraries/XMCLib/src/xmc4_gpio.c ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:../Libraries/XMCLib/src/xmc4_gpio.c ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:../Libraries/XMCLib/src/xmc4_gpio.c ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:../Libraries/XMCLib/src/xmc4_gpio.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:../Libraries/XMCLib/src/xmc4_gpio.c ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:../Libraries/XMCLib/src/xmc4_gpio.c ****  *                                                                              
+  32:../Libraries/XMCLib/src/xmc4_gpio.c ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:../Libraries/XMCLib/src/xmc4_gpio.c ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:../Libraries/XMCLib/src/xmc4_gpio.c ****  **************************************************************************************************
+  35:../Libraries/XMCLib/src/xmc4_gpio.c ****  *
+  36:../Libraries/XMCLib/src/xmc4_gpio.c ****  * Change History
+  37:../Libraries/XMCLib/src/xmc4_gpio.c ****  * --------------
+  38:../Libraries/XMCLib/src/xmc4_gpio.c ****  *
+  39:../Libraries/XMCLib/src/xmc4_gpio.c ****  * 2015-02-20:
+  40:../Libraries/XMCLib/src/xmc4_gpio.c ****  *     - Initial draft <br>
+  41:../Libraries/XMCLib/src/xmc4_gpio.c ****  *      
+  42:../Libraries/XMCLib/src/xmc4_gpio.c ****  * 2015-06-20:
+  43:../Libraries/XMCLib/src/xmc4_gpio.c ****  *     - Removed version macros and declaration of GetDriverVersion API
+  44:../Libraries/XMCLib/src/xmc4_gpio.c ****  *
+  45:../Libraries/XMCLib/src/xmc4_gpio.c ****  * 2017-09-15:
+  46:../Libraries/XMCLib/src/xmc4_gpio.c ****  *     - Fix side effects on output level when programming a pin as input after the same pin in ano
+  47:../Libraries/XMCLib/src/xmc4_gpio.c ****  *  
+  48:../Libraries/XMCLib/src/xmc4_gpio.c ****  * @endcond
+  49:../Libraries/XMCLib/src/xmc4_gpio.c ****  *
+  50:../Libraries/XMCLib/src/xmc4_gpio.c ****  */
+  51:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  52:../Libraries/XMCLib/src/xmc4_gpio.c **** #include "xmc_gpio.h"
+  53:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  54:../Libraries/XMCLib/src/xmc4_gpio.c **** #if UC_FAMILY == XMC4
+  55:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  56:../Libraries/XMCLib/src/xmc4_gpio.c **** /*******************************************************************************
+  57:../Libraries/XMCLib/src/xmc4_gpio.c ****  * MACROS
+  58:../Libraries/XMCLib/src/xmc4_gpio.c ****  *******************************************************************************/
+  59:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  60:../Libraries/XMCLib/src/xmc4_gpio.c **** #define PORT_PDR_Msk              PORT0_PDR0_PD0_Msk
+  61:../Libraries/XMCLib/src/xmc4_gpio.c **** #define PORT_PDR_Size             (4U)
+  62:../Libraries/XMCLib/src/xmc4_gpio.c **** #define PORT_HWSEL_Msk            PORT0_HWSEL_HW0_Msk
+  63:../Libraries/XMCLib/src/xmc4_gpio.c **** #define XMC_GPIO_MODE_OE          XMC_GPIO_MODE_OUTPUT_PUSH_PULL
+  64:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  65:../Libraries/XMCLib/src/xmc4_gpio.c **** /*******************************************************************************
+  66:../Libraries/XMCLib/src/xmc4_gpio.c ****  * API IMPLEMENTATION
+  67:../Libraries/XMCLib/src/xmc4_gpio.c ****  *******************************************************************************/
+  68:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  69:../Libraries/XMCLib/src/xmc4_gpio.c **** void XMC_GPIO_Init(XMC_GPIO_PORT_t *const port, const uint8_t pin, const XMC_GPIO_CONFIG_t *const c
+  70:../Libraries/XMCLib/src/xmc4_gpio.c **** {
+  27              	 .loc 1 70 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+  32              	.LVL0:
+  33 0000 F0B4     	 push {r4,r5,r6,r7}
+  34              	.LCFI0:
+  35              	 .cfi_def_cfa_offset 16
+  36              	 .cfi_offset 4,-16
+  37              	 .cfi_offset 5,-12
+  38              	 .cfi_offset 6,-8
+  39              	 .cfi_offset 7,-4
+  40 0002 01F0FC03 	 and r3,r1,#252
+  41 0006 0344     	 add r3,r3,r0
+  71:../Libraries/XMCLib/src/xmc4_gpio.c ****   XMC_ASSERT("XMC_GPIO_Init: Invalid port", XMC_GPIO_CHECK_PORT(port));
+  72:../Libraries/XMCLib/src/xmc4_gpio.c ****   XMC_ASSERT("XMC_GPIO_Init: Invalid mode", XMC_GPIO_IsModeValid(config->mode));
+  73:../Libraries/XMCLib/src/xmc4_gpio.c ****  
+  74:../Libraries/XMCLib/src/xmc4_gpio.c ****   /* Switch to input */
+  75:../Libraries/XMCLib/src/xmc4_gpio.c ****   port->IOCR[pin >> 2U] &= (uint32_t)~(PORT_IOCR_PC_Msk << (PORT_IOCR_PC_Size * (pin & 0x3U)));
+  42              	 .loc 1 75 0
+  43 0008 1E69     	 ldr r6,[r3,#16]
+  44 000a 01F00304 	 and r4,r1,#3
+  45 000e E400     	 lsls r4,r4,#3
+  46 0010 F825     	 movs r5,#248
+  47 0012 A540     	 lsls r5,r5,r4
+  48 0014 26EA0505 	 bic r5,r6,r5
+  49 0018 1D61     	 str r5,[r3,#16]
+  76:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  77:../Libraries/XMCLib/src/xmc4_gpio.c ****   /* HW port control is disabled */
+  78:../Libraries/XMCLib/src/xmc4_gpio.c ****   port->HWSEL &= ~(uint32_t)((uint32_t)PORT_HWSEL_Msk << ((uint32_t)pin << 1U));
+  50              	 .loc 1 78 0
+  51 001a 466F     	 ldr r6,[r0,#116]
+  52 001c 4F00     	 lsls r7,r1,#1
+  53 001e 0325     	 movs r5,#3
+  54 0020 BD40     	 lsls r5,r5,r7
+  55 0022 26EA0505 	 bic r5,r6,r5
+  56 0026 4567     	 str r5,[r0,#116]
+  79:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  80:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  81:../Libraries/XMCLib/src/xmc4_gpio.c ****   /* Enable digital input */
+  82:../Libraries/XMCLib/src/xmc4_gpio.c ****   if (XMC_GPIO_CHECK_ANALOG_PORT(port))
+  57              	 .loc 1 82 0
+  58 0028 174D     	 ldr r5,.L6
+  59 002a A842     	 cmp r0,r5
+  60 002c 03D0     	 beq .L2
+  61              	 .loc 1 82 0 is_stmt 0 discriminator 1
+  62 002e 05F58075 	 add r5,r5,#256
+  63 0032 A842     	 cmp r0,r5
+  64 0034 07D1     	 bne .L3
+  65              	.L2:
+  83:../Libraries/XMCLib/src/xmc4_gpio.c ****   {
+  84:../Libraries/XMCLib/src/xmc4_gpio.c ****     port->PDISC &= ~(uint32_t)((uint32_t)0x1U << pin);
+  66              	 .loc 1 84 0 is_stmt 1
+  67 0036 056E     	 ldr r5,[r0,#96]
+  68 0038 0126     	 movs r6,#1
+  69 003a 06FA01F1 	 lsl r1,r6,r1
+  70              	.LVL1:
+  71 003e 25EA0101 	 bic r1,r5,r1
+  72 0042 0166     	 str r1,[r0,#96]
+  73 0044 18E0     	 b .L4
+  74              	.LVL2:
+  75              	.L3:
+  85:../Libraries/XMCLib/src/xmc4_gpio.c ****   }
+  86:../Libraries/XMCLib/src/xmc4_gpio.c ****   else
+  87:../Libraries/XMCLib/src/xmc4_gpio.c ****   {
+  88:../Libraries/XMCLib/src/xmc4_gpio.c ****     if ((config->mode & XMC_GPIO_MODE_OE) != 0)
+  76              	 .loc 1 88 0
+  77 0046 92F90050 	 ldrsb r5,[r2]
+  78 004a 002D     	 cmp r5,#0
+  79 004c 14DA     	 bge .L4
+  89:../Libraries/XMCLib/src/xmc4_gpio.c ****     {
+  90:../Libraries/XMCLib/src/xmc4_gpio.c ****       /* If output is enabled */
+  91:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  92:../Libraries/XMCLib/src/xmc4_gpio.c ****       /* Set output level */
+  93:../Libraries/XMCLib/src/xmc4_gpio.c ****       port->OMR = (uint32_t)config->output_level << pin;
+  80              	 .loc 1 93 0
+  81 004e 5568     	 ldr r5,[r2,#4]
+  82 0050 8D40     	 lsls r5,r5,r1
+  83 0052 4560     	 str r5,[r0,#4]
+  84 0054 CD08     	 lsrs r5,r1,#3
+  85 0056 00EB8500 	 add r0,r0,r5,lsl#2
+  86              	.LVL3:
+  94:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+  95:../Libraries/XMCLib/src/xmc4_gpio.c ****       /* Set output driver strength */
+  96:../Libraries/XMCLib/src/xmc4_gpio.c ****       port->PDR[pin >> 3U] &= (uint32_t)~(PORT_PDR_Msk << ((uint32_t)PORT_PDR_Size * ((uint32_t)pin
+  87              	 .loc 1 96 0
+  88 005a 066C     	 ldr r6,[r0,#64]
+  89 005c 01F00701 	 and r1,r1,#7
+  90              	.LVL4:
+  91 0060 8900     	 lsls r1,r1,#2
+  92 0062 0725     	 movs r5,#7
+  93 0064 8D40     	 lsls r5,r5,r1
+  94 0066 26EA0505 	 bic r5,r6,r5
+  95 006a 0564     	 str r5,[r0,#64]
+  97:../Libraries/XMCLib/src/xmc4_gpio.c ****       port->PDR[pin >> 3U] |= (uint32_t)config->output_strength << ((uint32_t)PORT_PDR_Size * ((uin
+  96              	 .loc 1 97 0
+  97 006c 056C     	 ldr r5,[r0,#64]
+  98 006e 167A     	 ldrb r6,[r2,#8]
+  99 0070 06FA01F1 	 lsl r1,r6,r1
+ 100 0074 2943     	 orrs r1,r1,r5
+ 101 0076 0164     	 str r1,[r0,#64]
+ 102              	.L4:
+  98:../Libraries/XMCLib/src/xmc4_gpio.c ****     }
+  99:../Libraries/XMCLib/src/xmc4_gpio.c ****   }
+ 100:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+ 101:../Libraries/XMCLib/src/xmc4_gpio.c ****   /* Set mode */
+ 102:../Libraries/XMCLib/src/xmc4_gpio.c ****   port->IOCR[pin >> 2U] |= (uint32_t)config->mode << ((uint32_t)PORT_IOCR_PC_Size * ((uint32_t)pin 
+ 103              	 .loc 1 102 0
+ 104 0078 1969     	 ldr r1,[r3,#16]
+ 105 007a 1278     	 ldrb r2,[r2]
+ 106              	.LVL5:
+ 107 007c A240     	 lsls r2,r2,r4
+ 108 007e 0A43     	 orrs r2,r2,r1
+ 109 0080 1A61     	 str r2,[r3,#16]
+ 103:../Libraries/XMCLib/src/xmc4_gpio.c **** }
+ 110              	 .loc 1 103 0
+ 111 0082 F0BC     	 pop {r4,r5,r6,r7}
+ 112              	.LCFI1:
+ 113              	 .cfi_restore 7
+ 114              	 .cfi_restore 6
+ 115              	 .cfi_restore 5
+ 116              	 .cfi_restore 4
+ 117              	 .cfi_def_cfa_offset 0
+ 118 0084 7047     	 bx lr
+ 119              	.L7:
+ 120 0086 00BF     	 .align 2
+ 121              	.L6:
+ 122 0088 008E0248 	 .word 1208126976
+ 123              	 .cfi_endproc
+ 124              	.LFE145:
+ 126              	 .section .text.XMC_GPIO_SetOutputStrength,"ax",%progbits
+ 127              	 .align 2
+ 128              	 .global XMC_GPIO_SetOutputStrength
+ 129              	 .thumb
+ 130              	 .thumb_func
+ 132              	XMC_GPIO_SetOutputStrength:
+ 133              	.LFB146:
+ 104:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+ 105:../Libraries/XMCLib/src/xmc4_gpio.c **** void XMC_GPIO_SetOutputStrength(XMC_GPIO_PORT_t *const port, const uint8_t pin, XMC_GPIO_OUTPUT_STR
+ 106:../Libraries/XMCLib/src/xmc4_gpio.c **** {
+ 134              	 .loc 1 106 0
+ 135              	 .cfi_startproc
+ 136              	 
+ 137              	 
+ 138              	 
+ 139              	.LVL6:
+ 140 0000 10B4     	 push {r4}
+ 141              	.LCFI2:
+ 142              	 .cfi_def_cfa_offset 4
+ 143              	 .cfi_offset 4,-4
+ 144 0002 CB08     	 lsrs r3,r1,#3
+ 145 0004 00EB8300 	 add r0,r0,r3,lsl#2
+ 146              	.LVL7:
+ 107:../Libraries/XMCLib/src/xmc4_gpio.c ****   XMC_ASSERT("XMC_GPIO_Init: Invalid port", XMC_GPIO_CHECK_OUTPUT_PORT(port));
+ 108:../Libraries/XMCLib/src/xmc4_gpio.c ****   XMC_ASSERT("XMC_GPIO_Init: Invalid output strength", XMC_GPIO_CHECK_OUTPUT_STRENGTH(strength));
+ 109:../Libraries/XMCLib/src/xmc4_gpio.c **** 
+ 110:../Libraries/XMCLib/src/xmc4_gpio.c ****   port->PDR[pin >> 3U] &= (uint32_t)~((uint32_t)PORT_PDR_Msk << ((uint32_t)PORT_PDR_Size * ((uint32
+ 147              	 .loc 1 110 0
+ 148 0008 046C     	 ldr r4,[r0,#64]
+ 149 000a 01F00701 	 and r1,r1,#7
+ 150              	.LVL8:
+ 151 000e 8900     	 lsls r1,r1,#2
+ 152 0010 0723     	 movs r3,#7
+ 153 0012 8B40     	 lsls r3,r3,r1
+ 154 0014 24EA0303 	 bic r3,r4,r3
+ 155 0018 0364     	 str r3,[r0,#64]
+ 111:../Libraries/XMCLib/src/xmc4_gpio.c ****   port->PDR[pin >> 3U] |= (uint32_t)strength << ((uint32_t)PORT_PDR_Size * ((uint32_t)pin & 0x7U));
+ 156              	 .loc 1 111 0
+ 157 001a 036C     	 ldr r3,[r0,#64]
+ 158 001c 8A40     	 lsls r2,r2,r1
+ 159              	.LVL9:
+ 160 001e 1343     	 orrs r3,r3,r2
+ 161 0020 0364     	 str r3,[r0,#64]
+ 112:../Libraries/XMCLib/src/xmc4_gpio.c **** }
+ 162              	 .loc 1 112 0
+ 163 0022 5DF8044B 	 ldr r4,[sp],#4
+ 164              	.LCFI3:
+ 165              	 .cfi_restore 4
+ 166              	 .cfi_def_cfa_offset 0
+ 167 0026 7047     	 bx lr
+ 168              	 .cfi_endproc
+ 169              	.LFE146:
+ 171              	 .text
+ 172              	.Letext0:
+ 173              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 174              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 175              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_gpio.h"
+ 176              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_gpio.h"
+ 177              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc4_gpio.c
+    {standard input}:19     .text.XMC_GPIO_Init:00000000 $t
+    {standard input}:24     .text.XMC_GPIO_Init:00000000 XMC_GPIO_Init
+    {standard input}:122    .text.XMC_GPIO_Init:00000088 $d
+    {standard input}:127    .text.XMC_GPIO_SetOutputStrength:00000000 $t
+    {standard input}:132    .text.XMC_GPIO_SetOutputStrength:00000000 XMC_GPIO_SetOutputStrength
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc_gpio.h.97.fa6a2e1be6030a75d960293cc3bbbd6b
+                           .group:00000000 wm4.xmc4_gpio_map.h.74.66e9110cf801b78826ef5354da51c32f
+                           .group:00000000 wm4.xmc4_gpio.h.79.ce6c49508b5a7769c66e7e3c21dcdfe4
+
+NO UNDEFINED SYMBOLS

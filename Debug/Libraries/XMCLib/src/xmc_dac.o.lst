@@ -1,0 +1,2185 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "xmc_dac.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.XMC_DAC_Enable,"ax",%progbits
+  19              	 .align 2
+  20              	 .global XMC_DAC_Enable
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	XMC_DAC_Enable:
+  25              	.LFB197:
+  26              	 .file 1 "../Libraries/XMCLib/src/xmc_dac.c"
+   1:../Libraries/XMCLib/src/xmc_dac.c **** /**
+   2:../Libraries/XMCLib/src/xmc_dac.c ****  * @file xmc_dac.c
+   3:../Libraries/XMCLib/src/xmc_dac.c ****  * @date 2015-06-19
+   4:../Libraries/XMCLib/src/xmc_dac.c ****  *
+   5:../Libraries/XMCLib/src/xmc_dac.c ****  * @cond
+   6:../Libraries/XMCLib/src/xmc_dac.c ****  **********************************************************************************
+   7:../Libraries/XMCLib/src/xmc_dac.c ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:../Libraries/XMCLib/src/xmc_dac.c ****  *
+   9:../Libraries/XMCLib/src/xmc_dac.c ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:../Libraries/XMCLib/src/xmc_dac.c ****  * All rights reserved.                        
+  11:../Libraries/XMCLib/src/xmc_dac.c ****  *                                             
+  12:../Libraries/XMCLib/src/xmc_dac.c ****  * Redistribution and use in source and binary forms, with or without           
+  13:../Libraries/XMCLib/src/xmc_dac.c ****  * modification,are permitted provided that the following conditions are met:   
+  14:../Libraries/XMCLib/src/xmc_dac.c ****  *                                                                              
+  15:../Libraries/XMCLib/src/xmc_dac.c ****  *   Redistributions of source code must retain the above copyright notice,      
+  16:../Libraries/XMCLib/src/xmc_dac.c ****  *   this list of conditions and the following disclaimer.                        
+  17:../Libraries/XMCLib/src/xmc_dac.c ****  * 
+  18:../Libraries/XMCLib/src/xmc_dac.c ****  *   Redistributions in binary form must reproduce the above copyright notice,   
+  19:../Libraries/XMCLib/src/xmc_dac.c ****  *   this list of conditions and the following disclaimer in the documentation    
+  20:../Libraries/XMCLib/src/xmc_dac.c ****  *   and/or other materials provided with the distribution.                       
+  21:../Libraries/XMCLib/src/xmc_dac.c ****  * 
+  22:../Libraries/XMCLib/src/xmc_dac.c ****  *   Neither the name of the copyright holders nor the names of its contributors 
+  23:../Libraries/XMCLib/src/xmc_dac.c ****  *   may be used to endorse or promote products derived from this software without
+  24:../Libraries/XMCLib/src/xmc_dac.c ****  *   specific prior written permission.                                           
+  25:../Libraries/XMCLib/src/xmc_dac.c ****  *                                                                              
+  26:../Libraries/XMCLib/src/xmc_dac.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  
+  27:../Libraries/XMCLib/src/xmc_dac.c ****  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    
+  28:../Libraries/XMCLib/src/xmc_dac.c ****  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   
+  29:../Libraries/XMCLib/src/xmc_dac.c ****  * ARE  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE   
+  30:../Libraries/XMCLib/src/xmc_dac.c ****  * LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         
+  31:../Libraries/XMCLib/src/xmc_dac.c ****  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF         
+  32:../Libraries/XMCLib/src/xmc_dac.c ****  * SUBSTITUTE GOODS OR  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    
+  33:../Libraries/XMCLib/src/xmc_dac.c ****  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN      
+  34:../Libraries/XMCLib/src/xmc_dac.c ****  * CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)       
+  35:../Libraries/XMCLib/src/xmc_dac.c ****  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   
+  36:../Libraries/XMCLib/src/xmc_dac.c ****  * POSSIBILITY OF SUCH DAMAGE.                                                  
+  37:../Libraries/XMCLib/src/xmc_dac.c ****  *                                                                              
+  38:../Libraries/XMCLib/src/xmc_dac.c ****  * To improve the quality of the software, users are encouraged to share        
+  39:../Libraries/XMCLib/src/xmc_dac.c ****  * modifications, enhancements or bug fixes with Infineon Technologies AG       
+  40:../Libraries/XMCLib/src/xmc_dac.c ****  * dave@infineon.com).                                                          
+  41:../Libraries/XMCLib/src/xmc_dac.c ****  **********************************************************************************
+  42:../Libraries/XMCLib/src/xmc_dac.c ****  *
+  43:../Libraries/XMCLib/src/xmc_dac.c ****  * Change History
+  44:../Libraries/XMCLib/src/xmc_dac.c ****  * --------------
+  45:../Libraries/XMCLib/src/xmc_dac.c ****  *
+  46:../Libraries/XMCLib/src/xmc_dac.c ****  * 2015-02-18:
+  47:../Libraries/XMCLib/src/xmc_dac.c ****  *     - Initial version
+  48:../Libraries/XMCLib/src/xmc_dac.c ****  *
+  49:../Libraries/XMCLib/src/xmc_dac.c ****  * 2015-06-19:
+  50:../Libraries/XMCLib/src/xmc_dac.c ****  *     - Removed GetDriverVersion API
+  51:../Libraries/XMCLib/src/xmc_dac.c ****  * @endcond 
+  52:../Libraries/XMCLib/src/xmc_dac.c ****  *
+  53:../Libraries/XMCLib/src/xmc_dac.c ****  */
+  54:../Libraries/XMCLib/src/xmc_dac.c **** 
+  55:../Libraries/XMCLib/src/xmc_dac.c **** /*******************************************************************************
+  56:../Libraries/XMCLib/src/xmc_dac.c ****  * HEADER FILES
+  57:../Libraries/XMCLib/src/xmc_dac.c ****  *******************************************************************************/
+  58:../Libraries/XMCLib/src/xmc_dac.c **** 
+  59:../Libraries/XMCLib/src/xmc_dac.c **** #include <xmc_dac.h>
+  60:../Libraries/XMCLib/src/xmc_dac.c **** #include <xmc_scu.h>
+  61:../Libraries/XMCLib/src/xmc_dac.c **** 
+  62:../Libraries/XMCLib/src/xmc_dac.c **** /* DAC peripheral is not available on XMC1X devices. */
+  63:../Libraries/XMCLib/src/xmc_dac.c **** #if defined(DAC)
+  64:../Libraries/XMCLib/src/xmc_dac.c **** 
+  65:../Libraries/XMCLib/src/xmc_dac.c **** /*******************************************************************************
+  66:../Libraries/XMCLib/src/xmc_dac.c ****  * MACROS
+  67:../Libraries/XMCLib/src/xmc_dac.c ****  *******************************************************************************/
+  68:../Libraries/XMCLib/src/xmc_dac.c **** 
+  69:../Libraries/XMCLib/src/xmc_dac.c **** #define XMC_DAC_MIN_FREQ_DIVIDER (16U)
+  70:../Libraries/XMCLib/src/xmc_dac.c **** #define XMC_DAC_MAX_FREQ_DIVIDER (1048576U)
+  71:../Libraries/XMCLib/src/xmc_dac.c **** #define XMC_DAC_DAC0PATL_PAT_BITSIZE (5U)
+  72:../Libraries/XMCLib/src/xmc_dac.c **** 
+  73:../Libraries/XMCLib/src/xmc_dac.c **** /*******************************************************************************
+  74:../Libraries/XMCLib/src/xmc_dac.c ****  * API IMPLEMENTATION
+  75:../Libraries/XMCLib/src/xmc_dac.c ****  *******************************************************************************/
+  76:../Libraries/XMCLib/src/xmc_dac.c **** 
+  77:../Libraries/XMCLib/src/xmc_dac.c **** /* API to enable the DAC module */
+  78:../Libraries/XMCLib/src/xmc_dac.c **** void XMC_DAC_Enable(XMC_DAC_t *const dac)
+  79:../Libraries/XMCLib/src/xmc_dac.c **** {
+  27              	 .loc 1 79 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 08B5     	 push {r3,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 8
+  35              	 .cfi_offset 3,-8
+  36              	 .cfi_offset 14,-4
+  80:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_UNUSED_ARG(dac);
+  81:../Libraries/XMCLib/src/xmc_dac.c ****   
+  82:../Libraries/XMCLib/src/xmc_dac.c **** #if defined(CLOCK_GATING_SUPPORTED)
+  83:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_SCU_CLOCK_UngatePeripheralClock(XMC_SCU_PERIPHERAL_CLOCK_DAC);
+  84:../Libraries/XMCLib/src/xmc_dac.c **** #endif
+  85:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_SCU_RESET_DeassertPeripheralReset(XMC_SCU_PERIPHERAL_RESET_DAC);
+  37              	 .loc 1 85 0
+  38 0002 0248     	 ldr r0,.L3
+  39              	.LVL1:
+  40 0004 FFF7FEFF 	 bl XMC_SCU_RESET_DeassertPeripheralReset
+  41              	.LVL2:
+  42 0008 08BD     	 pop {r3,pc}
+  43              	.L4:
+  44 000a 00BF     	 .align 2
+  45              	.L3:
+  46 000c 20000010 	 .word 268435488
+  47              	 .cfi_endproc
+  48              	.LFE197:
+  50              	 .section .text.XMC_DAC_Disable,"ax",%progbits
+  51              	 .align 2
+  52              	 .global XMC_DAC_Disable
+  53              	 .thumb
+  54              	 .thumb_func
+  56              	XMC_DAC_Disable:
+  57              	.LFB198:
+  86:../Libraries/XMCLib/src/xmc_dac.c **** }
+  87:../Libraries/XMCLib/src/xmc_dac.c **** 
+  88:../Libraries/XMCLib/src/xmc_dac.c **** /* API to disable the DAC module */
+  89:../Libraries/XMCLib/src/xmc_dac.c **** void XMC_DAC_Disable(XMC_DAC_t *const dac)
+  90:../Libraries/XMCLib/src/xmc_dac.c **** {
+  58              	 .loc 1 90 0
+  59              	 .cfi_startproc
+  60              	 
+  61              	 
+  62              	.LVL3:
+  63 0000 08B5     	 push {r3,lr}
+  64              	.LCFI1:
+  65              	 .cfi_def_cfa_offset 8
+  66              	 .cfi_offset 3,-8
+  67              	 .cfi_offset 14,-4
+  91:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_UNUSED_ARG(dac);
+  92:../Libraries/XMCLib/src/xmc_dac.c **** 
+  93:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_SCU_RESET_AssertPeripheralReset(XMC_SCU_PERIPHERAL_RESET_DAC);
+  68              	 .loc 1 93 0
+  69 0002 0248     	 ldr r0,.L7
+  70              	.LVL4:
+  71 0004 FFF7FEFF 	 bl XMC_SCU_RESET_AssertPeripheralReset
+  72              	.LVL5:
+  73 0008 08BD     	 pop {r3,pc}
+  74              	.L8:
+  75 000a 00BF     	 .align 2
+  76              	.L7:
+  77 000c 20000010 	 .word 268435488
+  78              	 .cfi_endproc
+  79              	.LFE198:
+  81              	 .section .text.XMC_DAC_IsEnabled,"ax",%progbits
+  82              	 .align 2
+  83              	 .global XMC_DAC_IsEnabled
+  84              	 .thumb
+  85              	 .thumb_func
+  87              	XMC_DAC_IsEnabled:
+  88              	.LFB199:
+  94:../Libraries/XMCLib/src/xmc_dac.c **** #if defined(CLOCK_GATING_SUPPORTED)
+  95:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_SCU_CLOCK_GatePeripheralClock(XMC_SCU_PERIPHERAL_CLOCK_DAC);
+  96:../Libraries/XMCLib/src/xmc_dac.c **** #endif
+  97:../Libraries/XMCLib/src/xmc_dac.c **** }
+  98:../Libraries/XMCLib/src/xmc_dac.c **** 
+  99:../Libraries/XMCLib/src/xmc_dac.c **** /* API to check whether DAC is enabled */
+ 100:../Libraries/XMCLib/src/xmc_dac.c **** bool XMC_DAC_IsEnabled(const XMC_DAC_t *const dac)
+ 101:../Libraries/XMCLib/src/xmc_dac.c **** {
+  89              	 .loc 1 101 0
+  90              	 .cfi_startproc
+  91              	 
+  92              	 
+  93              	.LVL6:
+  94 0000 08B5     	 push {r3,lr}
+  95              	.LCFI2:
+  96              	 .cfi_def_cfa_offset 8
+  97              	 .cfi_offset 3,-8
+  98              	 .cfi_offset 14,-4
+ 102:../Libraries/XMCLib/src/xmc_dac.c ****   bool status;
+ 103:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 104:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_UNUSED_ARG(dac);
+ 105:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 106:../Libraries/XMCLib/src/xmc_dac.c ****   status = XMC_SCU_RESET_IsPeripheralResetAsserted(XMC_SCU_PERIPHERAL_RESET_DAC);
+  99              	 .loc 1 106 0
+ 100 0002 0348     	 ldr r0,.L11
+ 101              	.LVL7:
+ 102 0004 FFF7FEFF 	 bl XMC_SCU_RESET_IsPeripheralResetAsserted
+ 103              	.LVL8:
+ 107:../Libraries/XMCLib/src/xmc_dac.c ****   if(status == true)
+ 104              	 .loc 1 107 0
+ 105 0008 80F00100 	 eor r0,r0,#1
+ 106              	.LVL9:
+ 108:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 109:../Libraries/XMCLib/src/xmc_dac.c ****     status = false;
+ 110:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 111:../Libraries/XMCLib/src/xmc_dac.c ****   else
+ 112:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 113:../Libraries/XMCLib/src/xmc_dac.c ****     status = true;
+ 114:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 115:../Libraries/XMCLib/src/xmc_dac.c ****   return (status);
+ 116:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 107              	 .loc 1 116 0
+ 108 000c C0B2     	 uxtb r0,r0
+ 109 000e 08BD     	 pop {r3,pc}
+ 110              	.L12:
+ 111              	 .align 2
+ 112              	.L11:
+ 113 0010 20000010 	 .word 268435488
+ 114              	 .cfi_endproc
+ 115              	.LFE199:
+ 117              	 .section .text.XMC_DAC_CH_Init,"ax",%progbits
+ 118              	 .align 2
+ 119              	 .global XMC_DAC_CH_Init
+ 120              	 .thumb
+ 121              	 .thumb_func
+ 123              	XMC_DAC_CH_Init:
+ 124              	.LFB200:
+ 117:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 118:../Libraries/XMCLib/src/xmc_dac.c **** /* API to initialize DAC channel configuration */
+ 119:../Libraries/XMCLib/src/xmc_dac.c **** void XMC_DAC_CH_Init(XMC_DAC_t *const dac, const uint8_t channel, const XMC_DAC_CH_CONFIG_t *const 
+ 120:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 125              	 .loc 1 120 0
+ 126              	 .cfi_startproc
+ 127              	 
+ 128              	 
+ 129              	.LVL10:
+ 130 0000 70B5     	 push {r4,r5,r6,lr}
+ 131              	.LCFI3:
+ 132              	 .cfi_def_cfa_offset 16
+ 133              	 .cfi_offset 4,-16
+ 134              	 .cfi_offset 5,-12
+ 135              	 .cfi_offset 6,-8
+ 136              	 .cfi_offset 14,-4
+ 137 0002 0446     	 mov r4,r0
+ 138 0004 0D46     	 mov r5,r1
+ 139 0006 1646     	 mov r6,r2
+ 140              	.LVL11:
+ 141              	.LBB42:
+ 142              	.LBB43:
+  85:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 143              	 .loc 1 85 0
+ 144 0008 0748     	 ldr r0,.L16
+ 145              	.LVL12:
+ 146 000a FFF7FEFF 	 bl XMC_SCU_RESET_DeassertPeripheralReset
+ 147              	.LVL13:
+ 148              	.LBE43:
+ 149              	.LBE42:
+ 121:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_Enable(dac);
+ 122:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 123:../Libraries/XMCLib/src/xmc_dac.c ****   dac->DACCFG[channel].low = config->cfg0;
+ 150              	 .loc 1 123 0
+ 151 000e 3368     	 ldr r3,[r6]
+ 152 0010 04EBC500 	 add r0,r4,r5,lsl#3
+ 153 0014 4360     	 str r3,[r0,#4]
+ 124:../Libraries/XMCLib/src/xmc_dac.c ****   dac->DACCFG[channel].high = config->cfg1;
+ 154              	 .loc 1 124 0
+ 155 0016 7368     	 ldr r3,[r6,#4]
+ 156 0018 8360     	 str r3,[r0,#8]
+ 125:../Libraries/XMCLib/src/xmc_dac.c ****   if (channel < XMC_DAC_NO_CHANNELS)
+ 157              	 .loc 1 125 0
+ 158 001a 012D     	 cmp r5,#1
+ 159 001c 03D8     	 bhi .L13
+ 160              	.LVL14:
+ 161              	.LBB44:
+ 162              	.LBB45:
+ 163              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_dac.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @file xmc_dac.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @date 2015-08-31
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @cond
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  **********************************************************************************
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * All rights reserved.                        
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *                                             
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Redistribution and use in source and binary forms, with or without           
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * modification,are permitted provided that the following conditions are met:   
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *                                                                              
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   Redistributions of source code must retain the above copyright notice,      
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   this list of conditions and the following disclaimer.                        
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   Redistributions in binary form must reproduce the above copyright notice,   
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   this list of conditions and the following disclaimer in the documentation    
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   and/or other materials provided with the distribution.                       
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   Neither the name of the copyright holders nor the names of its contributors 
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   may be used to endorse or promote products derived from this software without
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *   specific prior written permission.                                           
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *                                                                              
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * ARE  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE   
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF         
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * SUBSTITUTE GOODS OR  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN      
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)       
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * POSSIBILITY OF SUCH DAMAGE.                                                  
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *                                                                              
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * To improve the quality of the software, users are encouraged to share        
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * modifications, enhancements or bug fixes with Infineon Technologies AG       
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * dave@infineon.com).                                                          
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  **********************************************************************************
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Change History
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * --------------
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 2015-02-18:
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *     - Initial version
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *      
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 2015-02-20:
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *     - Driver description added
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 2015-06-19:
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *     - Removed version macros and declaration of GetDriverVersion API
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 2015-08-31:
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *     - Help document updated
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @endcond 
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #ifndef XMC_DAC_H
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_H
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /*******************************************************************************
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * HEADER FILES
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *******************************************************************************/
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #include <xmc_common.h>
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /* DAC peripheral is not available on XMC1X devices. */
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #if defined(DAC)
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @addtogroup XMClib
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @{
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @addtogroup DAC
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @{
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @brief Digital to Analog Converter (DAC) driver for XMC 4000 microcontroller family. <br>
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC driver uses DAC peripheral to convert digital value to analog value. XMC4000 microcontroller
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * and maximum conversion rate of 2MHz with full accuracy and 5MHz with reduced accuracy.
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * It consists of inbuilt pattern generator, ramp generator and noise generator modes. Additionally
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * in single value mode and in data mode.
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * It has DMA handling capability to generate custom waveforms in data mode without CPU interventio
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC driver features:
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -#  Configuration structure XMC_DAC_CH_CONFIG_t and initialization function XMC_DAC_CH_Init() to
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -#  Pattern Generator Mode:
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- DAC is configured in pattern generator mode using XMC_DAC_CH_StartPatternMode()
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- XMC_DAC_CH_SetPattern() is used to set the waveform pattern values in pattern register for on
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- Allows to change the trigger frequency using XMC_DAC_CH_SetPatternFrequency()
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -#  Single Value Mode:
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- DAC is configured in single value mode using XMC_DAC_CH_StartSingleValueMode()
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- Allows to change the trigger frequency using XMC_DAC_CH_SetFrequency()
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -# Data Mode:
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- DAC is configured in data mode using XMC_DAC_CH_StartDataMode()
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- Allows to change the trigger frequency using XMC_DAC_CH_SetFrequency()
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -# Ramp Mode:
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *  - DAC is configured in ramp generator mode using XMC_DAC_CH_StartRampMode()
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *  - Allows to change the trigger frequency using XMC_DAC_CH_SetRampFrequency()
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *  - Allows to set the start and stop values of the ramp using XMC_DAC_CH_SetRampStart() and XMC_D
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -# Noise Mode:
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- DAC is configured in noise mode using XMC_DAC_CH_StartNoiseMode()
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * 	- Allows to change the trigger frequency using XMC_DAC_CH_SetFrequency()
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -# Allows to change the scale, offset dynamically using XMC_DAC_CH_SetOutputScale() and XMC_DAC_
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -# Allows to select one of the eight possible trigger sources using XMC_DAC_CH_SetTrigger()
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * -# 2 DAC channels can be used in synchronization in single value mode and data mode to generate 
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /*******************************************************************************
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * MACROS
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *******************************************************************************/
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC0 ((XMC_DAC_t *)DAC_BASE)         /**< DAC module register base */
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_DACCFG_NEGATE_Msk (0x10000000UL) /*< DAC negation enable mask in XMC44 device */
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_NO_CHANNELS (2U)                 /**< DAC maximum channels */
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_SAMPLES_PER_PERIOD (32U)         /**< DAC samples per period in pattern mode */
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_PATTERN_TRIANGLE  {0U, 4U, 8U, 12U, 16U, 19U, 23U, 27U, 31U} /**< First quarter Tri
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_PATTERN_SINE      {0U, 6U, 12U, 17U, 22U, 26U, 29U, 30U, 31U} /**< First quarter Si
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_PATTERN_RECTANGLE {31U, 31U, 31U, 31U, 31U, 31U, 31U, 31U, 31U} /**< First quarter 
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_IS_DAC_VALID(PTR)            ((PTR) == XMC_DAC0)
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_IS_CHANNEL_VALID(CH)         (CH < XMC_DAC_NO_CHANNELS)
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_IS_TRIGGER_VALID(TRIGGER)    ((TRIGGER == XMC_DAC_CH_TRIGGER_INTERNAL) ||\
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_EXTERNAL_CCU80_SR1) ||
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_EXTERNAL_CCU40_SR1) ||
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_EXTERNAL_CCU41_SR1) ||
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_EXTERNAL_P2_9) ||\
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_EXTERNAL_P2_8) ||\
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_EXTERNAL_U0C0_DX1INS) 
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_EXTERNAL_U1C0_DX1INS) 
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (TRIGGER == XMC_DAC_CH_TRIGGER_SOFTWARE))
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_IS_MODE_VALID(MODE)          ((MODE == XMC_DAC_CH_MODE_IDLE) ||\
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (MODE == XMC_DAC_CH_MODE_SINGLE) ||\
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (MODE == XMC_DAC_CH_MODE_DATA) ||\
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (MODE == XMC_DAC_CH_MODE_PATTERN) ||\
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (MODE == XMC_DAC_CH_MODE_NOISE) ||\
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (MODE == XMC_DAC_CH_MODE_RAMP))
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #define XMC_DAC_IS_OUTPUT_SCALE_VALID(SCALE) ((SCALE == XMC_DAC_CH_OUTPUT_SCALE_NONE) ||\
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_MUL_2) ||\
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_MUL_4) ||\
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_MUL_8) ||\
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_MUL_16) ||\
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_MUL_32) ||\
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_MUL_64) ||\
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_MUL_128) ||\
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_DIV_2) ||\
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_DIV_4) ||\
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_DIV_8) ||\
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_DIV_16) ||\
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_DIV_32) ||\
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_DIV_64) ||\
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               (SCALE == XMC_DAC_CH_OUTPUT_SCALE_DIV_128))
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                             
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /*******************************************************************************
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * ENUMS
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *******************************************************************************/
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Return types of the API's
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef enum XMC_DAC_CH_STATUS
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_STATUS_OK              = 0U, /**< Status is ok, no error detected */
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_STATUS_ERROR           = 1U, /**< Error detected */
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_STATUS_BUSY            = 2U, /**< DAC is busy */
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_STATUS_ERROR_FREQ2LOW  = 3U, /**< Frequency can't be configured. Frequency is to low. 
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_STATUS_ERROR_FREQ2HIGH = 4U  /**< Frequency can't be configured. Frequency is to high.
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_STATUS_t;
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Operating modes of DAC
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef enum XMC_DAC_CH_MODE
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_MODE_IDLE    = 0x0U << DAC_DAC0CFG0_MODE_Pos,    /**< DAC is disabled */
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_MODE_SINGLE  = 0x1U << DAC_DAC0CFG0_MODE_Pos,    /**< Single value mode - single data 
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_MODE_DATA    = 0x2U << DAC_DAC0CFG0_MODE_Pos,    /**< Data mode - continuous data proc
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_MODE_PATTERN = 0x3U << DAC_DAC0CFG0_MODE_Pos,    /**< Pattern mode - inbuilt pattern w
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                                    Sine, Triangle, Rectangle */
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_MODE_NOISE   = 0x4U << DAC_DAC0CFG0_MODE_Pos,    /**< Noise mode - pseudo-random noise
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_MODE_RAMP    = 0x5U << DAC_DAC0CFG0_MODE_Pos     /**< Ramp mode - ramp generation */
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_MODE_t;
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Trigger sources for the data update
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef enum XMC_DAC_CH_TRIGGER
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_INTERNAL =
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x0U << DAC_DAC0CFG1_TRIGMOD_Pos),                                      /**< Internal trigge
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_EXTERNAL_CCU80_SR1 =
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_TRIGMOD_Pos) | 0x0U,                               /**< External trigge
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_EXTERNAL_CCU40_SR1 =
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_TRIGMOD_Pos) | (0x2U << DAC_DAC0CFG1_TRIGSEL_Pos), /**< External trigge
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_EXTERNAL_CCU41_SR1 =
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_TRIGMOD_Pos) | (0x3U << DAC_DAC0CFG1_TRIGSEL_Pos), /**< External trigge
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_EXTERNAL_P2_9 =
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_TRIGMOD_Pos) | (0x4U << DAC_DAC0CFG1_TRIGSEL_Pos), /**< External trigge
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_EXTERNAL_P2_8 =
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_TRIGMOD_Pos) | (0x5U << DAC_DAC0CFG1_TRIGSEL_Pos), /**< External trigge
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_EXTERNAL_U0C0_DX1INS =
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_TRIGMOD_Pos) | (0x6U << DAC_DAC0CFG1_TRIGSEL_Pos), /**< External trigge
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_EXTERNAL_U1C0_DX1INS =
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_TRIGMOD_Pos) | (0x7U << DAC_DAC0CFG1_TRIGSEL_Pos), /**< External trigge
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_TRIGGER_SOFTWARE =
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x2U << DAC_DAC0CFG1_TRIGMOD_Pos)                                       /**< Software trigge
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_TRIGGER_t;
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Data type of the input data
+ 219:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 220:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef enum XMC_DAC_CH_DATA_TYPE
+ 221:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 222:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_DATA_TYPE_UNSIGNED = 0U , /**< input data is unsigned */
+ 223:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_DATA_TYPE_SIGNED = 1U     /**< input data is signed */
+ 224:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_DATA_TYPE_t;
+ 225:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 226:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 227:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Scaling of the input data
+ 228:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 229:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef enum XMC_DAC_CH_OUTPUT_SCALE
+ 230:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 231:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_NONE =
+ 232:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x0U,                                                                   /**< No scaling */
+ 233:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_MUL_2 =
+ 234:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_MULDIV_Pos) | (0x1U << DAC_DAC0CFG1_SCALE_Pos),   /**< multiplied by 2 
+ 235:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_MUL_4 =
+ 236:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_MULDIV_Pos) | (0x2U << DAC_DAC0CFG1_SCALE_Pos),   /**< multiplied by 4 
+ 237:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_MUL_8 =
+ 238:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_MULDIV_Pos) | (0x3U << DAC_DAC0CFG1_SCALE_Pos),   /**< multiplied by 8 
+ 239:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_MUL_16 =
+ 240:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_MULDIV_Pos) | (0x4U << DAC_DAC0CFG1_SCALE_Pos),   /**< multiplied by 16
+ 241:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_MUL_32 =
+ 242:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_MULDIV_Pos) | (0x5U << DAC_DAC0CFG1_SCALE_Pos),   /**< multiplied by 32
+ 243:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_MUL_64 =
+ 244:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_MULDIV_Pos) | (0x6U << DAC_DAC0CFG1_SCALE_Pos),   /**< multiplied by 64
+ 245:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_MUL_128 =
+ 246:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       (0x1U << DAC_DAC0CFG1_MULDIV_Pos) | (0x7U << DAC_DAC0CFG1_SCALE_Pos),   /**< multiplied by 12
+ 247:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_DIV_2 =
+ 248:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x1U << DAC_DAC0CFG1_SCALE_Pos,                                         /**< divided by 2 */
+ 249:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_DIV_4 =
+ 250:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x2U << DAC_DAC0CFG1_SCALE_Pos,                                         /**< divided by 4 */
+ 251:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_DIV_8 =
+ 252:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x3U << DAC_DAC0CFG1_SCALE_Pos,                                         /**< divided by 8 */
+ 253:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_DIV_16 =
+ 254:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x4U << DAC_DAC0CFG1_SCALE_Pos,                                         /**< divided by 16 */
+ 255:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_DIV_32 =
+ 256:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x5U << DAC_DAC0CFG1_SCALE_Pos,                                         /**< divided by 32 */
+ 257:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_DIV_64 =
+ 258:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x6U << DAC_DAC0CFG1_SCALE_Pos,                                         /**< divided by 64 */
+ 259:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_SCALE_DIV_128 =
+ 260:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****       0x7U << DAC_DAC0CFG1_SCALE_Pos                                          /**< divided by 128 *
+ 261:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_OUTPUT_SCALE_t;
+ 262:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 263:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 264:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Negation of input data (applicable only for XMC44 device)
+ 265:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 266:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef enum XMC_DAC_CH_OUTPUT_NEGATION
+ 267:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 268:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_NEGATION_DISABLED = 0U,                   /**< XMC_DAC_CH_OUTPUT_NEGATION_DISAB
+ 269:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_OUTPUT_NEGATION_ENABLED = 1U                     /**< XMC_DAC_CH_OUTPUT_NEGATION_ENABL
+ 270:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_OUTPUT_NEGATION_t;
+ 271:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 272:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 273:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Output sign signal for the Pattern Generation Mode
+ 274:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 275:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef enum XMC_DAC_CH_PATTERN_SIGN_OUTPUT
+ 276:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_PATTERN_SIGN_OUTPUT_DISABLED = 0U,  /**< Sign output signal generation is disabled */
+ 278:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_DAC_CH_PATTERN_SIGN_OUTPUT_ENABLED = 1U    /**< Sign output signal generation is enabled */
+ 279:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_PATTERN_SIGN_OUTPUT_t;
+ 280:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 281:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /*******************************************************************************
+ 282:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DATA STRUCTURES
+ 283:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *******************************************************************************/
+ 284:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 285:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC peripheral registers configuration.
+ 286:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 287:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef struct
+ 288:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 289:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   __I  uint32_t  ID;
+ 290:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 291:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   struct
+ 292:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   {
+ 293:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****      __IO uint32_t low;
+ 294:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****      __IO uint32_t high;
+ 295:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   } DACCFG[XMC_DAC_NO_CHANNELS];
+ 296:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 297:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   __IO uint32_t DACDATA[XMC_DAC_NO_CHANNELS];
+ 298:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   __IO uint32_t DAC01DATA;
+ 299:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 300:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   struct
+ 301:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   {
+ 302:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****      __IO uint32_t low;
+ 303:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****      __IO uint32_t high;
+ 304:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   } DACPAT[XMC_DAC_NO_CHANNELS];
+ 305:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 306:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_t;
+ 307:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 308:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /*Anonymous structure/union guard start*/
+ 309:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #if defined(__CC_ARM)
+ 310:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   #pragma push
+ 311:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   #pragma anon_unions
+ 312:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #elif defined(__TASKING__)
+ 313:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   #pragma warning 586
+ 314:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #endif
+ 315:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 316:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 317:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Channel related configuration
+ 318:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 319:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** typedef struct XMC_DAC_CH_CONFIG
+ 320:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 321:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   union
+ 322:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   {
+ 323:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   struct
+ 324:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   {
+ 325:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t :23;                /**< Not used bits */
+ 326:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t data_type:1;        /**< input data type - unsigned / signed */
+ 327:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t :4;                 /**< Not used bits */
+ 328:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t output_negation:1;  /**< Negation of the output waveform enabled/disabled */
+ 329:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t :3;
+ 330:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   };
+ 331:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   uint32_t cfg0;
+ 332:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   };
+ 333:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   union
+ 334:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   {
+ 335:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   struct
+ 336:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   {
+ 337:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t output_scale:4;  /**< Scale value of type XMC_DAC_CH_OUTPUT_SCALE_t. It includes scali
+ 338:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t output_offset:8; /**< offset value */
+ 339:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     uint32_t :20;
+ 340:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   };
+ 341:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   uint32_t cfg1;
+ 342:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   };
+ 343:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** } XMC_DAC_CH_CONFIG_t;
+ 344:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /*Anonymous structure/union guard end*/
+ 345:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #if defined(__CC_ARM)
+ 346:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   #pragma pop
+ 347:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #elif defined(__TASKING__)
+ 348:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   #pragma warning restore
+ 349:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #endif
+ 350:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /*******************************************************************************
+ 351:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * API PROTOTYPES
+ 352:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *******************************************************************************/
+ 353:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 354:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #ifdef __cplusplus
+ 355:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** extern "C" {
+ 356:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** #endif
+ 357:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 358:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 359:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 360:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 361:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 362:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 363:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 364:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Enables DAC clock and releases DAC reset.<br>
+ 365:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 366:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 367:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Enabling DAC is the first step of DAC initialisation. This API is called by XMC_DAC_CH_Init().
+ 368:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC clock is enabled by setting \a DAC bit of \a CGATCLR1 register. DAC reset is released by set
+ 369:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 370:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 371:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 372:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_IsEnabled(), XMC_DAC_Disable(), XMC_DAC_CH_Init()\n\n\n
+ 373:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 374:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 375:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** void XMC_DAC_Enable(XMC_DAC_t *const dac);
+ 376:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 377:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 378:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 379:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 380:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 381:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 382:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 383:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Disables DAC clock and resets DAC.
+ 384:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 385:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 386:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC clock is disabled by setting \a DAC bit of \a CGATSET1 register. DAC is reset by setting \a 
+ 387:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 388:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 389:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_IsEnabled(), XMC_DAC_Enable()\n\n\n
+ 390:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 391:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 392:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** void XMC_DAC_Disable(XMC_DAC_t *const dac);
+ 393:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 394:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 395:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 396:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 397:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return bool<br>
+ 398:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * true  - if DAC is enabled<br>
+ 399:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * false - if DAC is disabled
+ 400:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 401:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 402:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Returns the state of the DAC.
+ 403:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 404:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 405:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC enabled status is determined by referring to \a DACRS bit of \a PRSTAT1 register.
+ 406:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 407:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 408:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_Enable(), XMC_DAC_Disable()\n\n\n
+ 409:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 410:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 411:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** bool XMC_DAC_IsEnabled(const XMC_DAC_t *const dac);
+ 412:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 413:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 414:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 415:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 416:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 417:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 418:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 419:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC switches to Simultaneous data mode from Independent data mode.
+ 420:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 421:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 422:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Independent data mode is the default data mode.
+ 423:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Simultaneous data mode is enabled by setting \a DATMOD bit of \a DAC0CFG1 register.
+ 424:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 425:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 426:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Set channel 0 and channel 1 to Data mode before calling this API.
+ 427:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 428:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 429:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_StartSingleValueMode(), XMC_DAC_CH_StartDataMode(), XMC_DAC_SimultaneousWrite(), XMC_
+ 430:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 431:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 432:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_EnableSimultaneousDataMode(XMC_DAC_t *const dac)
+ 433:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 434:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_EnableSimultaneousDataMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(
+ 435:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 436:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[0].high |= DAC_DAC0CFG1_DATMOD_Msk;
+ 437:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 438:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 439:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 440:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 441:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 442:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 443:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 444:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 445:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC switches to independent data mode from simultaneous Data mode.
+ 446:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 447:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 448:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Independent data mode is the default data mode.
+ 449:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Simultaneous data mode is disabled by clearing \a DATMOD bit of \a DAC0CFG1 register.
+ 450:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 451:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 452:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_StartDataMode(), XMC_DAC_EnableSimultaneousDataMode()\n\n\n
+ 453:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 454:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 455:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_DisableSimultaneousDataMode(XMC_DAC_t *const dac)
+ 456:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 457:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_DisableSimultaneousDataMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID
+ 458:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 459:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[0].high &= ~DAC_DAC0CFG1_DATMOD_Msk;
+ 460:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 461:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 462:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 463:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 464:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param data0 Data for DAC channel 0 [0-4095]
+ 465:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param data1 Data for DAC channel 1 [0-4095]
+ 466:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 467:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 468:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 469:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 470:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * The data (\e data0 & \e data1) to be converted by channel 0 & channel 1 are updated to \a DATA1 
+ 471:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * data0 and data1 have the range of [0-4095].
+ 472:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 473:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 474:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Channel 0 and Channel 1 should be set to simultaneous data mode before calling this API.
+ 475:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 476:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 477:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_EnableSimultaneousDataMode()\n\n\n
+ 478:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 479:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 480:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_SimultaneousWrite(XMC_DAC_t *const dac, const uint16_t data0, const ui
+ 481:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 482:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_SimultaneousWrite: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 483:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 484:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DAC01DATA = (data0 << DAC_DAC01DATA_DATA0_Pos) | (data1 << DAC_DAC01DATA_DATA1_Pos);
+ 485:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 486:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 487:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 488:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 489:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 490:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param config Pointer to the DAC channel configuration structure
+ 491:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 492:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 493:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 494:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 495:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Initialises and configures the DAC \e channel with the configuration date pointed by \e config.
+ 496:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 497:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 498:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * DAC channel is initialised by configuring the registers \a DAC0CFG0 and \a DAC0CFG1 registers (f
+ 499:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * It enables the channel output by calling XMC_DAC_CH_EnableOutput().
+ 500:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 501:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 502:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** void XMC_DAC_CH_Init(XMC_DAC_t *const dac, const uint8_t channel, const XMC_DAC_CH_CONFIG_t *const 
+ 503:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 504:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 505:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 506:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 507:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 508:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 509:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 510:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 511:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Channel \a channel output is enabled by setting the \a ANAEN bit of \a DAC0CFG1 register (for ch
+ 512:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 513:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><BR>
+ 514:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \a tSTARTUP time for DAC analog output starts after the \a ANAEN bit is set to one.
+ 515:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * After the expiry of the startup time the default value is driven to DAC output and a new value c
+ 516:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 517:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 518:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_DisableOutput(), XMC_DAC_CH_IsOutputEnabled()\n\n\n
+ 519:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 520:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 521:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_EnableOutput(XMC_DAC_t *const dac, const uint8_t channel)
+ 522:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 523:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_EnableOutput: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 524:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_EnableOutput: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(cha
+ 525:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 526:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[channel].high |= DAC_DAC0CFG1_ANAEN_Msk;
+ 164              	 .loc 2 526 0
+ 165 001e 8368     	 ldr r3,[r0,#8]
+ 166 0020 43F08073 	 orr r3,r3,#16777216
+ 167 0024 8360     	 str r3,[r0,#8]
+ 168              	.LVL15:
+ 169              	.L13:
+ 170 0026 70BD     	 pop {r4,r5,r6,pc}
+ 171              	.LVL16:
+ 172              	.L17:
+ 173              	 .align 2
+ 174              	.L16:
+ 175 0028 20000010 	 .word 268435488
+ 176              	.LBE45:
+ 177              	.LBE44:
+ 178              	 .cfi_endproc
+ 179              	.LFE200:
+ 181              	 .section .text.XMC_DAC_CH_SetFrequency,"ax",%progbits
+ 182              	 .align 2
+ 183              	 .global XMC_DAC_CH_SetFrequency
+ 184              	 .thumb
+ 185              	 .thumb_func
+ 187              	XMC_DAC_CH_SetFrequency:
+ 188              	.LFB201:
+ 126:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 127:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_EnableOutput(dac, channel);
+ 128:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 129:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 130:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 131:../Libraries/XMCLib/src/xmc_dac.c **** /* API to set the waveform frequency except in Ramp and Pattern generation mode. */
+ 132:../Libraries/XMCLib/src/xmc_dac.c **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_SetFrequency(XMC_DAC_t *const dac,
+ 133:../Libraries/XMCLib/src/xmc_dac.c ****                                             const uint8_t channel,
+ 134:../Libraries/XMCLib/src/xmc_dac.c ****                                             const uint32_t frequency)
+ 135:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 189              	 .loc 1 135 0
+ 190              	 .cfi_startproc
+ 191              	 
+ 192              	 
+ 193              	.LVL17:
+ 194 0000 70B5     	 push {r4,r5,r6,lr}
+ 195              	.LCFI4:
+ 196              	 .cfi_def_cfa_offset 16
+ 197              	 .cfi_offset 4,-16
+ 198              	 .cfi_offset 5,-12
+ 199              	 .cfi_offset 6,-8
+ 200              	 .cfi_offset 14,-4
+ 201 0002 0546     	 mov r5,r0
+ 202 0004 0E46     	 mov r6,r1
+ 203 0006 1446     	 mov r4,r2
+ 136:../Libraries/XMCLib/src/xmc_dac.c ****   uint32_t divider;
+ 137:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_STATUS_t status;
+ 138:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 139:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_SetFrequency: frequency must be greater than zero", frequency > 0U);
+ 140:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 141:../Libraries/XMCLib/src/xmc_dac.c ****   divider = XMC_SCU_CLOCK_GetPeripheralClockFrequency() / frequency;
+ 204              	 .loc 1 141 0
+ 205 0008 FFF7FEFF 	 bl XMC_SCU_CLOCK_GetPeripheralClockFrequency
+ 206              	.LVL18:
+ 207 000c B0FBF4F0 	 udiv r0,r0,r4
+ 208              	.LVL19:
+ 142:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 143:../Libraries/XMCLib/src/xmc_dac.c ****   if (divider < XMC_DAC_MIN_FREQ_DIVIDER)
+ 209              	 .loc 1 143 0
+ 210 0010 0F28     	 cmp r0,#15
+ 211 0012 0BD9     	 bls .L20
+ 144:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 145:../Libraries/XMCLib/src/xmc_dac.c ****     status = XMC_DAC_CH_STATUS_ERROR_FREQ2HIGH;
+ 146:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 147:../Libraries/XMCLib/src/xmc_dac.c ****   else if (divider >= XMC_DAC_MAX_FREQ_DIVIDER)
+ 212              	 .loc 1 147 0
+ 213 0014 B0F5801F 	 cmp r0,#1048576
+ 214 0018 0AD2     	 bcs .L21
+ 215 001a 05EBC605 	 add r5,r5,r6,lsl#3
+ 216              	.LVL20:
+ 148:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 149:../Libraries/XMCLib/src/xmc_dac.c ****     status = XMC_DAC_CH_STATUS_ERROR_FREQ2LOW;
+ 150:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 151:../Libraries/XMCLib/src/xmc_dac.c ****   else {
+ 152:../Libraries/XMCLib/src/xmc_dac.c ****     dac->DACCFG[channel].low = (dac->DACCFG[channel].low & (uint32_t)(~DAC_DAC0CFG0_FREQ_Msk)) |
+ 217              	 .loc 1 152 0
+ 218 001e 6B68     	 ldr r3,[r5,#4]
+ 219 0020 1B0D     	 lsrs r3,r3,#20
+ 220 0022 1B05     	 lsls r3,r3,#20
+ 221 0024 1843     	 orrs r0,r0,r3
+ 222              	.LVL21:
+ 223 0026 6860     	 str r0,[r5,#4]
+ 224              	.LVL22:
+ 153:../Libraries/XMCLib/src/xmc_dac.c ****                                (divider << DAC_DAC0CFG0_FREQ_Pos);
+ 154:../Libraries/XMCLib/src/xmc_dac.c ****     status = XMC_DAC_CH_STATUS_OK;
+ 225              	 .loc 1 154 0
+ 226 0028 0020     	 movs r0,#0
+ 227 002a 70BD     	 pop {r4,r5,r6,pc}
+ 228              	.LVL23:
+ 229              	.L20:
+ 145:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 230              	 .loc 1 145 0
+ 231 002c 0420     	 movs r0,#4
+ 232              	.LVL24:
+ 233 002e 70BD     	 pop {r4,r5,r6,pc}
+ 234              	.LVL25:
+ 235              	.L21:
+ 149:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 236              	 .loc 1 149 0
+ 237 0030 0320     	 movs r0,#3
+ 238              	.LVL26:
+ 155:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 156:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 157:../Libraries/XMCLib/src/xmc_dac.c ****   return status;
+ 158:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 239              	 .loc 1 158 0
+ 240 0032 70BD     	 pop {r4,r5,r6,pc}
+ 241              	 .cfi_endproc
+ 242              	.LFE201:
+ 244              	 .section .text.XMC_DAC_CH_SetRampFrequency,"ax",%progbits
+ 245              	 .align 2
+ 246              	 .global XMC_DAC_CH_SetRampFrequency
+ 247              	 .thumb
+ 248              	 .thumb_func
+ 250              	XMC_DAC_CH_SetRampFrequency:
+ 251              	.LFB202:
+ 159:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 160:../Libraries/XMCLib/src/xmc_dac.c **** /* API to set the waveform frequency in Ramp Mode. */
+ 161:../Libraries/XMCLib/src/xmc_dac.c **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_SetRampFrequency(XMC_DAC_t *const dac,
+ 162:../Libraries/XMCLib/src/xmc_dac.c ****                                                 const uint8_t channel,
+ 163:../Libraries/XMCLib/src/xmc_dac.c ****                                                 const uint32_t frequency)
+ 164:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 252              	 .loc 1 164 0
+ 253              	 .cfi_startproc
+ 254              	 
+ 255              	 
+ 256              	.LVL27:
+ 257 0000 70B5     	 push {r4,r5,r6,lr}
+ 258              	.LCFI5:
+ 259              	 .cfi_def_cfa_offset 16
+ 260              	 .cfi_offset 4,-16
+ 261              	 .cfi_offset 5,-12
+ 262              	 .cfi_offset 6,-8
+ 263              	 .cfi_offset 14,-4
+ 165:../Libraries/XMCLib/src/xmc_dac.c ****   uint32_t stop;
+ 166:../Libraries/XMCLib/src/xmc_dac.c ****   uint32_t start;
+ 167:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 168:../Libraries/XMCLib/src/xmc_dac.c ****   start = dac->DACDATA[channel];
+ 264              	 .loc 1 168 0
+ 265 0002 0B1D     	 adds r3,r1,#4
+ 266 0004 00EB8303 	 add r3,r0,r3,lsl#2
+ 267 0008 5E68     	 ldr r6,[r3,#4]
+ 268              	.LVL28:
+ 169:../Libraries/XMCLib/src/xmc_dac.c ****   stop = (dac->DAC01DATA >> (channel * DAC_DAC01DATA_DATA1_Pos)) & (uint32_t)DAC_DAC01DATA_DATA0_Ms
+ 269              	 .loc 1 169 0
+ 270 000a C369     	 ldr r3,[r0,#28]
+ 271              	.LVL29:
+ 272 000c 0C01     	 lsls r4,r1,#4
+ 273 000e E340     	 lsrs r3,r3,r4
+ 274              	.LVL30:
+ 275 0010 C3F30B03 	 ubfx r3,r3,#0,#12
+ 170:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 171:../Libraries/XMCLib/src/xmc_dac.c ****   return XMC_DAC_CH_SetFrequency(dac, channel, frequency * ((stop - start) + 1U));
+ 276              	 .loc 1 171 0
+ 277 0014 9B1B     	 subs r3,r3,r6
+ 278 0016 03FB0222 	 mla r2,r3,r2,r2
+ 279              	.LVL31:
+ 280 001a FFF7FEFF 	 bl XMC_DAC_CH_SetFrequency
+ 281              	.LVL32:
+ 172:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 282              	 .loc 1 172 0
+ 283 001e 70BD     	 pop {r4,r5,r6,pc}
+ 284              	 .cfi_endproc
+ 285              	.LFE202:
+ 287              	 .section .text.XMC_DAC_CH_StartSingleValueMode,"ax",%progbits
+ 288              	 .align 2
+ 289              	 .global XMC_DAC_CH_StartSingleValueMode
+ 290              	 .thumb
+ 291              	 .thumb_func
+ 293              	XMC_DAC_CH_StartSingleValueMode:
+ 294              	.LFB203:
+ 173:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 174:../Libraries/XMCLib/src/xmc_dac.c **** /* API to start the operation in Single Value Mode. */
+ 175:../Libraries/XMCLib/src/xmc_dac.c **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartSingleValueMode(XMC_DAC_t *const dac, const uint8_t channel)
+ 176:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 295              	 .loc 1 176 0
+ 296              	 .cfi_startproc
+ 297              	 
+ 298              	 
+ 299              	 
+ 300              	.LVL33:
+ 301 0000 00EBC101 	 add r1,r0,r1,lsl#3
+ 302              	.LVL34:
+ 303              	.LBB46:
+ 304              	.LBB47:
+ 527:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 528:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 529:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 530:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 531:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 532:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 533:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 534:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 535:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 536:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Channel \a channel output is disabled by clearing the \a ANAEN bit of \a DAC0CFG1 register (for 
+ 537:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 538:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 539:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * A call to this API stops driving the converted digital input to its output.
+ 540:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 541:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 542:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_EnableOutput(), XMC_DAC_CH_IsOutputEnabled()\n\n\n
+ 543:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 544:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 545:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_DisableOutput(XMC_DAC_t *const dac, const uint8_t channel)
+ 546:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 547:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_DisableOutput: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 548:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_DisableOutput: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(ch
+ 549:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 550:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[channel].high &= ~DAC_DAC0CFG1_ANAEN_Msk;
+ 551:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 552:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 553:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 554:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 555:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 556:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 557:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return bool <BR>
+ 558:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * true  - if analog output is enabled <BR>
+ 559:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * false - if analog output is disabled <BR>
+ 560:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 561:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 562:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Returns the status of DAC analog output.
+ 563:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 564:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 565:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Channel \a channel output enabled or disabled is determined by reading the \a ANAEN bit of \a DA
+ 566:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 567:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 568:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_EnableOutput(), XMC_DAC_CH_DisableOutput()\n\n\n
+ 569:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 570:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 571:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE bool XMC_DAC_CH_IsOutputEnabled(const XMC_DAC_t *const dac, const uint8_t channel)
+ 572:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 573:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_IsOutputEnabled: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 574:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_IsOutputEnabled: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(
+ 575:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 576:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   return (bool)(dac->DACCFG[channel].high & DAC_DAC0CFG1_ANAEN_Msk);
+ 577:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 578:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 579:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 580:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 581:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 582:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param data Data to be written  [0-4095]
+ 583:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 584:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 585:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 586:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 587:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Writes the \e data to the \e channel's DATA register.
+ 588:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 589:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 590:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * The \e data is then converted and driven to the output.
+ 591:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * If the trigger is set, On a trigger event the data in DATA register is converted and driven to \
+ 592:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Data \a data is written to the \a channel by loading \a data to \a DATA0 bit-field of \a DAC0DAT
+ 593:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * data has the range of [0-4095].
+ 594:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 595:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 596:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * The API can be used for Single Value Mode, Data Mode (Individual) & Ramp Mode.
+ 597:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call XMC_DAC_CH_EnableOutput() API to enable analog output.
+ 598:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 599:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 600:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_StartSingleValueMode(), XMC_DAC_CH_StartDataMode(), XMC_DAC_CH_StartRampMode()\n\n\n
+ 601:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 602:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 603:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_Write(XMC_DAC_t *const dac, const uint8_t channel, const uint16_t d
+ 604:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 605:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_Write: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 606:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_Write: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(channel));
+ 607:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 608:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACDATA[channel] = data;
+ 609:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 610:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 611:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 612:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 613:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 614:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 615:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 616:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 617:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 618:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e channel to Single Value Mode by calling XMC_DAC_CH_SetMode().
+ 619:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 620:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 621:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call XMC_DAC_CH_Write() API to write the data.
+ 622:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 623:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 624:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_Write()\n\n\n
+ 625:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 626:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 627:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartSingleValueMode(XMC_DAC_t *const dac, const uint8_t channel);
+ 628:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 629:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 630:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 631:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 632:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param trigger Data points update trigger
+ 633:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param frequency Waveform frequency [Hz]
+ 634:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 635:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return XMC_DAC_CH_STATUS_t status
+ 636:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 637:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 638:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e channel to Data mode. Trigger and frequency are configured.
+ 639:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 640:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 641:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call XMC_DAC_CH_Write() API to write the data. Call XMC_DAC_EnableSimultaneousDataMode() to swit
+ 642:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 643:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 644:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_Init(), XMC_DAC_CH_Write(), XMC_DAC_EnableSimultaneousDataMode() \n\n\n
+ 645:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 646:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 647:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartDataMode(XMC_DAC_t *const dac,
+ 648:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const uint8_t channel,
+ 649:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const XMC_DAC_CH_TRIGGER_t trigger,
+ 650:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const uint32_t frequency);
+ 651:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 652:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 653:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 654:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 655:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param start Start point of the ramp [0-4095]
+ 656:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param stop Stop point of the ramp [0-4095]
+ 657:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param trigger Data points update trigger
+ 658:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param frequency Ramp frequency in [Hz]
+ 659:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 660:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return XMC_DAC_CH_STATUS_t status
+ 661:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 662:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 663:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e channel to Ramp mode. Trigger, frequency, start and stop values are configured.
+ 664:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * On a \e trigger ramp values are converted and driven to \e channel output.
+ 665:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Start and stop have the range of [0-4095]. Stop should be equal or greater than start. 
+ 666:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 667:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 668:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * If the ramp counter reaches its \e stop value, it restarts from the \e start value with the next
+ 669:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 670:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 671:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_Init(), XMC_DAC_CH_GetRampStart(), XMC_DAC_CH_GetRampStop() \n\n\n
+ 672:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 673:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 674:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartRampMode(XMC_DAC_t *const dac,
+ 675:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const uint8_t channel,
+ 676:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const uint16_t start,
+ 677:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const uint16_t stop,
+ 678:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const XMC_DAC_CH_TRIGGER_t trigger,
+ 679:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                              const uint32_t frequency);
+ 680:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 681:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 682:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 683:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 684:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param pattern Data table of a pattern
+ 685:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param sign_output Sign information of the waveform
+ 686:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param trigger Data points update trigger
+ 687:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param frequency Waveform frequency in [Hz]
+ 688:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 689:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return XMC_DAC_CH_STATUS_t status
+ 690:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 691:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 692:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e channel to Pattern mode. Trigger, frequency, sign output and data are configured.
+ 693:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * On a \e trigger, the \e pattern values are converted and driven to \e channel output.
+ 694:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 695:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 696:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_Init(), XMC_DAC_CH_DisablePatternSignOutput() \n\n\n
+ 697:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 698:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 699:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartPatternMode(XMC_DAC_t *const dac,
+ 700:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                 const uint8_t channel,
+ 701:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                 const uint8_t *const pattern,
+ 702:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                 const XMC_DAC_CH_PATTERN_SIGN_OUTPUT_t sign_output,
+ 703:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                 const XMC_DAC_CH_TRIGGER_t trigger,
+ 704:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                 const uint32_t frequency);
+ 705:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 706:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 707:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 708:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 709:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param trigger Data points update trigger
+ 710:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param frequency Waveform frequency in [Hz]
+ 711:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 712:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return XMC_DAC_CH_STATUS_t status
+ 713:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 714:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 715:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e channel to Noise mode. Trigger and frequency are configured.
+ 716:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * On a \e trigger the DAC starts converting and drives to \e channel output.
+ 717:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 718:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 719:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_Init()\n\n\n
+ 720:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 721:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 722:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartNoiseMode(XMC_DAC_t *const dac,
+ 723:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               const uint8_t channel,
+ 724:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               const XMC_DAC_CH_TRIGGER_t trigger,
+ 725:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                               const uint32_t frequency);
+ 726:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 727:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 728:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 729:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 730:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param pattern Pointer to the data table
+ 731:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 732:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 733:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 734:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 735:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * The data for the Pattern mode is written to the \a DAC0PATL and \a DAC0PATH registers.
+ 736:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * The API is called by XMC_DAC_CH_StartPatternMode().
+ 737:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 738:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 739:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API if the \a channel is set to Pattern mode.
+ 740:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 741:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 742:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_EnablePatternSignOutput(), XMC_DAC_CH_DisablePatternSignOutput()\n\n\n
+ 743:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 744:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 745:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** void XMC_DAC_CH_SetPattern(XMC_DAC_t *const dac, const uint8_t channel, const uint8_t *const patter
+ 746:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 747:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 748:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 749:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 750:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 751:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 752:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 753:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 754:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Enables the output sign information for Pattern Mode.
+ 755:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 756:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 757:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sign output is enabled by setting \a SIGNEN bit of \a DAC0CFG0 register (for channel 0) / DAC1CF
+ 758:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 759:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 760:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API if the \e channel is set to Pattern mode.
+ 761:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 762:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 763:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_StartPatternMode(), XMC_DAC_CH_DisablePatternSignOutput()\n\n\n
+ 764:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 765:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 766:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_EnablePatternSignOutput(XMC_DAC_t *const dac,
+ 767:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                      const uint8_t channel)
+ 768:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 769:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_EnablePatternSignOutput: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(
+ 770:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_EnablePatternSignOutput: channel parameter not valid\n", XMC_DAC_IS_CHANNE
+ 771:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 772:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[channel].low |= DAC_DAC0CFG0_SIGNEN_Msk;
+ 773:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 774:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 775:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 776:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 777:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 778:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 779:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 780:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 781:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 782:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Disables output sign information for Pattern Mode.
+ 783:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 784:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 785:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sign output is disabled by clearing \a SIGNEN bit of \a DAC0CFG0 register (for channel 0) / DAC1
+ 786:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 787:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 788:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API if the \e channel is set to Pattern mode.
+ 789:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 790:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 791:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_StartPatternMode(), XMC_DAC_CH_EnablePatternSignOutput()\n\n\n
+ 792:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 793:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 794:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_DisablePatternSignOutput(XMC_DAC_t *const dac,
+ 795:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                      const uint8_t channel)
+ 796:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 797:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_DisablePatternSignOutput: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID
+ 798:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_DisablePatternSignOutput: channel parameter not valid\n", XMC_DAC_IS_CHANN
+ 799:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 800:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[channel].low &= ~DAC_DAC0CFG0_SIGNEN_Msk;
+ 801:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 802:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 803:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 804:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 805:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 806:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param start Ramp start point [0-4095]
+ 807:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 808:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 809:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 810:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 811:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the ramp start value by writing to the register \a DAC0DATA (for \e channel 0) or \a DAC1DA
+ 812:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * If the ramp counter reaches its stop value, it restarts from the \a start value with the next tr
+ 813:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Ensure \e start value is lower than the stop value.
+ 814:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 815:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 816:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API if the \a channel is set to Ramp mode.
+ 817:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Start value is a 12 bit data.
+ 818:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 819:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 820:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_GetRampStart(), XMC_DAC_CH_GetRampStop(), XMC_DAC_CH_SetRampStop()\n\n\n
+ 821:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 822:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 823:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_SetRampStart(XMC_DAC_t *const dac, const uint8_t channel, const uin
+ 824:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 825:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetRampStart: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 826:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetRampStart: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(cha
+ 827:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 828:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACDATA[channel] = start;
+ 829:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 830:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 831:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 832:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 833:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 834:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 835:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return uint16_t
+ 836:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 837:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 838:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Gets the ramp start value by reading \a DATA0 bit-field of \a DAC0DATA register (for channel 0) 
+ 839:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * If the ramp counter reaches its stop value, it restarts from the start value with the next trigg
+ 840:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 841:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 842:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API if the \e channel is set to Ramp mode.
+ 843:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 844:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 845:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_SetRampStart(), XMC_DAC_CH_StartRampMode(), XMC_DAC_CH_GetRampStop(), XMC_DAC_CH_SetR
+ 846:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 847:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 848:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE uint16_t XMC_DAC_CH_GetRampStart(XMC_DAC_t *const dac, const uint8_t channel)
+ 849:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 850:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_GetRampStart: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 851:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_GetRampStart: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(cha
+ 852:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   
+ 853:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   return (uint16_t)(dac->DACDATA[channel]);
+ 854:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 855:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 856:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 857:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 858:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 859:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param stop Ramp stop point [0-4095]
+ 860:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 861:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 862:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 863:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 864:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the ramp stop value by writing to the bit-field \a DATA0 (for \e channel 0) or \a DATA1 (fo
+ 865:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * If the ramp counter reaches its \a stop value, it restarts from the start value with the next tr
+ 866:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Ensure \e stop value is higher than the start value.
+ 867:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 868:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 869:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API if the \e channel is set to Ramp mode.
+ 870:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Stop value is a 12 bit data.
+ 871:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 872:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 873:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_GetRampStop(), XMC_DAC_CH_SetRampStart()\n\n\n
+ 874:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 875:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 876:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_SetRampStop(XMC_DAC_t *const dac, const uint8_t channel, const uint
+ 877:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 878:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetRampStop: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 879:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetRampStop: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(chan
+ 880:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     
+ 881:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DAC01DATA = (dac->DAC01DATA & ~(DAC_DAC01DATA_DATA0_Msk << (channel * DAC_DAC01DATA_DATA1_Po
+ 882:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                (stop << (channel * DAC_DAC01DATA_DATA1_Pos));
+ 883:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 884:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 885:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 886:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 887:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 888:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 889:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return uint16_t
+ 890:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 891:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 892:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Gets the ramp stop value by reading \a DATA0 bit-field of \a DAC01DATA register (for channel 0) 
+ 893:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * If the ramp counter reaches its stop value, it restarts from the start value with the next trigg
+ 894:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 895:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 896:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API if the \e channel is set to Ramp mode.
+ 897:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 898:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 899:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_SetRampStop(), XMC_DAC_CH_StartRampMode(), XMC_DAC_CH_GetRampStart()\n\n\n
+ 900:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 901:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 902:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE uint16_t XMC_DAC_CH_GetRampStop(XMC_DAC_t *const dac, const uint8_t channel)
+ 903:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 904:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_GetRampStop: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 905:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_GetRampStop: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(chan
+ 906:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 907:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   return((dac->DAC01DATA >> (channel * DAC_DAC01DATA_DATA1_Pos)) & DAC_DAC01DATA_DATA0_Msk);
+ 908:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 909:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 910:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 911:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 912:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 913:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param trigger Trigger source
+ 914:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 915:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+ 916:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 917:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 918:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Selects the \e trigger source for the \e channel by configuring the bits TRIGSEL & TRIGMOD of CF
+ 919:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 920:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 921:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Channel \a channel trigger source is selected by \a TRIGSEL bit-field of \a DAC0CFG1 register (f
+ 922:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 923:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 924:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_SetTrigger(XMC_DAC_t *const dac, const uint8_t channel, const XMC_D
+ 925:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+ 926:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetTrigger: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 927:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetTrigger: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(chann
+ 928:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetTrigger: trigger parameter not valid\n", XMC_DAC_IS_TRIGGER_VALID(trigg
+ 929:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 930:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[channel].high = (dac->DACCFG[channel].high & ~(DAC_DAC0CFG1_TRIGSEL_Msk | DAC_DAC0CFG
+ 931:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                               trigger;
+ 932:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 933:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 934:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 935:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 936:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 937:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param frequency Waveform frequency in [Hz]
+ 938:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 939:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return XMC_DAC_CH_STATUS_t
+ 940:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 941:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 942:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e frequency of DAC channel.
+ 943:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 944:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 945:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * The value \e frequency acts as clock divider. The smallest \e frequency divider value is 16.
+ 946:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * A valid \e frequency value should be within the range XMC_DAC_MIN_FREQ_DIVIDER to XMC_DAC_MAX_FR
+ 947:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Frequency \a frequency is configured by setting \a FREQ bit-field of \a DAC0CFG0 register (for c
+ 948:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 949:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 950:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API only for Single value mode, Data mode and Noise mode.
+ 951:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call XMC_DAC_CH_SetRampFrequency() in case of Ramp mode and XMC_DAC_CH_SetPatternFrequency() in 
+ 952:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 953:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 954:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_SetRampFrequency(), XMC_DAC_CH_SetPatternFrequency()\n\n\n
+ 955:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 956:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 957:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_SetFrequency(XMC_DAC_t *const dac, const uint8_t channel, const uint
+ 958:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 959:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 960:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 961:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 962:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param frequency [Hz]
+ 963:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 964:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return XMC_DAC_CH_STATUS_t
+ 965:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 966:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 967:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e frequency of DAC channel by calling XMC_DAC_CH_SetFrequency().
+ 968:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 969:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 970:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * For the Ramp mode, the \a frequency of operation depends on the total number of sample points (\
+ 971:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Frequency \e frequency is multiplied by the total number of sample points, so that each trigger 
+ 972:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 973:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 974:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API only if the \a channel is set to Ramp mode.
+ 975:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 976:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+ 977:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_StartRampMode()\n\n\n
+ 978:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 979:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+ 980:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_SetRampFrequency(XMC_DAC_t *const dac, const uint8_t channel, const 
+ 981:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+ 982:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+ 983:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+ 984:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+ 985:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param frequency in [Hz]
+ 986:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 987:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return XMC_DAC_CH_STATUS_t
+ 988:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 989:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+ 990:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the \e frequency of DAC channel by calling XMC_DAC_CH_SetFrequency().
+ 991:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 992:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par
+ 993:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * For the Pattern mode, the \a frequency of operation depends on the total number of sample points
+ 994:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Frequency \e frequency is multiplied by the total number of sample points, so that each trigger 
+ 995:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 996:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Note:</b><br>
+ 997:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Call this API only if the \a channel is set to Pattern mode.
+ 998:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+ 999:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Related APIs:</b><BR>
+1000:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * XMC_DAC_CH_StartPatternMode()\n\n\n
+1001:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+1002:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+1003:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE XMC_DAC_CH_STATUS_t XMC_DAC_CH_SetPatternFrequency(XMC_DAC_t *const dac,
+1004:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                                    const uint8_t channel,
+1005:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                                                                    const uint32_t frequency)
+1006:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+1007:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetPatternFrequency: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac)
+1008:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetPatternFrequency: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VA
+1009:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+1010:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   return XMC_DAC_CH_SetFrequency(dac, channel, frequency * XMC_DAC_SAMPLES_PER_PERIOD);
+1011:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+1012:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** 
+1013:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** /**
+1014:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param dac Pointer to an instance of DAC module
+1015:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param channel DAC channel number
+1016:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @param mode DAC operation mode
+1017:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+1018:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * @return None
+1019:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+1020:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * \par<b>Description:</b><br>
+1021:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Sets the operating \e mode for the \e channel by setting the \a MODE bit-field of \a DAC0CFG0 re
+1022:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  * Different modes of DAC operation are defined by enum XMC_DAC_CH_MODE_t.
+1023:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  *
+1024:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****  */
+1025:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** __STATIC_INLINE void XMC_DAC_CH_SetMode(XMC_DAC_t *const dac, const uint8_t channel, const XMC_DAC_
+1026:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** {
+1027:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+1028:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetMode: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(channel)
+1029:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   XMC_ASSERT("XMC_DAC_CH_SetMode: trigger parameter not valid\n", XMC_DAC_IS_MODE_VALID(mode));
+1030:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****     
+1031:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****   dac->DACCFG[channel].low = (dac->DACCFG[channel].low & ~DAC_DAC0CFG0_MODE_Msk) |
+ 305              	 .loc 2 1031 0
+ 306 0004 4B68     	 ldr r3,[r1,#4]
+ 307 0006 23F4E003 	 bic r3,r3,#7340032
+ 308 000a 43F48013 	 orr r3,r3,#1048576
+ 309 000e 4B60     	 str r3,[r1,#4]
+ 310              	.LBE47:
+ 311              	.LBE46:
+ 177:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartSingleValueMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac
+ 178:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartSingleValueMode: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_V
+ 179:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartSingleValueMode: dac module not enabled\n", XMC_DAC_IsEnabled(dac));
+ 180:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 181:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_SINGLE);
+ 182:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 183:../Libraries/XMCLib/src/xmc_dac.c ****   return XMC_DAC_CH_STATUS_OK;
+ 184:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 312              	 .loc 1 184 0
+ 313 0010 0020     	 movs r0,#0
+ 314              	.LVL35:
+ 315 0012 7047     	 bx lr
+ 316              	 .cfi_endproc
+ 317              	.LFE203:
+ 319              	 .section .text.XMC_DAC_CH_StartDataMode,"ax",%progbits
+ 320              	 .align 2
+ 321              	 .global XMC_DAC_CH_StartDataMode
+ 322              	 .thumb
+ 323              	 .thumb_func
+ 325              	XMC_DAC_CH_StartDataMode:
+ 326              	.LFB204:
+ 185:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 186:../Libraries/XMCLib/src/xmc_dac.c **** /* API to start the operation in Data Mode. */
+ 187:../Libraries/XMCLib/src/xmc_dac.c **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartDataMode(XMC_DAC_t *const dac,
+ 188:../Libraries/XMCLib/src/xmc_dac.c ****                                              const uint8_t channel,
+ 189:../Libraries/XMCLib/src/xmc_dac.c ****                                              const XMC_DAC_CH_TRIGGER_t trigger,
+ 190:../Libraries/XMCLib/src/xmc_dac.c ****                                              const uint32_t frequency)
+ 191:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 327              	 .loc 1 191 0
+ 328              	 .cfi_startproc
+ 329              	 
+ 330              	 
+ 331              	.LVL36:
+ 332 0000 38B5     	 push {r3,r4,r5,lr}
+ 333              	.LCFI6:
+ 334              	 .cfi_def_cfa_offset 16
+ 335              	 .cfi_offset 3,-16
+ 336              	 .cfi_offset 4,-12
+ 337              	 .cfi_offset 5,-8
+ 338              	 .cfi_offset 14,-4
+ 339              	.LVL37:
+ 340 0002 00EBC104 	 add r4,r0,r1,lsl#3
+ 341              	.LBB48:
+ 342              	.LBB49:
+ 343              	 .loc 2 1031 0
+ 344 0006 6568     	 ldr r5,[r4,#4]
+ 345 0008 25F4E005 	 bic r5,r5,#7340032
+ 346 000c 6560     	 str r5,[r4,#4]
+ 347              	.LBE49:
+ 348              	.LBE48:
+ 192:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_STATUS_t status = XMC_DAC_CH_STATUS_OK;
+ 193:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 194:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartDataMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 195:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartDataMode: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(ch
+ 196:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartDataMode: dac module not enabled\n", XMC_DAC_IsEnabled(dac));
+ 197:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 198:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_IDLE);
+ 199:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 200:../Libraries/XMCLib/src/xmc_dac.c ****   if (trigger == XMC_DAC_CH_TRIGGER_INTERNAL)
+ 349              	 .loc 1 200 0
+ 350 000e 1546     	 mov r5,r2
+ 351 0010 22B9     	 cbnz r2,.L27
+ 201:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 202:../Libraries/XMCLib/src/xmc_dac.c ****     status = XMC_DAC_CH_SetFrequency(dac, channel, frequency);
+ 352              	 .loc 1 202 0
+ 353 0012 1A46     	 mov r2,r3
+ 354              	.LVL38:
+ 355 0014 FFF7FEFF 	 bl XMC_DAC_CH_SetFrequency
+ 356              	.LVL39:
+ 203:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 204:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 205:../Libraries/XMCLib/src/xmc_dac.c ****   if (status == XMC_DAC_CH_STATUS_OK)
+ 357              	 .loc 1 205 0
+ 358 0018 0346     	 mov r3,r0
+ 359 001a 58B9     	 cbnz r0,.L28
+ 360              	.LVL40:
+ 361              	.L27:
+ 362              	.LBB50:
+ 363              	.LBB51:
+ 930:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                               trigger;
+ 364              	 .loc 2 930 0
+ 365 001c A268     	 ldr r2,[r4,#8]
+ 366 001e 22F4CE22 	 bic r2,r2,#421888
+ 367 0022 2A43     	 orrs r2,r2,r5
+ 368 0024 A260     	 str r2,[r4,#8]
+ 369              	.LVL41:
+ 370              	.LBE51:
+ 371              	.LBE50:
+ 372              	.LBB52:
+ 373              	.LBB53:
+ 374              	 .loc 2 1031 0
+ 375 0026 6368     	 ldr r3,[r4,#4]
+ 376 0028 23F4E003 	 bic r3,r3,#7340032
+ 377 002c 43F40013 	 orr r3,r3,#2097152
+ 378 0030 6360     	 str r3,[r4,#4]
+ 379 0032 0023     	 movs r3,#0
+ 380              	.LVL42:
+ 381              	.L28:
+ 382              	.LBE53:
+ 383              	.LBE52:
+ 206:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 207:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetTrigger(dac, channel, trigger);
+ 208:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_DATA);
+ 209:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 210:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 211:../Libraries/XMCLib/src/xmc_dac.c ****   return status;
+ 212:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 384              	 .loc 1 212 0
+ 385 0034 1846     	 mov r0,r3
+ 386 0036 38BD     	 pop {r3,r4,r5,pc}
+ 387              	 .cfi_endproc
+ 388              	.LFE204:
+ 390              	 .section .text.XMC_DAC_CH_StartRampMode,"ax",%progbits
+ 391              	 .align 2
+ 392              	 .global XMC_DAC_CH_StartRampMode
+ 393              	 .thumb
+ 394              	 .thumb_func
+ 396              	XMC_DAC_CH_StartRampMode:
+ 397              	.LFB205:
+ 213:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 214:../Libraries/XMCLib/src/xmc_dac.c **** /* API to start the operation in Ramp Mode. */
+ 215:../Libraries/XMCLib/src/xmc_dac.c **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartRampMode(XMC_DAC_t *const dac,
+ 216:../Libraries/XMCLib/src/xmc_dac.c ****                                              const uint8_t channel,
+ 217:../Libraries/XMCLib/src/xmc_dac.c ****                                              const uint16_t start,
+ 218:../Libraries/XMCLib/src/xmc_dac.c ****                                              const uint16_t stop,
+ 219:../Libraries/XMCLib/src/xmc_dac.c ****                                              const XMC_DAC_CH_TRIGGER_t trigger,
+ 220:../Libraries/XMCLib/src/xmc_dac.c ****                                              const uint32_t frequency)
+ 221:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 398              	 .loc 1 221 0
+ 399              	 .cfi_startproc
+ 400              	 
+ 401              	 
+ 402              	.LVL43:
+ 403 0000 F8B5     	 push {r3,r4,r5,r6,r7,lr}
+ 404              	.LCFI7:
+ 405              	 .cfi_def_cfa_offset 24
+ 406              	 .cfi_offset 3,-24
+ 407              	 .cfi_offset 4,-20
+ 408              	 .cfi_offset 5,-16
+ 409              	 .cfi_offset 6,-12
+ 410              	 .cfi_offset 7,-8
+ 411              	 .cfi_offset 14,-4
+ 412 0002 069E     	 ldr r6,[sp,#24]
+ 413              	.LVL44:
+ 414 0004 00EBC104 	 add r4,r0,r1,lsl#3
+ 415              	.LBB54:
+ 416              	.LBB55:
+ 417              	 .loc 2 1031 0
+ 418 0008 6568     	 ldr r5,[r4,#4]
+ 419 000a 25F4E005 	 bic r5,r5,#7340032
+ 420 000e 6560     	 str r5,[r4,#4]
+ 421              	.LVL45:
+ 422              	.LBE55:
+ 423              	.LBE54:
+ 424              	.LBB56:
+ 425              	.LBB57:
+ 828:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 426              	 .loc 2 828 0
+ 427 0010 0D1D     	 adds r5,r1,#4
+ 428 0012 00EB8505 	 add r5,r0,r5,lsl#2
+ 429 0016 6A60     	 str r2,[r5,#4]
+ 430              	.LVL46:
+ 431              	.LBE57:
+ 432              	.LBE56:
+ 433              	.LBB58:
+ 434              	.LBB59:
+ 881:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                (stop << (channel * DAC_DAC01DATA_DATA1_Pos));
+ 435              	 .loc 2 881 0
+ 436 0018 C569     	 ldr r5,[r0,#28]
+ 437 001a 0F01     	 lsls r7,r1,#4
+ 438 001c 40F6FF72 	 movw r2,#4095
+ 439              	.LVL47:
+ 440 0020 BA40     	 lsls r2,r2,r7
+ 441 0022 25EA0202 	 bic r2,r5,r2
+ 882:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 442              	 .loc 2 882 0
+ 443 0026 BB40     	 lsls r3,r3,r7
+ 444              	.LVL48:
+ 881:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                (stop << (channel * DAC_DAC01DATA_DATA1_Pos));
+ 445              	 .loc 2 881 0
+ 446 0028 1343     	 orrs r3,r3,r2
+ 447 002a C361     	 str r3,[r0,#28]
+ 448              	.LVL49:
+ 449              	.LBE59:
+ 450              	.LBE58:
+ 451              	.LBB60:
+ 452              	.LBB61:
+ 930:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                               trigger;
+ 453              	 .loc 2 930 0
+ 454 002c A368     	 ldr r3,[r4,#8]
+ 455 002e 23F4CE23 	 bic r3,r3,#421888
+ 456 0032 3343     	 orrs r3,r3,r6
+ 457 0034 A360     	 str r3,[r4,#8]
+ 458              	.LBE61:
+ 459              	.LBE60:
+ 222:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_STATUS_t status = XMC_DAC_CH_STATUS_OK;
+ 223:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 224:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartRampMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 225:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartRampMode: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(ch
+ 226:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartRampMode: dac module not enabled\n", XMC_DAC_IsEnabled(dac));
+ 227:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 228:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_IDLE);
+ 229:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 230:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetRampStart(dac, channel, start);
+ 231:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetRampStop(dac, channel, stop);
+ 232:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetTrigger(dac, channel, trigger);
+ 233:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 234:../Libraries/XMCLib/src/xmc_dac.c ****   if (trigger == XMC_DAC_CH_TRIGGER_INTERNAL)
+ 460              	 .loc 1 234 0
+ 461 0036 26B9     	 cbnz r6,.L31
+ 235:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 236:../Libraries/XMCLib/src/xmc_dac.c ****     status = XMC_DAC_CH_SetRampFrequency(dac, channel, frequency);
+ 462              	 .loc 1 236 0
+ 463 0038 079A     	 ldr r2,[sp,#28]
+ 464 003a FFF7FEFF 	 bl XMC_DAC_CH_SetRampFrequency
+ 465              	.LVL50:
+ 237:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 238:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 239:../Libraries/XMCLib/src/xmc_dac.c ****   if (status == XMC_DAC_CH_STATUS_OK)
+ 466              	 .loc 1 239 0
+ 467 003e 0346     	 mov r3,r0
+ 468 0040 30B9     	 cbnz r0,.L32
+ 469              	.LVL51:
+ 470              	.L31:
+ 471              	.LBB62:
+ 472              	.LBB63:
+ 473              	 .loc 2 1031 0
+ 474 0042 6368     	 ldr r3,[r4,#4]
+ 475 0044 23F4E003 	 bic r3,r3,#7340032
+ 476 0048 43F4A003 	 orr r3,r3,#5242880
+ 477 004c 6360     	 str r3,[r4,#4]
+ 478 004e 0023     	 movs r3,#0
+ 479              	.LVL52:
+ 480              	.L32:
+ 481              	.LBE63:
+ 482              	.LBE62:
+ 240:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 241:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_RAMP);
+ 242:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 243:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 244:../Libraries/XMCLib/src/xmc_dac.c ****   return status;
+ 245:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 483              	 .loc 1 245 0
+ 484 0050 1846     	 mov r0,r3
+ 485 0052 F8BD     	 pop {r3,r4,r5,r6,r7,pc}
+ 486              	 .cfi_endproc
+ 487              	.LFE205:
+ 489              	 .section .text.XMC_DAC_CH_StartNoiseMode,"ax",%progbits
+ 490              	 .align 2
+ 491              	 .global XMC_DAC_CH_StartNoiseMode
+ 492              	 .thumb
+ 493              	 .thumb_func
+ 495              	XMC_DAC_CH_StartNoiseMode:
+ 496              	.LFB207:
+ 246:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 247:../Libraries/XMCLib/src/xmc_dac.c **** /* API to start the operation in Pattern Mode. */
+ 248:../Libraries/XMCLib/src/xmc_dac.c **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartPatternMode(XMC_DAC_t *const dac,
+ 249:../Libraries/XMCLib/src/xmc_dac.c ****                                                 const uint8_t channel,
+ 250:../Libraries/XMCLib/src/xmc_dac.c ****                                                 const uint8_t *const pattern,
+ 251:../Libraries/XMCLib/src/xmc_dac.c ****                                                 const XMC_DAC_CH_PATTERN_SIGN_OUTPUT_t sign_output,
+ 252:../Libraries/XMCLib/src/xmc_dac.c ****                                                 const XMC_DAC_CH_TRIGGER_t trigger,
+ 253:../Libraries/XMCLib/src/xmc_dac.c ****                                                 const uint32_t frequency)
+ 254:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 255:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_STATUS_t status = XMC_DAC_CH_STATUS_OK;
+ 256:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 257:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartPatternMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 258:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartPatternMode: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID
+ 259:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartPatternMode: dac module not enabled\n", XMC_DAC_IsEnabled(dac));
+ 260:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 261:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_IDLE);
+ 262:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 263:../Libraries/XMCLib/src/xmc_dac.c ****   if (trigger == XMC_DAC_CH_TRIGGER_INTERNAL)
+ 264:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 265:../Libraries/XMCLib/src/xmc_dac.c ****     status = XMC_DAC_CH_SetFrequency(dac, channel, frequency * XMC_DAC_SAMPLES_PER_PERIOD);
+ 266:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 267:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 268:../Libraries/XMCLib/src/xmc_dac.c ****   if (status == XMC_DAC_CH_STATUS_OK)
+ 269:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 270:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetPattern(dac, channel, pattern);
+ 271:../Libraries/XMCLib/src/xmc_dac.c ****     if (XMC_DAC_CH_PATTERN_SIGN_OUTPUT_ENABLED == sign_output)
+ 272:../Libraries/XMCLib/src/xmc_dac.c ****     {
+ 273:../Libraries/XMCLib/src/xmc_dac.c ****       XMC_DAC_CH_EnablePatternSignOutput(dac, channel);
+ 274:../Libraries/XMCLib/src/xmc_dac.c ****     }
+ 275:../Libraries/XMCLib/src/xmc_dac.c ****     else
+ 276:../Libraries/XMCLib/src/xmc_dac.c ****     {
+ 277:../Libraries/XMCLib/src/xmc_dac.c ****       XMC_DAC_CH_DisablePatternSignOutput(dac, channel);
+ 278:../Libraries/XMCLib/src/xmc_dac.c ****     }
+ 279:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetTrigger(dac, channel, trigger);
+ 280:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_PATTERN);
+ 281:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 282:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 283:../Libraries/XMCLib/src/xmc_dac.c ****   return status;
+ 284:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 285:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 286:../Libraries/XMCLib/src/xmc_dac.c **** /* API to start the operation in Noise Mode. */
+ 287:../Libraries/XMCLib/src/xmc_dac.c **** XMC_DAC_CH_STATUS_t XMC_DAC_CH_StartNoiseMode(XMC_DAC_t *const dac,
+ 288:../Libraries/XMCLib/src/xmc_dac.c ****                                               const uint8_t channel,
+ 289:../Libraries/XMCLib/src/xmc_dac.c ****                                               const XMC_DAC_CH_TRIGGER_t trigger,
+ 290:../Libraries/XMCLib/src/xmc_dac.c ****                                               const uint32_t frequency)
+ 291:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 497              	 .loc 1 291 0
+ 498              	 .cfi_startproc
+ 499              	 
+ 500              	 
+ 501              	.LVL53:
+ 502 0000 38B5     	 push {r3,r4,r5,lr}
+ 503              	.LCFI8:
+ 504              	 .cfi_def_cfa_offset 16
+ 505              	 .cfi_offset 3,-16
+ 506              	 .cfi_offset 4,-12
+ 507              	 .cfi_offset 5,-8
+ 508              	 .cfi_offset 14,-4
+ 509              	.LVL54:
+ 510 0002 00EBC104 	 add r4,r0,r1,lsl#3
+ 511              	.LBB64:
+ 512              	.LBB65:
+ 513              	 .loc 2 1031 0
+ 514 0006 6568     	 ldr r5,[r4,#4]
+ 515 0008 25F4E005 	 bic r5,r5,#7340032
+ 516 000c 6560     	 str r5,[r4,#4]
+ 517              	.LBE65:
+ 518              	.LBE64:
+ 292:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_STATUS_t status = XMC_DAC_CH_STATUS_OK;
+ 293:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 294:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartNoiseMode: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 295:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartNoiseMode: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(c
+ 296:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_StartNoiseMode: dac module not enabled\n", XMC_DAC_IsEnabled(dac));
+ 297:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 298:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_IDLE);
+ 299:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 300:../Libraries/XMCLib/src/xmc_dac.c ****   if (trigger == XMC_DAC_CH_TRIGGER_INTERNAL)
+ 519              	 .loc 1 300 0
+ 520 000e 1546     	 mov r5,r2
+ 521 0010 22B9     	 cbnz r2,.L35
+ 301:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 302:../Libraries/XMCLib/src/xmc_dac.c ****     status = XMC_DAC_CH_SetFrequency(dac, channel, frequency);
+ 522              	 .loc 1 302 0
+ 523 0012 1A46     	 mov r2,r3
+ 524              	.LVL55:
+ 525 0014 FFF7FEFF 	 bl XMC_DAC_CH_SetFrequency
+ 526              	.LVL56:
+ 303:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 304:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 305:../Libraries/XMCLib/src/xmc_dac.c ****   if (status == XMC_DAC_CH_STATUS_OK)
+ 527              	 .loc 1 305 0
+ 528 0018 0346     	 mov r3,r0
+ 529 001a 58B9     	 cbnz r0,.L36
+ 530              	.LVL57:
+ 531              	.L35:
+ 532              	.LBB66:
+ 533              	.LBB67:
+ 930:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                               trigger;
+ 534              	 .loc 2 930 0
+ 535 001c A268     	 ldr r2,[r4,#8]
+ 536 001e 22F4CE22 	 bic r2,r2,#421888
+ 537 0022 2A43     	 orrs r2,r2,r5
+ 538 0024 A260     	 str r2,[r4,#8]
+ 539              	.LVL58:
+ 540              	.LBE67:
+ 541              	.LBE66:
+ 542              	.LBB68:
+ 543              	.LBB69:
+ 544              	 .loc 2 1031 0
+ 545 0026 6368     	 ldr r3,[r4,#4]
+ 546 0028 23F4E003 	 bic r3,r3,#7340032
+ 547 002c 43F48003 	 orr r3,r3,#4194304
+ 548 0030 6360     	 str r3,[r4,#4]
+ 549 0032 0023     	 movs r3,#0
+ 550              	.LVL59:
+ 551              	.L36:
+ 552              	.LBE69:
+ 553              	.LBE68:
+ 306:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 307:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetTrigger(dac, channel, trigger);
+ 308:../Libraries/XMCLib/src/xmc_dac.c ****     XMC_DAC_CH_SetMode(dac, channel, XMC_DAC_CH_MODE_NOISE);
+ 309:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 310:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 311:../Libraries/XMCLib/src/xmc_dac.c ****   return status;
+ 312:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 554              	 .loc 1 312 0
+ 555 0034 1846     	 mov r0,r3
+ 556 0036 38BD     	 pop {r3,r4,r5,pc}
+ 557              	 .cfi_endproc
+ 558              	.LFE207:
+ 560              	 .section .text.XMC_DAC_CH_SetPattern,"ax",%progbits
+ 561              	 .align 2
+ 562              	 .global XMC_DAC_CH_SetPattern
+ 563              	 .thumb
+ 564              	 .thumb_func
+ 566              	XMC_DAC_CH_SetPattern:
+ 567              	.LFB208:
+ 313:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 314:../Libraries/XMCLib/src/xmc_dac.c **** /* API to write the pattern data table. */
+ 315:../Libraries/XMCLib/src/xmc_dac.c **** void XMC_DAC_CH_SetPattern(XMC_DAC_t *const dac, uint8_t channel, const uint8_t *const data)
+ 316:../Libraries/XMCLib/src/xmc_dac.c **** {
+ 568              	 .loc 1 316 0
+ 569              	 .cfi_startproc
+ 570              	 
+ 571              	 
+ 572              	 
+ 573              	.LVL60:
+ 574 0000 F0B4     	 push {r4,r5,r6,r7}
+ 575              	.LCFI9:
+ 576              	 .cfi_def_cfa_offset 16
+ 577              	 .cfi_offset 4,-16
+ 578              	 .cfi_offset 5,-12
+ 579              	 .cfi_offset 6,-8
+ 580              	 .cfi_offset 7,-4
+ 317:../Libraries/XMCLib/src/xmc_dac.c ****   uint32_t index;
+ 318:../Libraries/XMCLib/src/xmc_dac.c ****   uint32_t temp;
+ 319:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 320:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_SetPattern: dac parameter not valid\n", XMC_DAC_IS_DAC_VALID(dac));
+ 321:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_SetPattern: channel parameter not valid\n", XMC_DAC_IS_CHANNEL_VALID(chann
+ 322:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_ASSERT("XMC_DAC_CH_SetPattern: dac module not enabled\n", XMC_DAC_IsEnabled(dac));
+ 323:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 324:../Libraries/XMCLib/src/xmc_dac.c ****   temp = data[0U];
+ 581              	 .loc 1 324 0
+ 582 0002 1678     	 ldrb r6,[r2]
+ 583              	.LVL61:
+ 584 0004 1546     	 mov r5,r2
+ 585 0006 571D     	 adds r7,r2,#5
+ 586 0008 0524     	 movs r4,#5
+ 587              	.LVL62:
+ 588              	.L39:
+ 325:../Libraries/XMCLib/src/xmc_dac.c ****   for(index = 1U; index < 6U; ++index)
+ 326:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 327:../Libraries/XMCLib/src/xmc_dac.c ****     temp |= (uint32_t)data[index] << (index * XMC_DAC_DAC0PATL_PAT_BITSIZE);
+ 589              	 .loc 1 327 0 discriminator 3
+ 590 000a 15F8013F 	 ldrb r3,[r5,#1]!
+ 591              	.LVL63:
+ 592 000e A340     	 lsls r3,r3,r4
+ 593 0010 1E43     	 orrs r6,r6,r3
+ 594              	.LVL64:
+ 595 0012 0534     	 adds r4,r4,#5
+ 325:../Libraries/XMCLib/src/xmc_dac.c ****   for(index = 1U; index < 6U; ++index)
+ 596              	 .loc 1 325 0 discriminator 3
+ 597 0014 BD42     	 cmp r5,r7
+ 598 0016 F8D1     	 bne .L39
+ 599 0018 00EBC101 	 add r1,r0,r1,lsl#3
+ 600              	.LVL65:
+ 328:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 329:../Libraries/XMCLib/src/xmc_dac.c ****   dac->DACPAT[channel].low = temp;
+ 601              	 .loc 1 329 0
+ 602 001c 0E62     	 str r6,[r1,#32]
+ 330:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 331:../Libraries/XMCLib/src/xmc_dac.c ****   temp = data[6U];
+ 603              	 .loc 1 331 0
+ 604 001e 1446     	 mov r4,r2
+ 605 0020 14F8066F 	 ldrb r6,[r4,#6]!
+ 606              	.LVL66:
+ 607 0024 0B32     	 adds r2,r2,#11
+ 608              	.LVL67:
+ 609 0026 0525     	 movs r5,#5
+ 610              	.LVL68:
+ 611              	.L40:
+ 332:../Libraries/XMCLib/src/xmc_dac.c ****   for(index = 1U; index < 6U; ++index)
+ 333:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 334:../Libraries/XMCLib/src/xmc_dac.c ****     temp |= (uint32_t)data[index + 6U] << (index * XMC_DAC_DAC0PATL_PAT_BITSIZE);
+ 612              	 .loc 1 334 0 discriminator 3
+ 613 0028 14F8013F 	 ldrb r3,[r4,#1]!
+ 614              	.LVL69:
+ 615 002c AB40     	 lsls r3,r3,r5
+ 616 002e 1E43     	 orrs r6,r6,r3
+ 617              	.LVL70:
+ 618 0030 0535     	 adds r5,r5,#5
+ 332:../Libraries/XMCLib/src/xmc_dac.c ****   for(index = 1U; index < 6U; ++index)
+ 619              	 .loc 1 332 0 discriminator 3
+ 620 0032 9442     	 cmp r4,r2
+ 621 0034 F8D1     	 bne .L40
+ 335:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 336:../Libraries/XMCLib/src/xmc_dac.c ****   dac->DACPAT[channel].high = temp;
+ 622              	 .loc 1 336 0
+ 623 0036 4E62     	 str r6,[r1,#36]
+ 337:../Libraries/XMCLib/src/xmc_dac.c **** }
+ 624              	 .loc 1 337 0
+ 625 0038 F0BC     	 pop {r4,r5,r6,r7}
+ 626              	.LCFI10:
+ 627              	 .cfi_restore 7
+ 628              	 .cfi_restore 6
+ 629              	 .cfi_restore 5
+ 630              	 .cfi_restore 4
+ 631              	 .cfi_def_cfa_offset 0
+ 632              	.LVL71:
+ 633 003a 7047     	 bx lr
+ 634              	 .cfi_endproc
+ 635              	.LFE208:
+ 637              	 .section .text.XMC_DAC_CH_StartPatternMode,"ax",%progbits
+ 638              	 .align 2
+ 639              	 .global XMC_DAC_CH_StartPatternMode
+ 640              	 .thumb
+ 641              	 .thumb_func
+ 643              	XMC_DAC_CH_StartPatternMode:
+ 644              	.LFB206:
+ 254:../Libraries/XMCLib/src/xmc_dac.c ****   XMC_DAC_CH_STATUS_t status = XMC_DAC_CH_STATUS_OK;
+ 645              	 .loc 1 254 0
+ 646              	 .cfi_startproc
+ 647              	 
+ 648              	 
+ 649              	.LVL72:
+ 650 0000 2DE9F843 	 push {r3,r4,r5,r6,r7,r8,r9,lr}
+ 651              	.LCFI11:
+ 652              	 .cfi_def_cfa_offset 32
+ 653              	 .cfi_offset 3,-32
+ 654              	 .cfi_offset 4,-28
+ 655              	 .cfi_offset 5,-24
+ 656              	 .cfi_offset 6,-20
+ 657              	 .cfi_offset 7,-16
+ 658              	 .cfi_offset 8,-12
+ 659              	 .cfi_offset 9,-8
+ 660              	 .cfi_offset 14,-4
+ 661 0004 0746     	 mov r7,r0
+ 662 0006 0E46     	 mov r6,r1
+ 663 0008 9146     	 mov r9,r2
+ 664 000a 9846     	 mov r8,r3
+ 665 000c 089D     	 ldr r5,[sp,#32]
+ 666              	.LVL73:
+ 667 000e 00EBC104 	 add r4,r0,r1,lsl#3
+ 668              	.LBB70:
+ 669              	.LBB71:
+ 670              	 .loc 2 1031 0
+ 671 0012 6368     	 ldr r3,[r4,#4]
+ 672              	.LVL74:
+ 673 0014 23F4E003 	 bic r3,r3,#7340032
+ 674 0018 6360     	 str r3,[r4,#4]
+ 675              	.LBE71:
+ 676              	.LBE70:
+ 263:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 677              	 .loc 1 263 0
+ 678 001a 2DB9     	 cbnz r5,.L45
+ 265:../Libraries/XMCLib/src/xmc_dac.c ****   }
+ 679              	 .loc 1 265 0
+ 680 001c 099A     	 ldr r2,[sp,#36]
+ 681              	.LVL75:
+ 682 001e 5201     	 lsls r2,r2,#5
+ 683 0020 FFF7FEFF 	 bl XMC_DAC_CH_SetFrequency
+ 684              	.LVL76:
+ 268:../Libraries/XMCLib/src/xmc_dac.c ****   {
+ 685              	 .loc 1 268 0
+ 686 0024 0346     	 mov r3,r0
+ 687 0026 C8B9     	 cbnz r0,.L46
+ 688              	.LVL77:
+ 689              	.L45:
+ 270:../Libraries/XMCLib/src/xmc_dac.c ****     if (XMC_DAC_CH_PATTERN_SIGN_OUTPUT_ENABLED == sign_output)
+ 690              	 .loc 1 270 0
+ 691 0028 3846     	 mov r0,r7
+ 692 002a 3146     	 mov r1,r6
+ 693 002c 4A46     	 mov r2,r9
+ 694 002e FFF7FEFF 	 bl XMC_DAC_CH_SetPattern
+ 695              	.LVL78:
+ 271:../Libraries/XMCLib/src/xmc_dac.c ****     {
+ 696              	 .loc 1 271 0
+ 697 0032 B8F1010F 	 cmp r8,#1
+ 698              	.LVL79:
+ 699              	.LBB72:
+ 700              	.LBB73:
+ 772:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 701              	 .loc 2 772 0
+ 702 0036 6368     	 ldr r3,[r4,#4]
+ 703 0038 0CBF     	 ite eq
+ 704 003a 43F00053 	 orreq r3,r3,#536870912
+ 705              	.LVL80:
+ 706              	.LBE73:
+ 707              	.LBE72:
+ 708              	.LBB74:
+ 709              	.LBB75:
+ 800:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h **** }
+ 710              	 .loc 2 800 0
+ 711 003e 23F00053 	 bicne r3,r3,#536870912
+ 712 0042 6360     	 str r3,[r4,#4]
+ 713              	.LVL81:
+ 714              	.LBE75:
+ 715              	.LBE74:
+ 716              	.LBB76:
+ 717              	.LBB77:
+ 930:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_dac.h ****                               trigger;
+ 718              	 .loc 2 930 0
+ 719 0044 A368     	 ldr r3,[r4,#8]
+ 720 0046 23F4CE23 	 bic r3,r3,#421888
+ 721 004a 1D43     	 orrs r5,r5,r3
+ 722              	.LVL82:
+ 723 004c A560     	 str r5,[r4,#8]
+ 724              	.LVL83:
+ 725              	.LBE77:
+ 726              	.LBE76:
+ 727              	.LBB78:
+ 728              	.LBB79:
+ 729              	 .loc 2 1031 0
+ 730 004e 6368     	 ldr r3,[r4,#4]
+ 731 0050 23F4E003 	 bic r3,r3,#7340032
+ 732 0054 43F44013 	 orr r3,r3,#3145728
+ 733 0058 6360     	 str r3,[r4,#4]
+ 734 005a 0023     	 movs r3,#0
+ 735              	.LVL84:
+ 736              	.L46:
+ 737              	.LBE79:
+ 738              	.LBE78:
+ 284:../Libraries/XMCLib/src/xmc_dac.c **** 
+ 739              	 .loc 1 284 0
+ 740 005c 1846     	 mov r0,r3
+ 741 005e BDE8F883 	 pop {r3,r4,r5,r6,r7,r8,r9,pc}
+ 742              	 .cfi_endproc
+ 743              	.LFE206:
+ 745 0062 00BF     	 .text
+ 746              	.Letext0:
+ 747              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 748              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 749              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_scu.h"
+ 750              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 751              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+ 752              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_scu.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_dac.c
+    {standard input}:19     .text.XMC_DAC_Enable:00000000 $t
+    {standard input}:24     .text.XMC_DAC_Enable:00000000 XMC_DAC_Enable
+    {standard input}:46     .text.XMC_DAC_Enable:0000000c $d
+    {standard input}:51     .text.XMC_DAC_Disable:00000000 $t
+    {standard input}:56     .text.XMC_DAC_Disable:00000000 XMC_DAC_Disable
+    {standard input}:77     .text.XMC_DAC_Disable:0000000c $d
+    {standard input}:82     .text.XMC_DAC_IsEnabled:00000000 $t
+    {standard input}:87     .text.XMC_DAC_IsEnabled:00000000 XMC_DAC_IsEnabled
+    {standard input}:113    .text.XMC_DAC_IsEnabled:00000010 $d
+    {standard input}:118    .text.XMC_DAC_CH_Init:00000000 $t
+    {standard input}:123    .text.XMC_DAC_CH_Init:00000000 XMC_DAC_CH_Init
+    {standard input}:175    .text.XMC_DAC_CH_Init:00000028 $d
+    {standard input}:182    .text.XMC_DAC_CH_SetFrequency:00000000 $t
+    {standard input}:187    .text.XMC_DAC_CH_SetFrequency:00000000 XMC_DAC_CH_SetFrequency
+    {standard input}:245    .text.XMC_DAC_CH_SetRampFrequency:00000000 $t
+    {standard input}:250    .text.XMC_DAC_CH_SetRampFrequency:00000000 XMC_DAC_CH_SetRampFrequency
+    {standard input}:288    .text.XMC_DAC_CH_StartSingleValueMode:00000000 $t
+    {standard input}:293    .text.XMC_DAC_CH_StartSingleValueMode:00000000 XMC_DAC_CH_StartSingleValueMode
+    {standard input}:320    .text.XMC_DAC_CH_StartDataMode:00000000 $t
+    {standard input}:325    .text.XMC_DAC_CH_StartDataMode:00000000 XMC_DAC_CH_StartDataMode
+    {standard input}:391    .text.XMC_DAC_CH_StartRampMode:00000000 $t
+    {standard input}:396    .text.XMC_DAC_CH_StartRampMode:00000000 XMC_DAC_CH_StartRampMode
+    {standard input}:490    .text.XMC_DAC_CH_StartNoiseMode:00000000 $t
+    {standard input}:495    .text.XMC_DAC_CH_StartNoiseMode:00000000 XMC_DAC_CH_StartNoiseMode
+    {standard input}:561    .text.XMC_DAC_CH_SetPattern:00000000 $t
+    {standard input}:566    .text.XMC_DAC_CH_SetPattern:00000000 XMC_DAC_CH_SetPattern
+    {standard input}:638    .text.XMC_DAC_CH_StartPatternMode:00000000 $t
+    {standard input}:643    .text.XMC_DAC_CH_StartPatternMode:00000000 XMC_DAC_CH_StartPatternMode
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc_dac.h.118.c8112c8efde85b3b5edb795c9ea09622
+                           .group:00000000 wm4.xmc4_scu.h.106.b7d8d773976d331f6820948fe093a27d
+
+UNDEFINED SYMBOLS
+XMC_SCU_RESET_DeassertPeripheralReset
+XMC_SCU_RESET_AssertPeripheralReset
+XMC_SCU_RESET_IsPeripheralResetAsserted
+XMC_SCU_CLOCK_GetPeripheralClockFrequency

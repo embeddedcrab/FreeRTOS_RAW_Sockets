@@ -1,0 +1,1276 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "xmc_posif.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.XMC_POSIF_Enable,"ax",%progbits
+  19              	 .align 2
+  20              	 .global XMC_POSIF_Enable
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	XMC_POSIF_Enable:
+  25              	.LFB194:
+  26              	 .file 1 "../Libraries/XMCLib/src/xmc_posif.c"
+   1:../Libraries/XMCLib/src/xmc_posif.c **** /**
+   2:../Libraries/XMCLib/src/xmc_posif.c ****  * @file xmc_posif.c
+   3:../Libraries/XMCLib/src/xmc_posif.c ****  * @date 2017-02-25
+   4:../Libraries/XMCLib/src/xmc_posif.c ****  *
+   5:../Libraries/XMCLib/src/xmc_posif.c ****  * @cond
+   6:../Libraries/XMCLib/src/xmc_posif.c ****  **********************************************************************************
+   7:../Libraries/XMCLib/src/xmc_posif.c ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:../Libraries/XMCLib/src/xmc_posif.c ****  *
+   9:../Libraries/XMCLib/src/xmc_posif.c ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:../Libraries/XMCLib/src/xmc_posif.c ****  * All rights reserved.                        
+  11:../Libraries/XMCLib/src/xmc_posif.c ****  *                                             
+  12:../Libraries/XMCLib/src/xmc_posif.c ****  * Redistribution and use in source and binary forms, with or without           
+  13:../Libraries/XMCLib/src/xmc_posif.c ****  * modification,are permitted provided that the following conditions are met:   
+  14:../Libraries/XMCLib/src/xmc_posif.c ****  *                                                                              
+  15:../Libraries/XMCLib/src/xmc_posif.c ****  *   Redistributions of source code must retain the above copyright notice,      
+  16:../Libraries/XMCLib/src/xmc_posif.c ****  *   this list of conditions and the following disclaimer.                        
+  17:../Libraries/XMCLib/src/xmc_posif.c ****  * 
+  18:../Libraries/XMCLib/src/xmc_posif.c ****  *   Redistributions in binary form must reproduce the above copyright notice,   
+  19:../Libraries/XMCLib/src/xmc_posif.c ****  *   this list of conditions and the following disclaimer in the documentation    
+  20:../Libraries/XMCLib/src/xmc_posif.c ****  *   and/or other materials provided with the distribution.                       
+  21:../Libraries/XMCLib/src/xmc_posif.c ****  * 
+  22:../Libraries/XMCLib/src/xmc_posif.c ****  *   Neither the name of the copyright holders nor the names of its contributors 
+  23:../Libraries/XMCLib/src/xmc_posif.c ****  *   may be used to endorse or promote products derived from this software without
+  24:../Libraries/XMCLib/src/xmc_posif.c ****  *   specific prior written permission.                                           
+  25:../Libraries/XMCLib/src/xmc_posif.c ****  *                                                                              
+  26:../Libraries/XMCLib/src/xmc_posif.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  
+  27:../Libraries/XMCLib/src/xmc_posif.c ****  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    
+  28:../Libraries/XMCLib/src/xmc_posif.c ****  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   
+  29:../Libraries/XMCLib/src/xmc_posif.c ****  * ARE  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE   
+  30:../Libraries/XMCLib/src/xmc_posif.c ****  * LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         
+  31:../Libraries/XMCLib/src/xmc_posif.c ****  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF         
+  32:../Libraries/XMCLib/src/xmc_posif.c ****  * SUBSTITUTE GOODS OR  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    
+  33:../Libraries/XMCLib/src/xmc_posif.c ****  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN      
+  34:../Libraries/XMCLib/src/xmc_posif.c ****  * CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)       
+  35:../Libraries/XMCLib/src/xmc_posif.c ****  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   
+  36:../Libraries/XMCLib/src/xmc_posif.c ****  * POSSIBILITY OF SUCH DAMAGE.                                                  
+  37:../Libraries/XMCLib/src/xmc_posif.c ****  *                                                                              
+  38:../Libraries/XMCLib/src/xmc_posif.c ****  * To improve the quality of the software, users are encouraged to share        
+  39:../Libraries/XMCLib/src/xmc_posif.c ****  * modifications, enhancements or bug fixes with Infineon Technologies AG       
+  40:../Libraries/XMCLib/src/xmc_posif.c ****  * dave@infineon.com).                                                          
+  41:../Libraries/XMCLib/src/xmc_posif.c ****  **********************************************************************************
+  42:../Libraries/XMCLib/src/xmc_posif.c ****  *
+  43:../Libraries/XMCLib/src/xmc_posif.c ****  * Change History
+  44:../Libraries/XMCLib/src/xmc_posif.c ****  * --------------
+  45:../Libraries/XMCLib/src/xmc_posif.c ****  *
+  46:../Libraries/XMCLib/src/xmc_posif.c ****  * 2015-02-18:
+  47:../Libraries/XMCLib/src/xmc_posif.c ****  *     - Initial version
+  48:../Libraries/XMCLib/src/xmc_posif.c ****  *      
+  49:../Libraries/XMCLib/src/xmc_posif.c ****  * 2015-02-20:
+  50:../Libraries/XMCLib/src/xmc_posif.c ****  *     - Driver description added <BR>
+  51:../Libraries/XMCLib/src/xmc_posif.c ****  *
+  52:../Libraries/XMCLib/src/xmc_posif.c ****  * 2015-04-30:
+  53:../Libraries/XMCLib/src/xmc_posif.c ****  *     - XMC_POSIF_Enable and XMC_POSIF_Disable APIs updated for POSIF1 peripheral check <BR>
+  54:../Libraries/XMCLib/src/xmc_posif.c ****  *
+  55:../Libraries/XMCLib/src/xmc_posif.c ****  * 2015-06-19:
+  56:../Libraries/XMCLib/src/xmc_posif.c ****  *     - Removed GetDriverVersion API <BR> 
+  57:../Libraries/XMCLib/src/xmc_posif.c ****  *
+  58:../Libraries/XMCLib/src/xmc_posif.c ****  * 2017-02-25:
+  59:../Libraries/XMCLib/src/xmc_posif.c ****  *     - XMC_POSIF_Enable() and XMC_POSIF_Disable() fixed compilation warnings
+  60:../Libraries/XMCLib/src/xmc_posif.c ****  *
+  61:../Libraries/XMCLib/src/xmc_posif.c ****  * @endcond 
+  62:../Libraries/XMCLib/src/xmc_posif.c ****  *
+  63:../Libraries/XMCLib/src/xmc_posif.c ****  */
+  64:../Libraries/XMCLib/src/xmc_posif.c **** 
+  65:../Libraries/XMCLib/src/xmc_posif.c **** /**************************************************************************************************
+  66:../Libraries/XMCLib/src/xmc_posif.c ****  * HEADER FILES
+  67:../Libraries/XMCLib/src/xmc_posif.c ****  **************************************************************************************************
+  68:../Libraries/XMCLib/src/xmc_posif.c **** #include <xmc_posif.h>
+  69:../Libraries/XMCLib/src/xmc_posif.c **** 
+  70:../Libraries/XMCLib/src/xmc_posif.c **** /* POSIF is not available on XMC1100 and XMC1200 */
+  71:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(POSIF0)
+  72:../Libraries/XMCLib/src/xmc_posif.c **** #include <xmc_scu.h>
+  73:../Libraries/XMCLib/src/xmc_posif.c **** 
+  74:../Libraries/XMCLib/src/xmc_posif.c **** /**************************************************************************************************
+  75:../Libraries/XMCLib/src/xmc_posif.c ****  * MACROS
+  76:../Libraries/XMCLib/src/xmc_posif.c ****  **************************************************************************************************
+  77:../Libraries/XMCLib/src/xmc_posif.c **** #define XMC_POSIF_PCONF_INSEL_Msk        (0x3fUL << POSIF_PCONF_INSEL0_Pos) /*< Mask for input pins
+  78:../Libraries/XMCLib/src/xmc_posif.c **** #define XMC_POSIF_INSEL_MAX              (4U) /*< Maximum possible input selector */
+  79:../Libraries/XMCLib/src/xmc_posif.c **** 
+  80:../Libraries/XMCLib/src/xmc_posif.c **** /**************************************************************************************************
+  81:../Libraries/XMCLib/src/xmc_posif.c ****  * LOCAL ROUTINES
+  82:../Libraries/XMCLib/src/xmc_posif.c ****  **************************************************************************************************
+  83:../Libraries/XMCLib/src/xmc_posif.c **** #ifdef XMC_ASSERT_ENABLE
+  84:../Libraries/XMCLib/src/xmc_posif.c **** __STATIC_INLINE bool XMC_POSIF_IsPeripheralValid(const XMC_POSIF_t *const peripheral)
+  85:../Libraries/XMCLib/src/xmc_posif.c **** {
+  86:../Libraries/XMCLib/src/xmc_posif.c ****   bool tmp;
+  87:../Libraries/XMCLib/src/xmc_posif.c **** 
+  88:../Libraries/XMCLib/src/xmc_posif.c ****   tmp = (peripheral == POSIF0);
+  89:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(POSIF1)  
+  90:../Libraries/XMCLib/src/xmc_posif.c ****   tmp |= (peripheral == POSIF1);
+  91:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+  92:../Libraries/XMCLib/src/xmc_posif.c **** 
+  93:../Libraries/XMCLib/src/xmc_posif.c ****   return tmp;  
+  94:../Libraries/XMCLib/src/xmc_posif.c **** }
+  95:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+  96:../Libraries/XMCLib/src/xmc_posif.c **** /**************************************************************************************************
+  97:../Libraries/XMCLib/src/xmc_posif.c ****  * API IMPLEMENTATION
+  98:../Libraries/XMCLib/src/xmc_posif.c ****  **************************************************************************************************
+  99:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 100:../Libraries/XMCLib/src/xmc_posif.c **** /* API to enable the POSIF module */
+ 101:../Libraries/XMCLib/src/xmc_posif.c **** void XMC_POSIF_Enable(XMC_POSIF_t *const peripheral)
+ 102:../Libraries/XMCLib/src/xmc_posif.c **** {
+  27              	 .loc 1 102 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 10B5     	 push {r4,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 8
+  35              	 .cfi_offset 4,-8
+  36              	 .cfi_offset 14,-4
+  37 0002 0446     	 mov r4,r0
+ 103:../Libraries/XMCLib/src/xmc_posif.c **** #if UC_FAMILY == XMC4
+ 104:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_SCU_CLOCK_EnableClock(XMC_SCU_CLOCK_CCU);
+  38              	 .loc 1 104 0
+  39 0004 1020     	 movs r0,#16
+  40              	.LVL1:
+  41 0006 FFF7FEFF 	 bl XMC_SCU_CLOCK_EnableClock
+  42              	.LVL2:
+ 105:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 106:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 107:../Libraries/XMCLib/src/xmc_posif.c ****   if (peripheral == POSIF0)
+  43              	 .loc 1 107 0
+  44 000a 084B     	 ldr r3,.L5
+  45 000c 9C42     	 cmp r4,r3
+  46 000e 04D1     	 bne .L2
+ 108:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 109:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(CLOCK_GATING_SUPPORTED)
+ 110:../Libraries/XMCLib/src/xmc_posif.c ****     XMC_SCU_CLOCK_UngatePeripheralClock(XMC_SCU_PERIPHERAL_CLOCK_POSIF0);
+ 111:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 112:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(PERIPHERAL_RESET_SUPPORTED)
+ 113:../Libraries/XMCLib/src/xmc_posif.c ****       XMC_SCU_RESET_DeassertPeripheralReset(XMC_SCU_PERIPHERAL_RESET_POSIF0);
+  47              	 .loc 1 113 0
+  48 0010 4FF40070 	 mov r0,#512
+  49 0014 FFF7FEFF 	 bl XMC_SCU_RESET_DeassertPeripheralReset
+  50              	.LVL3:
+  51 0018 10BD     	 pop {r4,pc}
+  52              	.LVL4:
+  53              	.L2:
+ 114:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 115:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 116:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(POSIF1)
+ 117:../Libraries/XMCLib/src/xmc_posif.c ****   else if (peripheral == POSIF1)
+  54              	 .loc 1 117 0
+  55 001a 054B     	 ldr r3,.L5+4
+  56 001c 9C42     	 cmp r4,r3
+  57 001e 03D1     	 bne .L1
+ 118:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 119:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(CLOCK_GATING_SUPPORTED)
+ 120:../Libraries/XMCLib/src/xmc_posif.c ****       XMC_SCU_CLOCK_UngatePeripheralClock(XMC_SCU_PERIPHERAL_CLOCK_POSIF1);
+ 121:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 122:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(PERIPHERAL_RESET_SUPPORTED)
+ 123:../Libraries/XMCLib/src/xmc_posif.c ****       XMC_SCU_RESET_DeassertPeripheralReset(XMC_SCU_PERIPHERAL_RESET_POSIF1);
+  58              	 .loc 1 123 0
+  59 0020 4FF48060 	 mov r0,#1024
+  60 0024 FFF7FEFF 	 bl XMC_SCU_RESET_DeassertPeripheralReset
+  61              	.LVL5:
+  62              	.L1:
+  63 0028 10BD     	 pop {r4,pc}
+  64              	.LVL6:
+  65              	.L6:
+  66 002a 00BF     	 .align 2
+  67              	.L5:
+  68 002c 00800240 	 .word 1073905664
+  69 0030 00C00240 	 .word 1073922048
+  70              	 .cfi_endproc
+  71              	.LFE194:
+  73              	 .section .text.XMC_POSIF_Disable,"ax",%progbits
+  74              	 .align 2
+  75              	 .global XMC_POSIF_Disable
+  76              	 .thumb
+  77              	 .thumb_func
+  79              	XMC_POSIF_Disable:
+  80              	.LFB195:
+ 124:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 125:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 126:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 127:../Libraries/XMCLib/src/xmc_posif.c ****   else
+ 128:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 129:../Libraries/XMCLib/src/xmc_posif.c ****     XMC_ASSERT("XMC_POSIF_Disable:Invalid module pointer", 0);
+ 130:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 131:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 132:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 133:../Libraries/XMCLib/src/xmc_posif.c **** /* API to disable the POSIF module */
+ 134:../Libraries/XMCLib/src/xmc_posif.c **** void XMC_POSIF_Disable(XMC_POSIF_t *const peripheral)
+ 135:../Libraries/XMCLib/src/xmc_posif.c **** {
+  81              	 .loc 1 135 0
+  82              	 .cfi_startproc
+  83              	 
+  84              	 
+  85              	.LVL7:
+  86 0000 08B5     	 push {r3,lr}
+  87              	.LCFI1:
+  88              	 .cfi_def_cfa_offset 8
+  89              	 .cfi_offset 3,-8
+  90              	 .cfi_offset 14,-4
+ 136:../Libraries/XMCLib/src/xmc_posif.c ****   if (peripheral == POSIF0)
+  91              	 .loc 1 136 0
+  92 0002 084B     	 ldr r3,.L11
+  93 0004 9842     	 cmp r0,r3
+  94 0006 04D1     	 bne .L8
+ 137:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 138:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(PERIPHERAL_RESET_SUPPORTED)
+ 139:../Libraries/XMCLib/src/xmc_posif.c ****       XMC_SCU_RESET_AssertPeripheralReset(XMC_SCU_PERIPHERAL_RESET_POSIF0);
+  95              	 .loc 1 139 0
+  96 0008 4FF40070 	 mov r0,#512
+  97              	.LVL8:
+  98 000c FFF7FEFF 	 bl XMC_SCU_RESET_AssertPeripheralReset
+  99              	.LVL9:
+ 100 0010 08BD     	 pop {r3,pc}
+ 101              	.LVL10:
+ 102              	.L8:
+ 140:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 141:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(CLOCK_GATING_SUPPORTED)
+ 142:../Libraries/XMCLib/src/xmc_posif.c ****       XMC_SCU_CLOCK_GatePeripheralClock(XMC_SCU_PERIPHERAL_CLOCK_POSIF0);
+ 143:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 144:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 145:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(POSIF1)
+ 146:../Libraries/XMCLib/src/xmc_posif.c ****   else if (peripheral == POSIF1)
+ 103              	 .loc 1 146 0
+ 104 0012 054B     	 ldr r3,.L11+4
+ 105 0014 9842     	 cmp r0,r3
+ 106 0016 03D1     	 bne .L7
+ 147:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 148:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(PERIPHERAL_RESET_SUPPORTED)
+ 149:../Libraries/XMCLib/src/xmc_posif.c ****       XMC_SCU_RESET_AssertPeripheralReset(XMC_SCU_PERIPHERAL_RESET_POSIF1);
+ 107              	 .loc 1 149 0
+ 108 0018 4FF48060 	 mov r0,#1024
+ 109              	.LVL11:
+ 110 001c FFF7FEFF 	 bl XMC_SCU_RESET_AssertPeripheralReset
+ 111              	.LVL12:
+ 112              	.L7:
+ 113 0020 08BD     	 pop {r3,pc}
+ 114              	.L12:
+ 115 0022 00BF     	 .align 2
+ 116              	.L11:
+ 117 0024 00800240 	 .word 1073905664
+ 118 0028 00C00240 	 .word 1073922048
+ 119              	 .cfi_endproc
+ 120              	.LFE195:
+ 122              	 .section .text.XMC_POSIF_Init,"ax",%progbits
+ 123              	 .align 2
+ 124              	 .global XMC_POSIF_Init
+ 125              	 .thumb
+ 126              	 .thumb_func
+ 128              	XMC_POSIF_Init:
+ 129              	.LFB196:
+ 150:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 151:../Libraries/XMCLib/src/xmc_posif.c **** #if defined(CLOCK_GATING_SUPPORTED)
+ 152:../Libraries/XMCLib/src/xmc_posif.c ****       XMC_SCU_CLOCK_GatePeripheralClock(XMC_SCU_PERIPHERAL_CLOCK_POSIF1);
+ 153:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 154:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 155:../Libraries/XMCLib/src/xmc_posif.c **** #endif
+ 156:../Libraries/XMCLib/src/xmc_posif.c ****   else
+ 157:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 158:../Libraries/XMCLib/src/xmc_posif.c ****     XMC_ASSERT("XMC_POSIF_Disable:Invalid module pointer", 0);
+ 159:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 160:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 161:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 162:../Libraries/XMCLib/src/xmc_posif.c **** /* API to initialize POSIF global resources */
+ 163:../Libraries/XMCLib/src/xmc_posif.c **** void XMC_POSIF_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_CONFIG_t *const config)
+ 164:../Libraries/XMCLib/src/xmc_posif.c **** {
+ 130              	 .loc 1 164 0
+ 131              	 .cfi_startproc
+ 132              	 
+ 133              	 
+ 134              	.LVL13:
+ 135 0000 38B5     	 push {r3,r4,r5,lr}
+ 136              	.LCFI2:
+ 137              	 .cfi_def_cfa_offset 16
+ 138              	 .cfi_offset 3,-16
+ 139              	 .cfi_offset 4,-12
+ 140              	 .cfi_offset 5,-8
+ 141              	 .cfi_offset 14,-4
+ 142 0002 0446     	 mov r4,r0
+ 143 0004 0D46     	 mov r5,r1
+ 165:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_Init:Invalid module pointer", XMC_POSIF_IsPeripheralValid(peripheral));
+ 166:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_Init:NULL Pointer", (config != (XMC_POSIF_CONFIG_t *)NULL) );
+ 167:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 168:../Libraries/XMCLib/src/xmc_posif.c ****   /* Enable the POSIF module */
+ 169:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_POSIF_Enable(peripheral);
+ 144              	 .loc 1 169 0
+ 145 0006 FFF7FEFF 	 bl XMC_POSIF_Enable
+ 146              	.LVL14:
+ 147              	.LBB4:
+ 148              	.LBB5:
+ 149              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_posif.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @file xmc_posif.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @date 2017-06-24
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @cond
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  **************************************************************************************************
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * All rights reserved.                        
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *                                             
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * following conditions are met:   
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *                                                                              
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * disclaimer.                        
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * products derived from this software without specific prior written permission.                  
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *                                                                              
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *                                                                              
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  **************************************************************************************************
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Change History
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * --------------
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 2015-02-18:
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *     - Initial version
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *      
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 2015-02-20:
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *     - Driver description added <BR>
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 2015-06-19:
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *     - Removed version macros and declaration of GetDriverVersion API <BR> 
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 2015-07-02:
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *     - Updated XMC_POSIF_QD_GetDirection API
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 2016-03-09:
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *     - Optimization of write only registers
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 2017-06-24
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *     - Added posif map connectivity file<br>
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @endcond 
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #ifndef XMC_POSIF_H
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #define XMC_POSIF_H
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**************************************************************************************************
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * HEADER FILES
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  **************************************************************************************************
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #include <xmc_common.h>
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #if defined(POSIF0)
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #include <xmc_scu.h>
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #include "xmc_posif_map.h"
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @addtogroup XMClib XMC Peripheral Library
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @{
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @addtogroup POSIF
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @brief Position Interface Unit (POSIF) driver for the XMC microcontroller family <br>
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * The POSIF unit is a flexible and powerful component for motor control systems that use
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * rotary encoders or hall sensors as feedback loop. It provides interface for motor position and v
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * POSIF unit works with CCU4 and CCU8 to enable position and velocity measurement and to control P
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Driver is divided in three POSIF functional blocks - Hall Sensor Control (POSIF_HSC), Quadrature
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * MultiChannel Mode (POSIF_MCM). <br>
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * POSIF driver features:
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -#  Configuration structure XMC_POSIF_CONFIG_t and initialization function XMC_POSIF_Init() to c
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -# Allows to change the operating mode using XMC_POSIF_SetMode()
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -# Allows the selection of one of the four inputs (A, B, C or D) using XMC_POSIF_SelectInputSour
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * hall0, hall1 and hall2 signals. For quadrature decoder mode, inputs are phase A, phase B and ind
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -#  Hall Sensor Control (APIs prefixed with XMC_POSIF_HSC_) <br>
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 	-  Configuration structure XMC_POSIF_HSC_CONFIG_t and initialization function XMC_POSIF_HSC_Ini
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 	-  Update current and expected hall pattern in shadow register using XMC_POSIF_HSC_SetHallPatte
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 	- Allows immediate shadow transfer using XMC_POSIF_HSC_UpdateHallPattern()
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -#  Quadrature Decoder (APIs prefixed with XMC_POSIF_QD_) <br>
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 	-  Configuration structure XMC_POSIF_QD_CONFIG_t and initialization function XMC_POSIF_QD_Init(
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 	-  Get direction of rotation using XMC_POSIF_QD_GetDirection()
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -#  MultiChannel Mode (APIs prefixed with XMC_POSIF_MCM_) <br>
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *	-  Configuration structure XMC_POSIF_MCM_CONFIG_t and initialization function XMC_POSIF_MCM_Init
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *	-  Update multichannel pattern in shadow register using XMC_POSIF_MCM_SetMultiChannelPattern()
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *	-  Allows immediate shadow transfer using XMC_POSIF_MCM_UpdateMultiChannelPattern()
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -# User need to call respective init functions to configure POSIF operating mode. e.g to configu
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * call both XMC_POSIF_HSC_Init() and XMC_POSIF_MCM_Init().
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * -# Allows to enable and disable interrupt sources and assign to service request node using XMC_P
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * 
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @note POSIF is not available on XMC11 and XMC12 devices
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @{
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**************************************************************************************************
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * MACROS
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  **************************************************************************************************
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #if ((UC_SERIES == XMC45) || (UC_SERIES == XMC44) || (UC_SERIES == XMC47) || (UC_SERIES == XMC48) |
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #define XMC_POSIF_CHECK_MODULE_PTR(PTR)  ( ((PTR)== POSIF0) || ((PTR)== POSIF1) ) /*< Check for val
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #else
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #define XMC_POSIF_CHECK_MODULE_PTR(PTR)  ( ((PTR)== POSIF0))  /*< Check for valid module pointer */
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #endif
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**************************************************************************************************
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * ENUMS
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  **************************************************************************************************
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  Defines the return status, to verify the POSIF related API calls. Use type @ref XMC_POSIF_STATU
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_STATUS
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_STATUS_OK = 0U,     /**< API fulfills request */
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_STATUS_ERROR        /**< API cannot fulfill request */
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_STATUS_t;
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF configurable modes.Use type @ref XMC_POSIF_MODE_t for this enum.
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * The members defines the function selector(FSEL) bitfields of \a PCONF register.
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_MODE
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_MODE_HALL_SENSOR = 0U, /**< Hall sensor mode */
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_MODE_QD              , /**< Quadrature Decoder mode */
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_MODE_MCM             , /**< Standalone Multichannel mode */
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_MODE_MCM_QD           /**< Quadrature Decoder + Standalone Multichannel mode */
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_MODE_t;
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF configurable input ports.Use type @ref XMC_POSIF_INPUT_PORT_t for this enum.
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * The member defines the respective input selector(INSELX) bitfields of \a PCONF register.
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It selects, which input is used for the phase or Hall input function (depending on the module is
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Quadrature Decoder or Hall Sensor Mode). Same enum can be used to configure pattern update signa
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \a PCONF register's \a MSETS bit field.
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_INPUT_PORT
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_A = 0U, /**< INPUT-A */
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_B     , /**< INPUT-B */
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_C     , /**< INPUT-C */
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_D     , /**< INPUT-D */
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_E     , /**< INPUT-E */
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_F     , /**< INPUT-F */
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_G     , /**< INPUT-G */
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_PORT_H       /**< INPUT-H */
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_INPUT_PORT_t;
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  Defines active level of an input signal.Use type @ref XMC_POSIF_INPUT_ACTIVE_LEVEL_t for this e
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_INPUT_ACTIVE_LEVEL
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_ACTIVE_LEVEL_HIGH  = 0U, /**< Input - Active High */
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_INPUT_ACTIVE_LEVEL_LOW         /**< Input - Active Low */
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_INPUT_ACTIVE_LEVEL_t;
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF input debounce filter configuration.POSIF inputs are connected to low pass filter 
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * this enum is used to configure low pass filters cut off frequency.
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Use type @ref XMC_POSIF_FILTER_t for this enum.
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * The member defines the low pass filter configuration(LPC) bitfield of \a PCONF register.
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_FILTER
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_DISABLED     = 0U, /**< No filtering */
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_1_CLOCK_CYCLE    , /**< Filter of 1 Clock Cycle */
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_2_CLOCK_CYCLE    , /**< Filter of 2 Clock Cycles */
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_4_CLOCK_CYCLE    , /**< Filter of 4 Clock Cycles */
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_8_CLOCK_CYCLE    , /**< Filter of 8 Clock Cycles */
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_16_CLOCK_CYCLE   , /**< Filter of 16 Clock Cycles */
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_32_CLOCK_CYCLE   , /**< Filter of 32 Clock Cycles */
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_FILTER_64_CLOCK_CYCLE     /**< Filter of 64 Clock Cycles */
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_FILTER_t;
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF events.Use type @ref XMC_POSIF_IRQ_EVENT_t for this enum.
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * The member defines available event sources.It is used to configure which event to be used for
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * interrupt generation using \a PFLGE register. [ PFLG,SPFLG,RPFLG]
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_IRQ_EVENT
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_CHE                  = 0U, /**< Hall Mode : Correct Hall Event */
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_WHE                  = 1U, /**< Hall Mode : Wrong Hall Event */
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_HALL_INPUT           = 2U, /**< Hall Mode : Hall Input update */
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_MCP_SHADOW_TRANSFER  = 4U, /**< Hall Mode + MCM Mode : MC Pattern shadow tran
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_INDX                 = 8U, /**< Quadrature Mode : Index event detection */
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_ERR                  = 9U, /**< Quadrature Mode : Quadrature Phase Error */
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_CNT                  = 10U, /**< Quadrature Mode : Quadrature Clock event */
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_DIR                  = 11U, /**< Quadrature Mode : Quadrature Direction chang
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_IRQ_EVENT_PCLK                 = 12U  /**< Quadrature Mode : Quadrature period clock ge
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_IRQ_EVENT_t;
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF service request lines.Use type @ref XMC_POSIF_SR_ID_t for this enum.
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It used to connect POSIF event to required service request line.
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * in \a PFLGE register for interrupt generation.
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_SR_ID
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 219:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_SR_ID_0 = 0U, /**< SR-0 */
+ 220:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_SR_ID_1      /**< SR-1 */
+ 221:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_SR_ID_t;
+ 222:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 223:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 224:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines position decoder mode selection.Use type @ref XMC_POSIF_QD_MODE_t for this enum.
+ 225:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * The member defines configuration for the operation of the quadrature decoder mode.
+ 226:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It used to configure \a QDC register.
+ 227:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 228:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_QD_MODE
+ 229:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 230:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_MODE_QUADRATURE       = 0U, /**< Standard Quadrature Mode */
+ 231:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_MODE_DIRECTION_COUNT       /**< Direction Count Mode */
+ 232:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_QD_MODE_t;
+ 233:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 234:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 235:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines motor rotation direction.Use type @ref XMC_POSIF_QD_DIR_t for this enum.
+ 236:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * The member defines the direction in quadrature mode.
+ 237:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 238:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_QD_DIR
+ 239:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 240:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_DIR_COUNTERCLOCKWISE  = 0U, /**< Counter Clockwise */
+ 241:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_DIR_CLOCKWISE              /**< Clockwise */
+ 242:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_QD_DIR_t;
+ 243:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 244:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 245:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines frequency of index signal generation.Use type @ref XMC_POSIF_QD_INDEX_GENERATION_t for t
+ 246:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Member represents available configuration for index marker generation using \a ICM  bit field in
+ 247:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 248:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_QD_INDEX_GENERATION
+ 249:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 250:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_INDEX_GENERATION_NEVER  = 0U, /**< Never generate the index marker signal */
+ 251:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_INDEX_GENERATION_ONCE      , /**< Generate only once after the first revolution */
+ 252:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_INDEX_GENERATION_ALWAYS      /**< Index marker generated upon every revolution */
+ 253:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_QD_INDEX_GENERATION_t;
+ 254:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 255:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 256:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  Defines trigger edge in hall sensor mode.Use type @ref XMC_POSIF_HSC_TRIGGER_EDGE_t for this en
+ 257:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  It can be used to configure \a PCONF register's \a SPES and \a MSES bit fields.
+ 258:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 259:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef enum XMC_POSIF_HSC_TRIGGER_EDGE
+ 260:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 261:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_HSC_TRIGGER_EDGE_RISING  = 0U, /**< Rising edge */
+ 262:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_HSC_TRIGGER_EDGE_FALLING      /**< Falling edge */
+ 263:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_HSC_TRIGGER_EDGE_t;
+ 264:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 265:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**************************************************************************************************
+ 266:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * DATA STRUCTURES
+ 267:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  **************************************************************************************************
+ 268:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 269:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /*Anonymous structure/union guard start*/
+ 270:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #if defined(__CC_ARM)
+ 271:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   #pragma push
+ 272:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   #pragma anon_unions
+ 273:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #elif defined(__TASKING__)
+ 274:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   #pragma warning 586
+ 275:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #endif
+ 276:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 278:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 279:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF peripheral register structure.Use type @ref XMC_POSIF_t for this data structure.
+ 280:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 281:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef POSIF_GLOBAL_TypeDef XMC_POSIF_t;
+ 282:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 283:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 284:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  Defines POSIF quadrature decoder initialization data structure.
+ 285:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  Use type @ref XMC_POSIF_QD_CONFIG_t for this data structure.
+ 286:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  It used to configure Quadrature mode using \a QDC register.
+ 287:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 288:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef struct XMC_POSIF_QD_CONFIG
+ 289:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 290:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   XMC_POSIF_QD_MODE_t mode;      /**< Operational Mode of the quadrature encoder and decoder */
+ 291:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   union
+ 292:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   {
+ 293:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     struct
+ 294:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     {
+ 295:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t phase_a: 1;       /**< Phase-A active level configuration */
+ 296:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t phase_b: 1;       /**< Phase-B active level configuration */
+ 297:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t phase_leader: 1;  /**< Which of the two phase signals[Phase A or Phase B] leads the 
+ 298:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t : 1;
+ 299:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t index: 2;        /**< Index signal generation control. Use @ref XMC_POSIF_QD_INDEX_G
+ 300:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t : 26;
+ 301:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     };
+ 302:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     uint32_t qdc;
+ 303:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   };
+ 304:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_QD_CONFIG_t;
+ 305:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 306:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 307:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF hall sensor control initialization data structure.
+ 308:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Use type @ref XMC_POSIF_HSC_CONFIG_t for this data structure.
+ 309:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It used to initialize hall sensor mode configuration using \a PCONF register.
+ 310:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 311:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef struct XMC_POSIF_HSC_CONFIG
+ 312:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 313:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   union
+ 314:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   {
+ 315:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     struct
+ 316:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     {
+ 317:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t : 4;
+ 318:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t disable_idle_signal: 1;   /**< Should idle signal be disabled upon wrong hall event?
+ 319:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t : 11;
+ 320:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t sampling_trigger: 1;      /**< Of HSDA and HSDB, which one is to be used to trigger 
+ 321:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t sampling_trigger_edge: 1; /**< Which edge of the sampling trigger signal is to be co
+ 322:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 	  uint32_t : 6;
+ 323:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t external_error_port: 2;    /**< Of the 4 external error ports, which one is to be co
+ 324:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t external_error_enable: 1;  /**< Should external errors lead to Wrong Hall event? */
+ 325:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t external_error_level: 1;   /**< What should be the active level of external error si
+ 326:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t: 4;
+ 327:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     };
+ 328:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     uint32_t hall_config;
+ 329:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   };
+ 330:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_HSC_CONFIG_t;
+ 331:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 332:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 333:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Defines POSIF multi-channel mode initialization data structure.
+ 334:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Use type @ref XMC_POSIF_MCM_CONFIG_t for this data structure.
+ 335:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It used to initialize multi channel mode configuration using \a PCONF register.
+ 336:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 337:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef struct XMC_POSIF_MCM_CONFIG
+ 338:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 339:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   union
+ 340:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   {
+ 341:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     struct
+ 342:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     {
+ 343:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t : 5;
+ 344:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t pattern_sw_update: 1; /**< should multi channel pattern updated by SW ? */
+ 345:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t : 12;
+ 346:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 	  uint32_t pattern_update_trigger: 3; /**< Of the 8 update triggers, which one is to be considered
+ 347:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t pattern_trigger_edge: 1;  /**< Which edge of the pattern update trigger is to be con
+ 348:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t pwm_sync: 2;         /**< Of the 4 pwm sync inputs, which one is to be considered? *
+ 349:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t : 8;
+ 350:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     };
+ 351:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     uint32_t mcm_config;
+ 352:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   };
+ 353:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** }XMC_POSIF_MCM_CONFIG_t;
+ 354:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 355:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 356:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  Defines POSIF module initialization data structure.
+ 357:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  Use type @ref XMC_POSIF_CONFIG_t for this data structure.
+ 358:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *  It is used to initialize POSIF module using \a PCONF register.
+ 359:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 360:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** typedef struct XMC_POSIF_CONFIG
+ 361:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 362:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   union
+ 363:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   {
+ 364:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     struct
+ 365:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     {
+ 366:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t mode: 2;    /**< POSIF Operational mode. Use @ref XMC_POSIF_MODE_t to configure */
+ 367:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t :6;
+ 368:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t input0: 2; /**< Choice of input for Input-1 */
+ 369:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t input1: 2; /**< Choice of input for Input-2 */
+ 370:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t input2: 2; /**< Choice of input for Input-3 */
+ 371:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t :14;
+ 372:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t filter: 3; /**< Input filter configuration */
+ 373:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****       uint32_t: 1;
+ 374:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     };
+ 375:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     uint32_t pconf;
+ 376:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   };
+ 377:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** } XMC_POSIF_CONFIG_t;
+ 378:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 379:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /*Anonymous structure/union guard end*/
+ 380:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #if defined(__CC_ARM)
+ 381:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   #pragma pop
+ 382:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #elif defined(__TASKING__)
+ 383:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   #pragma warning restore
+ 384:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #endif
+ 385:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 386:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**************************************************************************************************
+ 387:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * API Prototypes
+ 388:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  **************************************************************************************************
+ 389:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #ifdef __cplusplus
+ 390:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** extern "C" {
+ 391:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** #endif
+ 392:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 393:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 394:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module of type @ref XMC_POSIF_t
+ 395:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval None
+ 396:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 397:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 398:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * De-asserts the POSIF module from reset and enables the clock.\n
+ 399:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PRCLR0 register's \a POSIF0RS or \a POSIF1RS bit field depends upon \a peripheral.
+ 400:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * If running on other than XMC45 device then it will ungate the peripheral clock.
+ 401:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 402:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Note</b><br>
+ 403:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * This is the first API which application must invoke to configure POSIF.
+ 404:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It is internally called by XMC_POSIF_Init().
+ 405:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 406:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 407:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Disable(),XMC_POSIF_Init() \n\n\n
+ 408:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 409:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** void XMC_POSIF_Enable(XMC_POSIF_t *const peripheral);
+ 410:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 411:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 412:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module of type @ref XMC_POSIF_t
+ 413:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval None
+ 414:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 415:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 416:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Asserts the POSIF module into reset and disables the clock.\n
+ 417:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * If running on other than XMC45 device then in addition it will gate the peripheral clock.
+ 418:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PRCLR0 register's \a POSIF0RS or \a POSIF1RS bitfield depends upon \a peripheral.
+ 419:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 420:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 421:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Enable()\n\n\n
+ 422:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 423:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** void XMC_POSIF_Disable(XMC_POSIF_t *const peripheral);
+ 424:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 425:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 426:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module of type @ref XMC_POSIF_t
+ 427:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param config Pointer to POSIF configuration data(operation mode,input selection and filter conf
+ 428:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval None
+ 429:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 430:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 431:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Initialize POSIF module with \a config.\n
+ 432:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures POSIF global registers.This is the first API which application must invoke to configu
+ 433:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It sets up parameters common to all the POSIF modes - hall sensor,quadrature decoder and multi-c
+ 434:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PCONF register with mode of operation,input selection and filter configuration.
+ 435:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 436:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 437:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_HSC_Init(),XMC_POSIF_QD_Init(),XMC_POSIF_MCM_Init() \n\n\n
+ 438:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** */
+ 439:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** void XMC_POSIF_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_CONFIG_t * const config);
+ 440:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 441:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 442:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module
+ 443:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param config Pointer to hall sensor control initialization data of type @ref XMC_POSIF_HSC_CONF
+ 444:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval XMC_POSIF_STATUS_t  Returns @ref XMC_POSIF_STATUS_OK if configured in Hall Sensor Mode
+ 445:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *                             else return @ref XMC_POSIF_STATUS_ERROR.
+ 446:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 447:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 448:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Initializes hall sensor control mode.\n
+ 449:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PCONF register with which POSIF input trigger to be used for
+ 450:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * sampling hall pattern.Configures \a PCONF register for idle signal generation for wrong hall eve
+ 451:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 452:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Note</b><br>
+ 453:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It is necessary to have called XMC_POSIF_Init first with Hall sensor mode before invocation of t
+ 454:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 455:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 456:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Init() \n\n\n
+ 457:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 458:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** XMC_POSIF_STATUS_t XMC_POSIF_HSC_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_HSC_CONFIG_t *
+ 459:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 460:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 461:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module
+ 462:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param config Pointer to quadrature decoder initialization data
+ 463:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval XMC_POSIF_STATUS_t Returns quadrature mode initialization status of type @ref XMC_POSIF_
+ 464:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 465:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 466:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Initializes quadrature decoder control mode.\n
+ 467:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PCONF register with quadrature mode using @ref XMC_POSIF_QD_MODE_t data structure.
+ 468:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Initializes \a QDC register with quadrature mode configuration using @ref XMC_POSIF_QD_CONFIG_t 
+ 469:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 470:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Note</b><br>
+ 471:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It is necessary to have called XMC_POSIF_Init first with Quadrature decoder mode before invocati
+ 472:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 473:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 474:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Init() \n\n\n
+ 475:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 476:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** XMC_POSIF_STATUS_t XMC_POSIF_QD_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_QD_CONFIG_t * c
+ 477:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 478:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 479:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module
+ 480:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param config Pointer to quadrature decoder initialization data
+ 481:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval XMC_POSIF_STATUS_t Returns multi channel pattern initialization status of type @ref XMC_
+ 482:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 483:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 484:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Initializes multi channel mode in Hall mode, standalone multi-channel mode and quadrature with m
+ 485:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PCONF register with multi channel mode using @ref XMC_POSIF_MCM_CONFIG_t data stru
+ 486:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 487:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Note</b><br>
+ 488:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * It is necessary to call XMC_POSIF_Init first before invocation of this API.
+ 489:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * For XMC_POSIF_MODE_HALL_SENSOR, it is necessary to have called XMC_POSIF_HSC_Init before invocat
+ 490:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * For XMC_POSIF_MODE_MCM_QD, it is necessary to have called XMC_POSIF_QD_Init before invocation of
+ 491:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 492:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 493:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Init(),XMC_POSIF_HSC_Init(),XMC_POSIF_QD_Init() \n\n\n
+ 494:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 495:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** XMC_POSIF_STATUS_t XMC_POSIF_MCM_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_MCM_CONFIG_t *
+ 496:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 497:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 498:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module
+ 499:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param mode POSIF operating mode of type @ref XMC_POSIF_MODE_t
+ 500:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval None
+ 501:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 502:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 503:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures POSIF module for \a mode.\n
+ 504:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PCONF register's a\ FSEL bitfield with \a mode.
+ 505:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Refer @ref XMC_POSIF_MODE_t for available options.
+ 506:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 507:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Note</b><br>
+ 508:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * POSIF module should be in stopped state while changing the operating mode.
+ 509:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 510:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 511:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Stop() \n\n\n
+ 512:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 513:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** __STATIC_INLINE void XMC_POSIF_SetMode(XMC_POSIF_t *const peripheral, const XMC_POSIF_MODE_t mode)
+ 514:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 515:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   peripheral->PCONF = ((peripheral->PCONF & ~(uint32_t)(POSIF_PCONF_FSEL_Msk)) |
+ 516:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****                      (((uint32_t)mode << POSIF_PCONF_FSEL_Pos) & (uint32_t)POSIF_PCONF_FSEL_Msk));
+ 517:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** }
+ 518:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 519:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 520:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module
+ 521:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param input0 Choice of input for input 0 [0-3]
+ 522:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param input1 Choice of input for input 1 [0-3]
+ 523:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param input2 Choice of input for input 2 [0-3]
+ 524:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval None
+ 525:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 526:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 527:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures which input to be connected to POSIF module. \n
+ 528:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PCONF register's INSEL0,INSEL1,INSEL2 bit fields with source for the input connect
+ 529:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \a input1, \a input2 respectively.
+ 530:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 531:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Note</b><br>
+ 532:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures which input is used for the Phase X or Hall input X function depending upon the modul
+ 533:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * set for Quadrature Decoder or Hall Sensor Mode.
+ 534:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 535:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 536:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Init() \n\n\n
+ 537:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 538:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** void XMC_POSIF_SelectInputSource(XMC_POSIF_t *const peripheral, const XMC_POSIF_INPUT_PORT_t input0
+ 539:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****     const XMC_POSIF_INPUT_PORT_t input1, const XMC_POSIF_INPUT_PORT_t input2);
+ 540:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 541:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 542:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 543:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module
+ 544:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval None
+ 545:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 546:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 547:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Starts POSIF \a peripheral functional state machine.\n
+ 548:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Starts POSIF state machine for \a peripheral.Configures \a PRUNS register's \a SRB bit field wit
+ 549:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 550:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Note</b><br>
+ 551:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Global properties of POSIF along with mode specific properties should have been initialized befo
+ 552:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * FSM.
+ 553:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 554:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 555:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Stop(),XMC_POSIF_IsRunning() \n\n\n
+ 556:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 557:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** __STATIC_INLINE void XMC_POSIF_Start(XMC_POSIF_t *const peripheral)
+ 558:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 559:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   peripheral->PRUNS = (uint32_t)POSIF_PRUNS_SRB_Msk;
+ 560:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** }
+ 561:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** 
+ 562:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** /**
+ 563:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @param peripheral Pointer to an instance of POSIF module
+ 564:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * @retval None
+ 565:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 566:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Description</b><br>
+ 567:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Stops POSIF \a peripheral functional state machine.\n
+ 568:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Stop POSIF functional state machine and clears current internal status of the \a peripheral.
+ 569:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * Configures \a PRUNC register's \a CRB bit field with 1.
+ 570:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  *
+ 571:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * \par<b>Related APIs:</b><BR>
+ 572:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  * XMC_POSIF_Start(),XMC_POSIF_IsRunning() \n\n\n
+ 573:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****  */
+ 574:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** __STATIC_INLINE void XMC_POSIF_Stop(XMC_POSIF_t *const peripheral)
+ 575:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h **** {
+ 576:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_posif.h ****   peripheral->PRUNC = (uint32_t)(POSIF_PRUNC_CRB_Msk | POSIF_PRUNC_CSM_Msk);
+ 150              	 .loc 2 576 0
+ 151 000a 0323     	 movs r3,#3
+ 152 000c E360     	 str r3,[r4,#12]
+ 153              	.LBE5:
+ 154              	.LBE4:
+ 170:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 171:../Libraries/XMCLib/src/xmc_posif.c ****   /* Stop POSIF */
+ 172:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_POSIF_Stop(peripheral);
+ 173:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 174:../Libraries/XMCLib/src/xmc_posif.c ****   /* Program the operational mode, input selectors and debounce filter */
+ 175:../Libraries/XMCLib/src/xmc_posif.c ****   peripheral->PCONF = config->pconf;
+ 155              	 .loc 1 175 0
+ 156 000e 2B68     	 ldr r3,[r5]
+ 157 0010 2360     	 str r3,[r4]
+ 158 0012 38BD     	 pop {r3,r4,r5,pc}
+ 159              	 .cfi_endproc
+ 160              	.LFE196:
+ 162              	 .section .text.XMC_POSIF_HSC_Init,"ax",%progbits
+ 163              	 .align 2
+ 164              	 .global XMC_POSIF_HSC_Init
+ 165              	 .thumb
+ 166              	 .thumb_func
+ 168              	XMC_POSIF_HSC_Init:
+ 169              	.LFB197:
+ 176:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 177:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 178:../Libraries/XMCLib/src/xmc_posif.c **** /* API to initialize hall sensor interface */
+ 179:../Libraries/XMCLib/src/xmc_posif.c **** XMC_POSIF_STATUS_t XMC_POSIF_HSC_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_HSC_CONFIG_t *
+ 180:../Libraries/XMCLib/src/xmc_posif.c **** {
+ 170              	 .loc 1 180 0
+ 171              	 .cfi_startproc
+ 172              	 
+ 173              	 
+ 174              	 
+ 175              	.LVL15:
+ 181:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_POSIF_STATUS_t retval;
+ 182:../Libraries/XMCLib/src/xmc_posif.c ****   
+ 183:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_HSC_Init:Invalid module pointer\n", XMC_POSIF_IsPeripheralValid(peripheral)
+ 184:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_HSC_Init:NULL Pointer\n", (config != (XMC_POSIF_HSC_CONFIG_t *)NULL) );
+ 185:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 186:../Libraries/XMCLib/src/xmc_posif.c ****   if (XMC_POSIF_MODE_HALL_SENSOR == (XMC_POSIF_MODE_t)((peripheral->PCONF) & (uint32_t)POSIF_PCONF_
+ 176              	 .loc 1 186 0
+ 177 0000 0368     	 ldr r3,[r0]
+ 178 0002 13F0030F 	 tst r3,#3
+ 179 0006 05D1     	 bne .L17
+ 187:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 188:../Libraries/XMCLib/src/xmc_posif.c ****     peripheral->PCONF |= config->hall_config;
+ 180              	 .loc 1 188 0
+ 181 0008 0268     	 ldr r2,[r0]
+ 182 000a 0B68     	 ldr r3,[r1]
+ 183 000c 1343     	 orrs r3,r3,r2
+ 184 000e 0360     	 str r3,[r0]
+ 185              	.LVL16:
+ 189:../Libraries/XMCLib/src/xmc_posif.c ****     retval = XMC_POSIF_STATUS_OK;
+ 186              	 .loc 1 189 0
+ 187 0010 0020     	 movs r0,#0
+ 188              	.LVL17:
+ 189 0012 7047     	 bx lr
+ 190              	.LVL18:
+ 191              	.L17:
+ 190:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 191:../Libraries/XMCLib/src/xmc_posif.c ****   else
+ 192:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 193:../Libraries/XMCLib/src/xmc_posif.c ****     retval = XMC_POSIF_STATUS_ERROR;
+ 192              	 .loc 1 193 0
+ 193 0014 0120     	 movs r0,#1
+ 194              	.LVL19:
+ 194:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 195:../Libraries/XMCLib/src/xmc_posif.c ****   return retval;
+ 196:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 195              	 .loc 1 196 0
+ 196 0016 7047     	 bx lr
+ 197              	 .cfi_endproc
+ 198              	.LFE197:
+ 200              	 .section .text.XMC_POSIF_QD_Init,"ax",%progbits
+ 201              	 .align 2
+ 202              	 .global XMC_POSIF_QD_Init
+ 203              	 .thumb
+ 204              	 .thumb_func
+ 206              	XMC_POSIF_QD_Init:
+ 207              	.LFB198:
+ 197:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 198:../Libraries/XMCLib/src/xmc_posif.c **** /* API to initialize quadrature decoder interface */
+ 199:../Libraries/XMCLib/src/xmc_posif.c **** XMC_POSIF_STATUS_t XMC_POSIF_QD_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_QD_CONFIG_t * c
+ 200:../Libraries/XMCLib/src/xmc_posif.c **** {
+ 208              	 .loc 1 200 0
+ 209              	 .cfi_startproc
+ 210              	 
+ 211              	 
+ 212              	 
+ 213              	.LVL20:
+ 201:../Libraries/XMCLib/src/xmc_posif.c ****   uint8_t reg;
+ 202:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_POSIF_STATUS_t retval;
+ 203:../Libraries/XMCLib/src/xmc_posif.c ****   
+ 204:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_QD_Init:Invalid module pointer", XMC_POSIF_IsPeripheralValid(peripheral));
+ 205:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_QD_Init:NULL Pointer", (config != (XMC_POSIF_QD_CONFIG_t *)NULL) );
+ 206:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 207:../Libraries/XMCLib/src/xmc_posif.c ****   reg = (uint8_t)((peripheral->PCONF) & (uint32_t)POSIF_PCONF_FSEL_Msk);
+ 214              	 .loc 1 207 0
+ 215 0000 0368     	 ldr r3,[r0]
+ 216              	.LVL21:
+ 208:../Libraries/XMCLib/src/xmc_posif.c ****   if (((uint32_t)XMC_POSIF_MODE_QD == reg) || ((uint32_t)XMC_POSIF_MODE_MCM_QD == reg))
+ 217              	 .loc 1 208 0
+ 218 0002 13F0010F 	 tst r3,#1
+ 219 0006 08D0     	 beq .L20
+ 209:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 210:../Libraries/XMCLib/src/xmc_posif.c ****     /* Program the quadrature mode */
+ 211:../Libraries/XMCLib/src/xmc_posif.c ****     peripheral->PCONF |= (uint32_t)(config->mode) << POSIF_PCONF_QDCM_Pos;
+ 220              	 .loc 1 211 0
+ 221 0008 0368     	 ldr r3,[r0]
+ 222              	.LVL22:
+ 223 000a 0A78     	 ldrb r2,[r1]
+ 224 000c 43EA8203 	 orr r3,r3,r2,lsl#2
+ 225 0010 0360     	 str r3,[r0]
+ 212:../Libraries/XMCLib/src/xmc_posif.c ****     peripheral->QDC = config->qdc;
+ 226              	 .loc 1 212 0
+ 227 0012 4B68     	 ldr r3,[r1,#4]
+ 228 0014 0366     	 str r3,[r0,#96]
+ 229              	.LVL23:
+ 213:../Libraries/XMCLib/src/xmc_posif.c ****     retval = XMC_POSIF_STATUS_OK;
+ 230              	 .loc 1 213 0
+ 231 0016 0020     	 movs r0,#0
+ 232              	.LVL24:
+ 233 0018 7047     	 bx lr
+ 234              	.LVL25:
+ 235              	.L20:
+ 214:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 215:../Libraries/XMCLib/src/xmc_posif.c ****   else
+ 216:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 217:../Libraries/XMCLib/src/xmc_posif.c ****     retval = XMC_POSIF_STATUS_ERROR;
+ 236              	 .loc 1 217 0
+ 237 001a 0120     	 movs r0,#1
+ 238              	.LVL26:
+ 218:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 219:../Libraries/XMCLib/src/xmc_posif.c ****   
+ 220:../Libraries/XMCLib/src/xmc_posif.c ****   return retval;
+ 221:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 239              	 .loc 1 221 0
+ 240 001c 7047     	 bx lr
+ 241              	 .cfi_endproc
+ 242              	.LFE198:
+ 244 001e 00BF     	 .section .text.XMC_POSIF_MCM_Init,"ax",%progbits
+ 245              	 .align 2
+ 246              	 .global XMC_POSIF_MCM_Init
+ 247              	 .thumb
+ 248              	 .thumb_func
+ 250              	XMC_POSIF_MCM_Init:
+ 251              	.LFB199:
+ 222:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 223:../Libraries/XMCLib/src/xmc_posif.c **** /* API to initialize multi-channel mode.
+ 224:../Libraries/XMCLib/src/xmc_posif.c ****  * This is used in Hall mode, standalone multi-channel mode and quadrature with multi-channel mode
+ 225:../Libraries/XMCLib/src/xmc_posif.c ****  */
+ 226:../Libraries/XMCLib/src/xmc_posif.c **** XMC_POSIF_STATUS_t XMC_POSIF_MCM_Init(XMC_POSIF_t *const peripheral, const XMC_POSIF_MCM_CONFIG_t *
+ 227:../Libraries/XMCLib/src/xmc_posif.c **** {
+ 252              	 .loc 1 227 0
+ 253              	 .cfi_startproc
+ 254              	 
+ 255              	 
+ 256              	 
+ 257              	.LVL27:
+ 228:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_POSIF_STATUS_t retval;
+ 229:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 230:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_MCM_Init:Invalid module pointer", XMC_POSIF_IsPeripheralValid(peripheral));
+ 231:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_MCM_Init:NULL Pointer", (config != (XMC_POSIF_MCM_CONFIG_t *)NULL) );
+ 232:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 233:../Libraries/XMCLib/src/xmc_posif.c ****   if ((XMC_POSIF_MODE_t)((peripheral->PCONF) & (uint32_t)POSIF_PCONF_FSEL_Msk) != XMC_POSIF_MODE_QD
+ 258              	 .loc 1 233 0
+ 259 0000 0368     	 ldr r3,[r0]
+ 260 0002 03F00303 	 and r3,r3,#3
+ 261 0006 012B     	 cmp r3,#1
+ 262 0008 05D0     	 beq .L23
+ 234:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 235:../Libraries/XMCLib/src/xmc_posif.c ****     peripheral->PCONF |= config->mcm_config;
+ 263              	 .loc 1 235 0
+ 264 000a 0268     	 ldr r2,[r0]
+ 265 000c 0B68     	 ldr r3,[r1]
+ 266 000e 1343     	 orrs r3,r3,r2
+ 267 0010 0360     	 str r3,[r0]
+ 268              	.LVL28:
+ 236:../Libraries/XMCLib/src/xmc_posif.c ****     retval = XMC_POSIF_STATUS_OK;
+ 269              	 .loc 1 236 0
+ 270 0012 0020     	 movs r0,#0
+ 271              	.LVL29:
+ 272 0014 7047     	 bx lr
+ 273              	.LVL30:
+ 274              	.L23:
+ 237:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 238:../Libraries/XMCLib/src/xmc_posif.c ****   else
+ 239:../Libraries/XMCLib/src/xmc_posif.c ****   {
+ 240:../Libraries/XMCLib/src/xmc_posif.c ****     retval = XMC_POSIF_STATUS_ERROR;
+ 275              	 .loc 1 240 0
+ 276 0016 0120     	 movs r0,#1
+ 277              	.LVL31:
+ 241:../Libraries/XMCLib/src/xmc_posif.c ****   }
+ 242:../Libraries/XMCLib/src/xmc_posif.c ****   return retval;
+ 243:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 278              	 .loc 1 243 0
+ 279 0018 7047     	 bx lr
+ 280              	 .cfi_endproc
+ 281              	.LFE199:
+ 283 001a 00BF     	 .section .text.XMC_POSIF_SelectInputSource,"ax",%progbits
+ 284              	 .align 2
+ 285              	 .global XMC_POSIF_SelectInputSource
+ 286              	 .thumb
+ 287              	 .thumb_func
+ 289              	XMC_POSIF_SelectInputSource:
+ 290              	.LFB200:
+ 244:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 245:../Libraries/XMCLib/src/xmc_posif.c **** /* API to configure input source */
+ 246:../Libraries/XMCLib/src/xmc_posif.c **** void XMC_POSIF_SelectInputSource (XMC_POSIF_t *const peripheral, const XMC_POSIF_INPUT_PORT_t input
+ 247:../Libraries/XMCLib/src/xmc_posif.c ****     const XMC_POSIF_INPUT_PORT_t input1, const XMC_POSIF_INPUT_PORT_t input2)
+ 248:../Libraries/XMCLib/src/xmc_posif.c **** {
+ 291              	 .loc 1 248 0
+ 292              	 .cfi_startproc
+ 293              	 
+ 294              	 
+ 295              	 
+ 296              	.LVL32:
+ 297 0000 10B4     	 push {r4}
+ 298              	.LCFI3:
+ 299              	 .cfi_def_cfa_offset 4
+ 300              	 .cfi_offset 4,-4
+ 301              	.LVL33:
+ 249:../Libraries/XMCLib/src/xmc_posif.c ****   uint32_t reg;
+ 250:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_SelectInputSource:Invalid module pointer", XMC_POSIF_IsPeripheralValid(peri
+ 251:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_SelectInputSource:Wrong input port input0", (input0 < XMC_POSIF_INSEL_MAX))
+ 252:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_SelectInputSource:Wrong input port input1", (input1 < XMC_POSIF_INSEL_MAX))
+ 253:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_SelectInputSource:Wrong input port input2", (input2 < XMC_POSIF_INSEL_MAX))
+ 254:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 255:../Libraries/XMCLib/src/xmc_posif.c ****   reg = (uint32_t)((((uint32_t)input0 << POSIF_PCONF_INSEL0_Pos) & (uint32_t)POSIF_PCONF_INSEL0_Msk
+ 256:../Libraries/XMCLib/src/xmc_posif.c ****         (((uint32_t)input1 << POSIF_PCONF_INSEL1_Pos) & (uint32_t)POSIF_PCONF_INSEL1_Msk) |
+ 257:../Libraries/XMCLib/src/xmc_posif.c ****         (((uint32_t)input2 << POSIF_PCONF_INSEL2_Pos) & (uint32_t)POSIF_PCONF_INSEL2_Msk));
+ 258:../Libraries/XMCLib/src/xmc_posif.c ****   peripheral->PCONF = ((peripheral->PCONF & ~(uint32_t)XMC_POSIF_PCONF_INSEL_Msk) | reg);
+ 302              	 .loc 1 258 0
+ 303 0002 0468     	 ldr r4,[r0]
+ 257:../Libraries/XMCLib/src/xmc_posif.c ****   peripheral->PCONF = ((peripheral->PCONF & ~(uint32_t)XMC_POSIF_PCONF_INSEL_Msk) | reg);
+ 304              	 .loc 1 257 0
+ 305 0004 1B03     	 lsls r3,r3,#12
+ 306              	.LVL34:
+ 307 0006 03F44053 	 and r3,r3,#12288
+ 308              	 .loc 1 258 0
+ 309 000a 24F47C54 	 bic r4,r4,#16128
+ 310 000e 1C43     	 orrs r4,r4,r3
+ 256:../Libraries/XMCLib/src/xmc_posif.c ****         (((uint32_t)input2 << POSIF_PCONF_INSEL2_Pos) & (uint32_t)POSIF_PCONF_INSEL2_Msk));
+ 311              	 .loc 1 256 0
+ 312 0010 9202     	 lsls r2,r2,#10
+ 313              	.LVL35:
+ 314 0012 02F44062 	 and r2,r2,#3072
+ 315 0016 2243     	 orrs r2,r2,r4
+ 255:../Libraries/XMCLib/src/xmc_posif.c ****         (((uint32_t)input1 << POSIF_PCONF_INSEL1_Pos) & (uint32_t)POSIF_PCONF_INSEL1_Msk) |
+ 316              	 .loc 1 255 0
+ 317 0018 0902     	 lsls r1,r1,#8
+ 318              	.LVL36:
+ 319 001a 01F44071 	 and r1,r1,#768
+ 320              	 .loc 1 258 0
+ 321 001e 1143     	 orrs r1,r1,r2
+ 322 0020 0160     	 str r1,[r0]
+ 259:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 323              	 .loc 1 259 0
+ 324 0022 5DF8044B 	 ldr r4,[sp],#4
+ 325              	.LCFI4:
+ 326              	 .cfi_restore 4
+ 327              	 .cfi_def_cfa_offset 0
+ 328 0026 7047     	 bx lr
+ 329              	 .cfi_endproc
+ 330              	.LFE200:
+ 332              	 .section .text.XMC_POSIF_SetInterruptNode,"ax",%progbits
+ 333              	 .align 2
+ 334              	 .global XMC_POSIF_SetInterruptNode
+ 335              	 .thumb
+ 336              	 .thumb_func
+ 338              	XMC_POSIF_SetInterruptNode:
+ 339              	.LFB201:
+ 260:../Libraries/XMCLib/src/xmc_posif.c **** 
+ 261:../Libraries/XMCLib/src/xmc_posif.c **** /* API to select an interrupt node */
+ 262:../Libraries/XMCLib/src/xmc_posif.c **** void XMC_POSIF_SetInterruptNode(XMC_POSIF_t *const peripheral, const XMC_POSIF_IRQ_EVENT_t event, c
+ 263:../Libraries/XMCLib/src/xmc_posif.c **** {
+ 340              	 .loc 1 263 0
+ 341              	 .cfi_startproc
+ 342              	 
+ 343              	 
+ 344              	 
+ 345              	.LVL37:
+ 346 0000 10B4     	 push {r4}
+ 347              	.LCFI5:
+ 348              	 .cfi_def_cfa_offset 4
+ 349              	 .cfi_offset 4,-4
+ 264:../Libraries/XMCLib/src/xmc_posif.c ****   uint32_t reg;
+ 265:../Libraries/XMCLib/src/xmc_posif.c ****   
+ 266:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_SetInterruptNode:Invalid module pointer", XMC_POSIF_IsPeripheralValid(perip
+ 267:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_SetInterruptNode:Wrong IRQ event", (event <= XMC_POSIF_IRQ_EVENT_PCLK) );
+ 268:../Libraries/XMCLib/src/xmc_posif.c ****   XMC_ASSERT("XMC_POSIF_SetInterruptNode:Wrong SR ID", (sr <= XMC_POSIF_SR_ID_1) );
+ 269:../Libraries/XMCLib/src/xmc_posif.c ****   
+ 270:../Libraries/XMCLib/src/xmc_posif.c ****   reg = peripheral->PFLGE;
+ 350              	 .loc 1 270 0
+ 351 0002 436F     	 ldr r3,[r0,#116]
+ 352              	.LVL38:
+ 271:../Libraries/XMCLib/src/xmc_posif.c ****   reg &= ~((uint32_t)1 << ((uint32_t)event + (uint32_t)POSIF_PFLGE_CHESEL_Pos));
+ 353              	 .loc 1 271 0
+ 354 0004 1031     	 adds r1,r1,#16
+ 355              	.LVL39:
+ 356 0006 0124     	 movs r4,#1
+ 357 0008 8C40     	 lsls r4,r4,r1
+ 358 000a 23EA0403 	 bic r3,r3,r4
+ 359              	.LVL40:
+ 272:../Libraries/XMCLib/src/xmc_posif.c ****   reg |= (uint32_t)sr << ((uint32_t)event + (uint32_t)POSIF_PFLGE_CHESEL_Pos);
+ 360              	 .loc 1 272 0
+ 361 000e 8A40     	 lsls r2,r2,r1
+ 362              	.LVL41:
+ 363 0010 1A43     	 orrs r2,r2,r3
+ 364              	.LVL42:
+ 273:../Libraries/XMCLib/src/xmc_posif.c ****   peripheral->PFLGE = reg;
+ 365              	 .loc 1 273 0
+ 366 0012 4267     	 str r2,[r0,#116]
+ 274:../Libraries/XMCLib/src/xmc_posif.c **** }
+ 367              	 .loc 1 274 0
+ 368 0014 5DF8044B 	 ldr r4,[sp],#4
+ 369              	.LCFI6:
+ 370              	 .cfi_restore 4
+ 371              	 .cfi_def_cfa_offset 0
+ 372 0018 7047     	 bx lr
+ 373              	 .cfi_endproc
+ 374              	.LFE201:
+ 376 001a 00BF     	 .text
+ 377              	.Letext0:
+ 378              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 379              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 380              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+ 381              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_scu.h"
+ 382              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 383              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_posif.c
+    {standard input}:19     .text.XMC_POSIF_Enable:00000000 $t
+    {standard input}:24     .text.XMC_POSIF_Enable:00000000 XMC_POSIF_Enable
+    {standard input}:68     .text.XMC_POSIF_Enable:0000002c $d
+    {standard input}:74     .text.XMC_POSIF_Disable:00000000 $t
+    {standard input}:79     .text.XMC_POSIF_Disable:00000000 XMC_POSIF_Disable
+    {standard input}:117    .text.XMC_POSIF_Disable:00000024 $d
+    {standard input}:123    .text.XMC_POSIF_Init:00000000 $t
+    {standard input}:128    .text.XMC_POSIF_Init:00000000 XMC_POSIF_Init
+    {standard input}:163    .text.XMC_POSIF_HSC_Init:00000000 $t
+    {standard input}:168    .text.XMC_POSIF_HSC_Init:00000000 XMC_POSIF_HSC_Init
+    {standard input}:201    .text.XMC_POSIF_QD_Init:00000000 $t
+    {standard input}:206    .text.XMC_POSIF_QD_Init:00000000 XMC_POSIF_QD_Init
+    {standard input}:245    .text.XMC_POSIF_MCM_Init:00000000 $t
+    {standard input}:250    .text.XMC_POSIF_MCM_Init:00000000 XMC_POSIF_MCM_Init
+    {standard input}:284    .text.XMC_POSIF_SelectInputSource:00000000 $t
+    {standard input}:289    .text.XMC_POSIF_SelectInputSource:00000000 XMC_POSIF_SelectInputSource
+    {standard input}:333    .text.XMC_POSIF_SetInterruptNode:00000000 $t
+    {standard input}:338    .text.XMC_POSIF_SetInterruptNode:00000000 XMC_POSIF_SetInterruptNode
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc4_scu.h.106.b7d8d773976d331f6820948fe093a27d
+                           .group:00000000 wm4.xmc_posif_map.h.46.1386a036336a6dd1d5f9824b5b510e9b
+
+UNDEFINED SYMBOLS
+XMC_SCU_CLOCK_EnableClock
+XMC_SCU_RESET_DeassertPeripheralReset
+XMC_SCU_RESET_AssertPeripheralReset

@@ -1,0 +1,285 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "dri_rtc_conf.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.RTC_Event_Handler,"ax",%progbits
+  19              	 .align 2
+  20              	 .global RTC_Event_Handler
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	RTC_Event_Handler:
+  25              	.LFB185:
+  26              	 .file 1 "../Driver/RTC/cfg/src/dri_rtc_conf.c"
+   1:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /*****************************************************************************
+   2:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *
+   4:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *
+   6:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+   7:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+   8:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Title:		RTC Configuration Source
+   9:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Filename:		dri_rtc_conf.c
+  10:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Author:		HS
+  11:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Origin Date:	02/23/2020
+  12:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Version:		1.0.0
+  13:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Notes:
+  14:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *
+  15:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Change History
+  16:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * --------------
+  17:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *
+  18:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+  19:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  20:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /** @file:	dri_rtc_conf.c
+  21:../Driver/RTC/cfg/src/dri_rtc_conf.c ****  *  @brief:	This source file contains configuration function definitions for RTC
+  22:../Driver/RTC/cfg/src/dri_rtc_conf.c ****  */
+  23:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  24:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  25:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+  26:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Includes
+  27:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+  28:../Driver/RTC/cfg/src/dri_rtc_conf.c **** #include <dri_rtc.h>
+  29:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  30:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  31:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+  32:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Preprocessor Constants
+  33:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+  34:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  35:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  36:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+  37:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Configuration Constants
+  38:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+  39:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  40:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  41:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+  42:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Macros
+  43:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+  44:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  45:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  46:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+  47:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Typedefs
+  48:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+  49:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  50:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  51:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+  52:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Variables
+  53:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+  54:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  55:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /*
+  56:../Driver/RTC/cfg/src/dri_rtc_conf.c ****  * @brief	RTC API functions
+  57:../Driver/RTC/cfg/src/dri_rtc_conf.c ****  *
+  58:../Driver/RTC/cfg/src/dri_rtc_conf.c ****  * \par<b>Description:</b><br>
+  59:../Driver/RTC/cfg/src/dri_rtc_conf.c ****  * 			This is data structure for RTC API functions to be used by Application
+  60:../Driver/RTC/cfg/src/dri_rtc_conf.c ****  */
+  61:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  62:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  63:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /*****************************************************************************/
+  64:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  65:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /* Callback handler for user */
+  66:../Driver/RTC/cfg/src/dri_rtc_conf.c **** #if (RTC_CALLBACK_HANDLER_USED == 1U)
+  67:../Driver/RTC/cfg/src/dri_rtc_conf.c **** extern void RTC_callback_handler( void * p_channel, const eRTC_Events event );
+  68:../Driver/RTC/cfg/src/dri_rtc_conf.c **** #endif
+  69:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  70:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  71:../Driver/RTC/cfg/src/dri_rtc_conf.c **** #if (RTC_USED == 1U)
+  72:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /* RTC Channel Configurations */
+  73:../Driver/RTC/cfg/src/dri_rtc_conf.c **** XMC_RTC_CONFIG_t RTC_ChannelConfiguration =
+  74:../Driver/RTC/cfg/src/dri_rtc_conf.c **** {
+  75:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.time =
+  76:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	{
+  77:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.seconds = 0,
+  78:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.minutes = 20,
+  79:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.hours = 1,
+  80:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.days = 1,
+  81:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  82:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.daysofweek = XMC_RTC_WEEKDAY_SUNDAY,
+  83:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.month = 3,
+  84:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.year = 2020
+  85:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	},
+  86:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.alarm =
+  87:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	{
+  88:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.seconds = 0,
+  89:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.minutes = 22,
+  90:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.hours = 1,
+  91:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.days = 1,
+  92:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  93:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.month = 3,
+  94:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 		.year = 2020
+  95:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	},
+  96:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.prescaler = RTC_PRESCALE
+  97:../Driver/RTC/cfg/src/dri_rtc_conf.c **** };
+  98:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+  99:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /* RTC Module Configurations */
+ 100:../Driver/RTC/cfg/src/dri_rtc_conf.c **** tStRTC_ModuleConfiguartion RTC_Configuration =
+ 101:../Driver/RTC/cfg/src/dri_rtc_conf.c **** {
+ 102:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.p_module_context = RTC,
+ 103:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.p_channel_config = &RTC_ChannelConfiguration,
+ 104:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.clock_source = XMC_SCU_HIB_RTCCLKSRC_ULP
+ 105:../Driver/RTC/cfg/src/dri_rtc_conf.c **** };
+ 106:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /* RTC Module Control */
+ 107:../Driver/RTC/cfg/src/dri_rtc_conf.c **** tStRTC_Control RTC_Control;
+ 108:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+ 109:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+ 110:../Driver/RTC/cfg/src/dri_rtc_conf.c **** tStRTC_Callbacks RTC_Callback =
+ 111:../Driver/RTC/cfg/src/dri_rtc_conf.c **** {
+ 112:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.fp_callback = &RTC_callback_handler
+ 113:../Driver/RTC/cfg/src/dri_rtc_conf.c **** };
+ 114:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+ 115:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /** RTC Module **/
+ 116:../Driver/RTC/cfg/src/dri_rtc_conf.c **** tStRTC RTC_ =
+ 117:../Driver/RTC/cfg/src/dri_rtc_conf.c **** {
+ 118:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.p_config = &RTC_Configuration,
+ 119:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	.p_control = &RTC_Control
+ 120:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	#if (RTC_CALLBACK_HANDLER_USED == 1U)
+ 121:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	,.p_callback = &RTC_Callback
+ 122:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	#endif
+ 123:../Driver/RTC/cfg/src/dri_rtc_conf.c **** };
+ 124:../Driver/RTC/cfg/src/dri_rtc_conf.c **** #endif	/* RTC_USED */
+ 125:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+ 126:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+ 127:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******************************************************************************
+ 128:../Driver/RTC/cfg/src/dri_rtc_conf.c **** * Function Definitions
+ 129:../Driver/RTC/cfg/src/dri_rtc_conf.c **** *******************************************************************************/
+ 130:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+ 131:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /******* ISR Handlers for RTC channel *******/
+ 132:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 
+ 133:../Driver/RTC/cfg/src/dri_rtc_conf.c **** /* RTC ISR Entries */
+ 134:../Driver/RTC/cfg/src/dri_rtc_conf.c **** #if (RTC_USED == 1U)
+ 135:../Driver/RTC/cfg/src/dri_rtc_conf.c **** void RTC_Event_Handler( void )
+ 136:../Driver/RTC/cfg/src/dri_rtc_conf.c **** {
+  27              	 .loc 1 136 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+ 137:../Driver/RTC/cfg/src/dri_rtc_conf.c **** 	__asm("NOP");
+  32              	 .loc 1 137 0
+  33              	
+  34 0000 00BF     	 NOP
+  35              	
+  36              	 .thumb
+  37 0002 7047     	 bx lr
+  38              	 .cfi_endproc
+  39              	.LFE185:
+  41              	 .global RTC_
+  42              	 .global RTC_Callback
+  43              	 .comm RTC_Control,76,4
+  44              	 .global RTC_Configuration
+  45              	 .global RTC_ChannelConfiguration
+  46              	 .section .data.RTC_Callback,"aw",%progbits
+  47              	 .align 2
+  50              	RTC_Callback:
+  51 0000 00000000 	 .word RTC_callback_handler
+  52              	 .section .data.RTC_Configuration,"aw",%progbits
+  53              	 .align 2
+  56              	RTC_Configuration:
+  57 0000 004A0050 	 .word 1342196224
+  58 0004 00000000 	 .word RTC_ChannelConfiguration
+  59 0008 40       	 .byte 64
+  60 0009 000000   	 .space 3
+  61              	 .section .data.RTC_,"aw",%progbits
+  62              	 .align 2
+  65              	RTC_:
+  66 0000 00000000 	 .word RTC_Configuration
+  67 0004 00000000 	 .word RTC_Control
+  68 0008 00000000 	 .word RTC_Callback
+  69              	 .section .data.RTC_ChannelConfiguration,"aw",%progbits
+  70              	 .align 2
+  73              	RTC_ChannelConfiguration:
+  74 0000 00       	 .byte 0
+  75 0001 14       	 .byte 20
+  76 0002 01       	 .byte 1
+  77 0003 01       	 .byte 1
+  78 0004 00       	 .byte 0
+  79 0005 03       	 .byte 3
+  80 0006 E407     	 .short 2020
+  81 0008 00       	 .byte 0
+  82 0009 16       	 .byte 22
+  83 000a 01       	 .byte 1
+  84 000b 01       	 .byte 1
+  85 000c 00       	 .space 1
+  86 000d 03       	 .byte 3
+  87 000e E407     	 .short 2020
+  88 0010 FF7F     	 .short 32767
+  89 0012 0000     	 .space 2
+  90              	 .text
+  91              	.Letext0:
+  92              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+  93              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+  94              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+  95              	 .file 5 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\time.h"
+  96              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_rtc.h"
+  97              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_scu.h"
+  98              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/RTC/cfg/inc/dri_rtc_types.h"
+  99              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 100              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 dri_rtc_conf.c
+    {standard input}:19     .text.RTC_Event_Handler:00000000 $t
+    {standard input}:24     .text.RTC_Event_Handler:00000000 RTC_Event_Handler
+    {standard input}:65     .data.RTC_:00000000 RTC_
+    {standard input}:50     .data.RTC_Callback:00000000 RTC_Callback
+                            *COM*:0000004c RTC_Control
+    {standard input}:56     .data.RTC_Configuration:00000000 RTC_Configuration
+    {standard input}:73     .data.RTC_ChannelConfiguration:00000000 RTC_ChannelConfiguration
+    {standard input}:47     .data.RTC_Callback:00000000 $d
+    {standard input}:53     .data.RTC_Configuration:00000000 $d
+    {standard input}:62     .data.RTC_:00000000 $d
+    {standard input}:70     .data.RTC_ChannelConfiguration:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.time.h.8.2930fe070f4a8096b07db9159698c8e3
+                           .group:00000000 wm4.time.h.2.9857e62ad6ac99431e29d58067232314
+                           .group:00000000 wm4.time.h.24.3660bbb2d0a4c7457ff52ba3ada4c166
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.time.h.135.a144f22f40ef3cf15447b8562982e06e
+                           .group:00000000 wm4.xmc4_scu.h.106.b7d8d773976d331f6820948fe093a27d
+                           .group:00000000 wm4.dri_rtc_conf.h.20.ddb35dd4479cf4677ef8293c7ca1947c
+                           .group:00000000 wm4.xmc_gpio.h.51.99a4c0bd520ffa931ac6d8600dce89c4
+                           .group:00000000 wm4.xmc4_gpio_map.h.74.66e9110cf801b78826ef5354da51c32f
+                           .group:00000000 wm4.xmc4_gpio.h.79.ce6c49508b5a7769c66e7e3c21dcdfe4
+                           .group:00000000 wm4.dri_types.h.39.161f94b021468f2f6263340b954bb37f
+
+UNDEFINED SYMBOLS
+RTC_callback_handler

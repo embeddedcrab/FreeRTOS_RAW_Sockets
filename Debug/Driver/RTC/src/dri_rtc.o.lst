@@ -1,0 +1,422 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "dri_rtc.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.RTC_init,"ax",%progbits
+  19              	 .align 2
+  20              	 .global RTC_init
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	RTC_init:
+  25              	.LFB185:
+  26              	 .file 1 "../Driver/RTC/src/dri_rtc.c"
+   1:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+   2:../Driver/RTC/src/dri_rtc.c **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../Driver/RTC/src/dri_rtc.c **** *
+   4:../Driver/RTC/src/dri_rtc.c **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../Driver/RTC/src/dri_rtc.c **** *
+   6:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+   7:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+   8:../Driver/RTC/src/dri_rtc.c **** * Title:		RTC API Source
+   9:../Driver/RTC/src/dri_rtc.c **** * Filename:		dri_rtc.c
+  10:../Driver/RTC/src/dri_rtc.c **** * Author:		HS
+  11:../Driver/RTC/src/dri_rtc.c **** * Origin Date:	02/23/2020
+  12:../Driver/RTC/src/dri_rtc.c **** * Version:		1.0.0
+  13:../Driver/RTC/src/dri_rtc.c **** * Notes:
+  14:../Driver/RTC/src/dri_rtc.c **** *
+  15:../Driver/RTC/src/dri_rtc.c **** * Change History
+  16:../Driver/RTC/src/dri_rtc.c **** * --------------
+  17:../Driver/RTC/src/dri_rtc.c **** *
+  18:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  19:../Driver/RTC/src/dri_rtc.c **** 
+  20:../Driver/RTC/src/dri_rtc.c **** /** @file:	dri_rtc.c
+  21:../Driver/RTC/src/dri_rtc.c ****  *  @brief:	This header file contains API function definitions for RTC
+  22:../Driver/RTC/src/dri_rtc.c ****  */
+  23:../Driver/RTC/src/dri_rtc.c **** 
+  24:../Driver/RTC/src/dri_rtc.c **** 
+  25:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  26:../Driver/RTC/src/dri_rtc.c **** * Includes
+  27:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  28:../Driver/RTC/src/dri_rtc.c **** #include <dri_rtc.h>
+  29:../Driver/RTC/src/dri_rtc.c **** 
+  30:../Driver/RTC/src/dri_rtc.c **** 
+  31:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  32:../Driver/RTC/src/dri_rtc.c **** * Preprocessor Constants
+  33:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  34:../Driver/RTC/src/dri_rtc.c **** 
+  35:../Driver/RTC/src/dri_rtc.c **** 
+  36:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  37:../Driver/RTC/src/dri_rtc.c **** * Configuration Constants
+  38:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  39:../Driver/RTC/src/dri_rtc.c **** 
+  40:../Driver/RTC/src/dri_rtc.c **** /* RTC Events for Event Handler */
+  41:../Driver/RTC/src/dri_rtc.c **** #define RTC_EVENTS			(XMC_RTC_EVENT_PERIODIC_MINUTES |\
+  42:../Driver/RTC/src/dri_rtc.c **** 							XMC_RTC_EVENT_PERIODIC_HOURS | XMC_RTC_EVENT_PERIODIC_DAYS |\
+  43:../Driver/RTC/src/dri_rtc.c **** 							XMC_RTC_EVENT_PERIODIC_MONTHS | XMC_RTC_EVENT_PERIODIC_YEARS |\
+  44:../Driver/RTC/src/dri_rtc.c **** 							XMC_RTC_EVENT_ALARM)
+  45:../Driver/RTC/src/dri_rtc.c **** /* XMC_RTC_EVENT_PERIODIC_SECONDS */
+  46:../Driver/RTC/src/dri_rtc.c **** 
+  47:../Driver/RTC/src/dri_rtc.c **** 
+  48:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  49:../Driver/RTC/src/dri_rtc.c **** * Macros
+  50:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  51:../Driver/RTC/src/dri_rtc.c **** 
+  52:../Driver/RTC/src/dri_rtc.c **** 
+  53:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  54:../Driver/RTC/src/dri_rtc.c **** * Typedefs
+  55:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  56:../Driver/RTC/src/dri_rtc.c **** 
+  57:../Driver/RTC/src/dri_rtc.c **** 
+  58:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  59:../Driver/RTC/src/dri_rtc.c **** * Variables
+  60:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  61:../Driver/RTC/src/dri_rtc.c **** 
+  62:../Driver/RTC/src/dri_rtc.c **** 
+  63:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  64:../Driver/RTC/src/dri_rtc.c **** * Private Function Declarations
+  65:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  66:../Driver/RTC/src/dri_rtc.c **** 
+  67:../Driver/RTC/src/dri_rtc.c **** 
+  68:../Driver/RTC/src/dri_rtc.c **** /******************************************************************************
+  69:../Driver/RTC/src/dri_rtc.c **** * Public Function Definitions
+  70:../Driver/RTC/src/dri_rtc.c **** *******************************************************************************/
+  71:../Driver/RTC/src/dri_rtc.c **** 
+  72:../Driver/RTC/src/dri_rtc.c **** /**
+  73:../Driver/RTC/src/dri_rtc.c ****  * @function
+  74:../Driver/RTC/src/dri_rtc.c ****  *
+  75:../Driver/RTC/src/dri_rtc.c ****  * @brief
+  76:../Driver/RTC/src/dri_rtc.c ****  *
+  77:../Driver/RTC/src/dri_rtc.c ****  * <i>Imp Note:</i>
+  78:../Driver/RTC/src/dri_rtc.c ****  *
+  79:../Driver/RTC/src/dri_rtc.c ****  */
+  80:../Driver/RTC/src/dri_rtc.c **** long RTC_init( void * p_channel, const unsigned char init )
+  81:../Driver/RTC/src/dri_rtc.c **** {
+  27              	 .loc 1 81 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  82:../Driver/RTC/src/dri_rtc.c **** 	DRIVER_ASSERT( NULL == p_channel, RTC_STATUS_INVALID_ARGUMENT );
+  32              	 .loc 1 82 0
+  33 0000 0028     	 cmp r0,#0
+  34 0002 4BD0     	 beq .L5
+  81:../Driver/RTC/src/dri_rtc.c **** 	DRIVER_ASSERT( NULL == p_channel, RTC_STATUS_INVALID_ARGUMENT );
+  35              	 .loc 1 81 0
+  36 0004 70B5     	 push {r4,r5,r6,lr}
+  37              	.LCFI0:
+  38              	 .cfi_def_cfa_offset 16
+  39              	 .cfi_offset 4,-16
+  40              	 .cfi_offset 5,-12
+  41              	 .cfi_offset 6,-8
+  42              	 .cfi_offset 14,-4
+  83:../Driver/RTC/src/dri_rtc.c **** 	/* Local Variables */
+  84:../Driver/RTC/src/dri_rtc.c **** 	tStRTC_ModuleConfiguartion * p_config_l = ((tStRTC *)p_channel)->p_config;
+  43              	 .loc 1 84 0
+  44 0006 0668     	 ldr r6,[r0]
+  45              	.LVL1:
+  85:../Driver/RTC/src/dri_rtc.c **** 	tStRTC_Control * p_control_l = ((tStRTC *)p_channel)->p_control;
+  46              	 .loc 1 85 0
+  47 0008 4568     	 ldr r5,[r0,#4]
+  48              	.LVL2:
+  86:../Driver/RTC/src/dri_rtc.c **** 	long ret_status = RTC_STATUS_FAILED;
+  87:../Driver/RTC/src/dri_rtc.c **** 
+  88:../Driver/RTC/src/dri_rtc.c **** 	/* Check Initiallization */
+  89:../Driver/RTC/src/dri_rtc.c **** 	switch( init )
+  49              	 .loc 1 89 0
+  50 000a 0029     	 cmp r1,#0
+  51 000c 3AD0     	 beq .L3
+  52 000e 0129     	 cmp r1,#1
+  53 0010 46D1     	 bne .L9
+  90:../Driver/RTC/src/dri_rtc.c **** 	{
+  91:../Driver/RTC/src/dri_rtc.c **** 		case RTC_INIT_OPEN:
+  92:../Driver/RTC/src/dri_rtc.c **** 			/* Check initialization state */
+  93:../Driver/RTC/src/dri_rtc.c **** 			if( 1 == p_control_l->state.init )
+  54              	 .loc 1 93 0
+  55 0012 95F84830 	 ldrb r3,[r5,#72]
+  56 0016 13F0010F 	 tst r3,#1
+  57 001a 43D1     	 bne .L7
+  94:../Driver/RTC/src/dri_rtc.c **** 			{
+  95:../Driver/RTC/src/dri_rtc.c **** 				ret_status = RTC_STATUS_ALREADY_INITIALIZED;
+  96:../Driver/RTC/src/dri_rtc.c **** 			}
+  97:../Driver/RTC/src/dri_rtc.c **** 			else
+  98:../Driver/RTC/src/dri_rtc.c **** 			{
+  99:../Driver/RTC/src/dri_rtc.c **** 				/* Set RTC CLock source */
+ 100:../Driver/RTC/src/dri_rtc.c **** 				XMC_SCU_HIB_SetRtcClockSource( p_config_l->clock_source );
+  58              	 .loc 1 100 0
+  59 001c 307A     	 ldrb r0,[r6,#8]
+  60              	.LVL3:
+  61 001e FFF7FEFF 	 bl XMC_SCU_HIB_SetRtcClockSource
+  62              	.LVL4:
+ 101:../Driver/RTC/src/dri_rtc.c **** 				/* Initialize RTC channel */
+ 102:../Driver/RTC/src/dri_rtc.c **** 				ret_status = XMC_RTC_Init( (const XMC_RTC_CONFIG_t *const) p_config_l->p_channel_config );
+  63              	 .loc 1 102 0
+  64 0022 7068     	 ldr r0,[r6,#4]
+  65 0024 FFF7FEFF 	 bl XMC_RTC_Init
+  66              	.LVL5:
+ 103:../Driver/RTC/src/dri_rtc.c **** 				/* Check status */
+ 104:../Driver/RTC/src/dri_rtc.c **** 				if( XMC_RTC_STATUS_OK == ret_status )
+  67              	 .loc 1 104 0
+  68 0028 0446     	 mov r4,r0
+  69 002a 0028     	 cmp r0,#0
+  70 002c 3CD1     	 bne .L8
+ 105:../Driver/RTC/src/dri_rtc.c **** 				{
+ 106:../Driver/RTC/src/dri_rtc.c **** 					/* Set Default RTC Time */
+ 107:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_SetTime( &(p_config_l->p_channel_config->time) );
+  71              	 .loc 1 107 0
+  72 002e 7068     	 ldr r0,[r6,#4]
+  73              	.LVL6:
+  74 0030 FFF7FEFF 	 bl XMC_RTC_SetTime
+  75              	.LVL7:
+ 108:../Driver/RTC/src/dri_rtc.c **** 					/* Set Alarm */
+ 109:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_SetAlarm( &(p_config_l->p_channel_config->alarm) );
+  76              	 .loc 1 109 0
+  77 0034 7068     	 ldr r0,[r6,#4]
+  78 0036 0830     	 adds r0,r0,#8
+  79 0038 FFF7FEFF 	 bl XMC_RTC_SetAlarm
+  80              	.LVL8:
+ 110:../Driver/RTC/src/dri_rtc.c **** 
+ 111:../Driver/RTC/src/dri_rtc.c **** 					/* Get standard time values */
+ 112:../Driver/RTC/src/dri_rtc.c **** 					#if (RTC_USING_STANDARD_TIME == 1U)
+ 113:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_GetTimeStdFormat( &(p_control_l->time) );
+  81              	 .loc 1 113 0
+  82 003c 2846     	 mov r0,r5
+  83 003e FFF7FEFF 	 bl XMC_RTC_GetTimeStdFormat
+  84              	.LVL9:
+ 114:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_GetAlarmStdFormat( &(p_control_l->alarm) );
+  85              	 .loc 1 114 0
+  86 0042 05F12400 	 add r0,r5,#36
+  87 0046 FFF7FEFF 	 bl XMC_RTC_GetAlarmStdFormat
+  88              	.LVL10:
+ 115:../Driver/RTC/src/dri_rtc.c **** 					#endif
+ 116:../Driver/RTC/src/dri_rtc.c **** 					/* Enable RTC Events */
+ 117:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_EnableEvent( RTC_EVENTS );
+  89              	 .loc 1 117 0
+  90 004a 4FF4B770 	 mov r0,#366
+  91 004e FFF7FEFF 	 bl XMC_RTC_EnableEvent
+  92              	.LVL11:
+ 118:../Driver/RTC/src/dri_rtc.c **** 					/* Enable Hibernate Wakeup for RTC Alarm */
+ 119:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_EnableHibernationWakeUp( XMC_RTC_WAKEUP_EVENT_ON_ALARM );
+  93              	 .loc 1 119 0
+  94 0052 0420     	 movs r0,#4
+  95 0054 FFF7FEFF 	 bl XMC_RTC_EnableHibernationWakeUp
+  96              	.LVL12:
+ 120:../Driver/RTC/src/dri_rtc.c **** 
+ 121:../Driver/RTC/src/dri_rtc.c **** 					#if (RTC_ALARM_NMI_REQUEST == 1U)
+ 122:../Driver/RTC/src/dri_rtc.c **** 					/* Enable NMI request for RTC Alarm
+ 123:../Driver/RTC/src/dri_rtc.c **** 					 * Note: NMI has to be handled in NMI handler */
+ 124:../Driver/RTC/src/dri_rtc.c **** 					XMC_SCU_INTERRUPT_EnableNmiRequest( XMC_SCU_NMIREQ_RTC_AI );
+  97              	 .loc 1 124 0
+  98 0058 0420     	 movs r0,#4
+  99 005a FFF7FEFF 	 bl XMC_SCU_INTERRUPT_EnableNmiRequest
+ 100              	.LVL13:
+ 125:../Driver/RTC/src/dri_rtc.c **** 					#elif (RTC_ALARM_NMI_REQUEST == 0U)
+ 126:../Driver/RTC/src/dri_rtc.c **** 					XMC_SCU_INTERRUPT_SetEventHandler( XMC_SCU_INTERRUPT_EVENT_RTC_ALARM, &RTC_Alarm_Handler );
+ 127:../Driver/RTC/src/dri_rtc.c **** 					#endif
+ 128:../Driver/RTC/src/dri_rtc.c **** 					/* Set RTC Event Handlers,
+ 129:../Driver/RTC/src/dri_rtc.c **** 					 * Note: Not checking the return status, should consider the max event numbers */
+ 130:../Driver/RTC/src/dri_rtc.c **** 					XMC_SCU_INTERRUPT_SetEventHandler( XMC_SCU_INTERRUPT_EVENT_RTC_PERIODIC, &RTC_Event_Handler );
+ 101              	 .loc 1 130 0
+ 102 005e 0220     	 movs r0,#2
+ 103 0060 1249     	 ldr r1,.L11
+ 104 0062 FFF7FEFF 	 bl XMC_SCU_INTERRUPT_SetEventHandler
+ 105              	.LVL14:
+ 131:../Driver/RTC/src/dri_rtc.c **** 					XMC_SCU_INTERRUPT_EnableEvent( XMC_SCU_INTERRUPT_EVENT_RTC_PERIODIC | XMC_SCU_INTERRUPT_EVENT_
+ 106              	 .loc 1 131 0
+ 107 0066 0620     	 movs r0,#6
+ 108 0068 FFF7FEFF 	 bl XMC_SCU_INTERRUPT_EnableEvent
+ 109              	.LVL15:
+ 132:../Driver/RTC/src/dri_rtc.c **** 
+ 133:../Driver/RTC/src/dri_rtc.c **** 					/* Enable and Start RTC */
+ 134:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_Enable();
+ 110              	 .loc 1 134 0
+ 111 006c FFF7FEFF 	 bl XMC_RTC_Enable
+ 112              	.LVL16:
+ 135:../Driver/RTC/src/dri_rtc.c **** 					XMC_RTC_Start();
+ 113              	 .loc 1 135 0
+ 114 0070 FFF7FEFF 	 bl XMC_RTC_Start
+ 115              	.LVL17:
+ 136:../Driver/RTC/src/dri_rtc.c **** 
+ 137:../Driver/RTC/src/dri_rtc.c **** 					/* Update parameters */
+ 138:../Driver/RTC/src/dri_rtc.c **** 					p_control_l->state.init = 1;
+ 116              	 .loc 1 138 0
+ 117 0074 95F84830 	 ldrb r3,[r5,#72]
+ 118 0078 43F00103 	 orr r3,r3,#1
+ 119 007c 85F84830 	 strb r3,[r5,#72]
+ 120              	.LVL18:
+ 139:../Driver/RTC/src/dri_rtc.c **** 					/* Update return status */
+ 140:../Driver/RTC/src/dri_rtc.c **** 					ret_status = RTC_STATUS_SUCCESS;
+ 121              	 .loc 1 140 0
+ 122 0080 2046     	 mov r0,r4
+ 123 0082 70BD     	 pop {r4,r5,r6,pc}
+ 124              	.LVL19:
+ 125              	.L3:
+ 141:../Driver/RTC/src/dri_rtc.c **** 				}
+ 142:../Driver/RTC/src/dri_rtc.c **** 			}
+ 143:../Driver/RTC/src/dri_rtc.c **** 		break;
+ 144:../Driver/RTC/src/dri_rtc.c **** 
+ 145:../Driver/RTC/src/dri_rtc.c **** 		case RTC_INIT_CLOSE:
+ 146:../Driver/RTC/src/dri_rtc.c **** 			/* Disable and Stop RTC */
+ 147:../Driver/RTC/src/dri_rtc.c **** 			XMC_RTC_Disable();
+ 126              	 .loc 1 147 0
+ 127 0084 FFF7FEFF 	 bl XMC_RTC_Disable
+ 128              	.LVL20:
+ 148:../Driver/RTC/src/dri_rtc.c **** 			XMC_RTC_Stop();
+ 129              	 .loc 1 148 0
+ 130 0088 FFF7FEFF 	 bl XMC_RTC_Stop
+ 131              	.LVL21:
+ 149:../Driver/RTC/src/dri_rtc.c **** 			ret_status = RTC_STATUS_SUCCESS;
+ 150:../Driver/RTC/src/dri_rtc.c **** 			/* update initialization satte */
+ 151:../Driver/RTC/src/dri_rtc.c **** 			p_control_l->state.init = 0;
+ 132              	 .loc 1 151 0
+ 133 008c 95F84830 	 ldrb r3,[r5,#72]
+ 134 0090 6FF30003 	 bfc r3,#0,#1
+ 135 0094 85F84830 	 strb r3,[r5,#72]
+ 149:../Driver/RTC/src/dri_rtc.c **** 			ret_status = RTC_STATUS_SUCCESS;
+ 136              	 .loc 1 149 0
+ 137 0098 0020     	 movs r0,#0
+ 152:../Driver/RTC/src/dri_rtc.c **** 		break;
+ 138              	 .loc 1 152 0
+ 139 009a 70BD     	 pop {r4,r5,r6,pc}
+ 140              	.LVL22:
+ 141              	.L5:
+ 142              	.LCFI1:
+ 143              	 .cfi_def_cfa_offset 0
+ 144              	 .cfi_restore 4
+ 145              	 .cfi_restore 5
+ 146              	 .cfi_restore 6
+ 147              	 .cfi_restore 14
+  82:../Driver/RTC/src/dri_rtc.c **** 	/* Local Variables */
+ 148              	 .loc 1 82 0
+ 149 009c 0320     	 movs r0,#3
+ 150              	.LVL23:
+ 153:../Driver/RTC/src/dri_rtc.c **** 
+ 154:../Driver/RTC/src/dri_rtc.c **** 		default:
+ 155:../Driver/RTC/src/dri_rtc.c **** 			ret_status = RTC_STATUS_INVALID_ARGUMENT;
+ 156:../Driver/RTC/src/dri_rtc.c **** 	}
+ 157:../Driver/RTC/src/dri_rtc.c **** 
+ 158:../Driver/RTC/src/dri_rtc.c **** 	/* Return status */
+ 159:../Driver/RTC/src/dri_rtc.c **** 	return ret_status;
+ 160:../Driver/RTC/src/dri_rtc.c **** }
+ 151              	 .loc 1 160 0
+ 152 009e 7047     	 bx lr
+ 153              	.LVL24:
+ 154              	.L9:
+ 155              	.LCFI2:
+ 156              	 .cfi_def_cfa_offset 16
+ 157              	 .cfi_offset 4,-16
+ 158              	 .cfi_offset 5,-12
+ 159              	 .cfi_offset 6,-8
+ 160              	 .cfi_offset 14,-4
+ 155:../Driver/RTC/src/dri_rtc.c **** 	}
+ 161              	 .loc 1 155 0
+ 162 00a0 0320     	 movs r0,#3
+ 163              	.LVL25:
+ 164 00a2 70BD     	 pop {r4,r5,r6,pc}
+ 165              	.LVL26:
+ 166              	.L7:
+  95:../Driver/RTC/src/dri_rtc.c **** 			}
+ 167              	 .loc 1 95 0
+ 168 00a4 0520     	 movs r0,#5
+ 169              	.LVL27:
+ 170 00a6 70BD     	 pop {r4,r5,r6,pc}
+ 171              	.LVL28:
+ 172              	.L8:
+ 173              	 .loc 1 160 0
+ 174 00a8 70BD     	 pop {r4,r5,r6,pc}
+ 175              	.LVL29:
+ 176              	.L12:
+ 177 00aa 00BF     	 .align 2
+ 178              	.L11:
+ 179 00ac 00000000 	 .word RTC_Event_Handler
+ 180              	 .cfi_endproc
+ 181              	.LFE185:
+ 183              	 .text
+ 184              	.Letext0:
+ 185              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 186              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 187              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\time.h"
+ 188              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_rtc.h"
+ 189              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_rtc.h"
+ 190              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_scu.h"
+ 191              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_scu.h"
+ 192              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/RTC/cfg/inc/dri_rtc_types.h"
+ 193              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 194              	 .file 11 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 dri_rtc.c
+    {standard input}:19     .text.RTC_init:00000000 $t
+    {standard input}:24     .text.RTC_init:00000000 RTC_init
+    {standard input}:179    .text.RTC_init:000000ac $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.time.h.8.2930fe070f4a8096b07db9159698c8e3
+                           .group:00000000 wm4.time.h.2.9857e62ad6ac99431e29d58067232314
+                           .group:00000000 wm4.time.h.24.3660bbb2d0a4c7457ff52ba3ada4c166
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.56707660962b21991903f1fee7c13bb3
+                           .group:00000000 wm4.time.h.135.a144f22f40ef3cf15447b8562982e06e
+                           .group:00000000 wm4.xmc4_scu.h.106.b7d8d773976d331f6820948fe093a27d
+                           .group:00000000 wm4.dri_rtc_conf.h.20.ddb35dd4479cf4677ef8293c7ca1947c
+                           .group:00000000 wm4.xmc_gpio.h.51.99a4c0bd520ffa931ac6d8600dce89c4
+                           .group:00000000 wm4.xmc4_gpio_map.h.74.66e9110cf801b78826ef5354da51c32f
+                           .group:00000000 wm4.xmc4_gpio.h.79.ce6c49508b5a7769c66e7e3c21dcdfe4
+                           .group:00000000 wm4.dri_types.h.39.161f94b021468f2f6263340b954bb37f
+
+UNDEFINED SYMBOLS
+XMC_SCU_HIB_SetRtcClockSource
+XMC_RTC_Init
+XMC_RTC_SetTime
+XMC_RTC_SetAlarm
+XMC_RTC_GetTimeStdFormat
+XMC_RTC_GetAlarmStdFormat
+XMC_RTC_EnableEvent
+XMC_RTC_EnableHibernationWakeUp
+XMC_SCU_INTERRUPT_EnableNmiRequest
+XMC_SCU_INTERRUPT_SetEventHandler
+XMC_SCU_INTERRUPT_EnableEvent
+XMC_RTC_Enable
+XMC_RTC_Start
+XMC_RTC_Disable
+XMC_RTC_Stop
+RTC_Event_Handler

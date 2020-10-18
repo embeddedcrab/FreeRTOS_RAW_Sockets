@@ -1,0 +1,2146 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "server_task.cpp"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text._ZN12ClientTask__12client_entryEPv,"axG",%progbits,_ZN12ClientTask__12client_entryEPv,comdat
+  19              	 .align 2
+  20              	 .weak _ZN12ClientTask__12client_entryEPv
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	_ZN12ClientTask__12client_entryEPv:
+  25              	.LFB35:
+  26              	 .file 1 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc/client_task.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Feel free to use this Code at your own risk for your own purposes.
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Title:		Client Task Header
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Filename:		client_task.h
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Author:		HS
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Origin Date:	01/18/2020
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Version:		1.0.0
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Notes:
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /** @file:	client_task.h
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h ****  *  @brief:	This file contains function declarations
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h ****  *  		for Client Task
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h ****  */
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** #ifndef CLIENT_TASK_H_
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** #define CLIENT_TASK_H_
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Includes
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** #include <rtos_wrappers.h>
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** #include <dri_mem.h>
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /* Include FreeRTOS-Plus TCP/IP files */
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** #include <FreeRTOS_IP.h>
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** #include <FreeRTOS_Sockets.h>
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Preprocessor Constants
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Configuration Constants
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Macros
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Typedefs
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Function Prototypes
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** * Variables
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** *******************************************************************************/
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /******************************************************************************
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h ****  *
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h ****  * @brief	Class for ClientTask__ Instance
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h ****  *
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h ****  ******************************************************************************/
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** class ClientTask__
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** {
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /* public members */
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** public:
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	/** Constructors and Destructors */
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	explicit ClientTask__( const UBaseType_t& uxPriority, const configSTACK_DEPTH_TYPE& usStackDepth )
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	{
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 		(void) RTOS_WRAPPER__::create( ClientTask__::client_entry,
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 										xtask_name, usStackDepth, NULL,
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 										uxPriority, xhandle );
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	}
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	ClientTask__() = delete;
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	ClientTask__ operator=( const ClientTask__& ) = delete;
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	ClientTask__( const ClientTask__ & ) = delete;
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	virtual ~ClientTask__()
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	{
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 		/* Add definition for Destructor */
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 		RTOS_WRAPPER__::destroy( xhandle );
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	}
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	/******* API Member functions *******/
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	/**
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 * @function
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 *
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 * @brief
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 *
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 * @param[in]
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 *
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 * @param[out]
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 *
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 * @return
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 *
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 * \par<b>Description:</b><br>
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 *
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 * <i>Imp Note:</i>
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 *
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	 */
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** /* private members */
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** private:
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	/** Data Members **/
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	const char * const xtask_name = "ClientTask";
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	TaskHandle_t * xhandle = nullptr;
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	/******* Private Member Functions *******/
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	static void client_entry( void * pvParameters )
+  27              	 .loc 1 120 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	.LVL0:
+  32 0000 08B5     	 push {r3,lr}
+  33              	.LCFI0:
+  34              	 .cfi_def_cfa_offset 8
+  35              	 .cfi_offset 3,-8
+  36              	 .cfi_offset 14,-4
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 	{
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 		/* Pass the control to server body */
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\client_task.h **** 		((ClientTask__ *) pvParameters)->client_body( pvParameters );
+  37              	 .loc 1 123 0
+  38 0002 0146     	 mov r1,r0
+  39 0004 FFF7FEFF 	 bl _ZN12ClientTask__11client_bodyEPv
+  40              	.LVL1:
+  41 0008 08BD     	 pop {r3,pc}
+  42              	 .cfi_endproc
+  43              	.LFE35:
+  45 000a 00BF     	 .section .text.raw_udp_server,"ax",%progbits
+  46              	 .align 2
+  47              	 .global raw_udp_server
+  48              	 .thumb
+  49              	 .thumb_func
+  51              	raw_udp_server:
+  52              	.LFB75:
+  53              	 .file 2 "../App/src/server_task.cpp"
+   1:../App/src/server_task.cpp **** /**************************************************************************************************
+   2:../App/src/server_task.cpp ****  * @file	server_task.cpp
+   3:../App/src/server_task.cpp ****  * @brief	Server Task Source
+   4:../App/src/server_task.cpp ****  * @version
+   5:../App/src/server_task.cpp ****  * @date	01/18/2020
+   6:../App/src/server_task.cpp ****  *
+   7:../App/src/server_task.cpp ****  * @cond
+   8:../App/src/server_task.cpp ****  **************************************************************************************************
+   9:../App/src/server_task.cpp ****  * Copyright (c) 2020, Hemant Sharma - All Rights Reserved
+  10:../App/src/server_task.cpp ****  * All rights reserved.
+  11:../App/src/server_task.cpp ****  *
+  12:../App/src/server_task.cpp ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:../App/src/server_task.cpp ****  * following conditions are met:
+  14:../App/src/server_task.cpp ****  *
+  15:../App/src/server_task.cpp ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:../App/src/server_task.cpp ****  * disclaimer.
+  17:../App/src/server_task.cpp ****  *
+  18:../App/src/server_task.cpp ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:../App/src/server_task.cpp ****  * disclaimer in the documentation and/or other materials provided with the distribution.
+  20:../App/src/server_task.cpp ****  *
+  21:../App/src/server_task.cpp ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:../App/src/server_task.cpp ****  * products derived from this software without specific prior written permission.
+  23:../App/src/server_task.cpp ****  *
+  24:../App/src/server_task.cpp ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:../App/src/server_task.cpp ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:../App/src/server_task.cpp ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:../App/src/server_task.cpp ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:../App/src/server_task.cpp ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:../App/src/server_task.cpp ****  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN AN
+  30:../App/src/server_task.cpp ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  31:../App/src/server_task.cpp ****  **************************************************************************************************
+  32:../App/src/server_task.cpp ****  *
+  33:../App/src/server_task.cpp ****  * *************************** Change history ********************************
+  34:../App/src/server_task.cpp ****  *
+  35:../App/src/server_task.cpp ****  * @endcond
+  36:../App/src/server_task.cpp ****  */
+  37:../App/src/server_task.cpp **** 
+  38:../App/src/server_task.cpp **** 
+  39:../App/src/server_task.cpp **** /******************************************************************************
+  40:../App/src/server_task.cpp **** * Includes
+  41:../App/src/server_task.cpp **** *******************************************************************************/
+  42:../App/src/server_task.cpp **** #include <server_task.h>
+  43:../App/src/server_task.cpp **** #include <client_task.h>
+  44:../App/src/server_task.cpp **** 
+  45:../App/src/server_task.cpp **** #include <FreeRTOS_IP_Private.h>
+  46:../App/src/server_task.cpp **** 
+  47:../App/src/server_task.cpp **** 
+  48:../App/src/server_task.cpp **** /******************************************************************************
+  49:../App/src/server_task.cpp **** * Preprocessor Constants
+  50:../App/src/server_task.cpp **** *******************************************************************************/
+  51:../App/src/server_task.cpp **** 
+  52:../App/src/server_task.cpp **** #define USING_RAW_UDP_SERVER
+  53:../App/src/server_task.cpp **** 
+  54:../App/src/server_task.cpp **** 
+  55:../App/src/server_task.cpp **** /******************************************************************************
+  56:../App/src/server_task.cpp **** * Configuration Constants
+  57:../App/src/server_task.cpp **** *******************************************************************************/
+  58:../App/src/server_task.cpp **** 
+  59:../App/src/server_task.cpp **** #define MAX_CLIENTS		2
+  60:../App/src/server_task.cpp **** 
+  61:../App/src/server_task.cpp **** 
+  62:../App/src/server_task.cpp **** /******************************************************************************
+  63:../App/src/server_task.cpp **** * Macros
+  64:../App/src/server_task.cpp **** *******************************************************************************/
+  65:../App/src/server_task.cpp **** 
+  66:../App/src/server_task.cpp **** 
+  67:../App/src/server_task.cpp **** /******************************************************************************
+  68:../App/src/server_task.cpp **** * Typedefs
+  69:../App/src/server_task.cpp **** *******************************************************************************/
+  70:../App/src/server_task.cpp **** 
+  71:../App/src/server_task.cpp **** 
+  72:../App/src/server_task.cpp **** /******************************************************************************
+  73:../App/src/server_task.cpp **** * Variables
+  74:../App/src/server_task.cpp **** *******************************************************************************/
+  75:../App/src/server_task.cpp **** 
+  76:../App/src/server_task.cpp **** /* Declare static data member of class
+  77:../App/src/server_task.cpp ****  *
+  78:../App/src/server_task.cpp ****  * Note: Tell linker to take variable from this source file
+  79:../App/src/server_task.cpp ****  * */
+  80:../App/src/server_task.cpp **** 
+  81:../App/src/server_task.cpp **** 
+  82:../App/src/server_task.cpp **** static const char * const gserver_handler_name = "ServerHandler";
+  83:../App/src/server_task.cpp **** static const UBaseType_t gserver_handler_priority = ipconfigIP_TASK_PRIORITY + 1;
+  84:../App/src/server_task.cpp **** static const configSTACK_DEPTH_TYPE gserver_handler_stack_depth = configMINIMAL_STACK_SIZE * 2;
+  85:../App/src/server_task.cpp **** 
+  86:../App/src/server_task.cpp **** 
+  87:../App/src/server_task.cpp **** /******************************************************************************
+  88:../App/src/server_task.cpp **** * Function Declarations
+  89:../App/src/server_task.cpp **** *******************************************************************************/
+  90:../App/src/server_task.cpp **** 
+  91:../App/src/server_task.cpp **** extern "C"
+  92:../App/src/server_task.cpp **** {
+  93:../App/src/server_task.cpp **** #ifdef USING_RAW_UDP_SERVER
+  94:../App/src/server_task.cpp **** 
+  95:../App/src/server_task.cpp **** #define configECHO_SERVER_ADDR0		192
+  96:../App/src/server_task.cpp **** #define configECHO_SERVER_ADDR1		168
+  97:../App/src/server_task.cpp **** #define configECHO_SERVER_ADDR2		1
+  98:../App/src/server_task.cpp **** #define configECHO_SERVER_ADDR3		7
+  99:../App/src/server_task.cpp **** 
+ 100:../App/src/server_task.cpp **** #define RAW_UDP_SERVER_DATA_LENGTH	20
+ 101:../App/src/server_task.cpp **** 
+ 102:../App/src/server_task.cpp **** const char * rus_task_name = "RAW UDP Server";
+ 103:../App/src/server_task.cpp **** void raw_udp_server( void * pvParameters );
+ 104:../App/src/server_task.cpp **** 
+ 105:../App/src/server_task.cpp **** #endif
+ 106:../App/src/server_task.cpp **** }
+ 107:../App/src/server_task.cpp **** 
+ 108:../App/src/server_task.cpp **** 
+ 109:../App/src/server_task.cpp **** /******************************************************************************
+ 110:../App/src/server_task.cpp **** * Function Definitions
+ 111:../App/src/server_task.cpp **** *******************************************************************************/
+ 112:../App/src/server_task.cpp **** 
+ 113:../App/src/server_task.cpp **** 
+ 114:../App/src/server_task.cpp **** /******* Public Member function for ServerTask__ class *******/
+ 115:../App/src/server_task.cpp **** 
+ 116:../App/src/server_task.cpp **** /**
+ 117:../App/src/server_task.cpp ****  * @function
+ 118:../App/src/server_task.cpp ****  *
+ 119:../App/src/server_task.cpp ****  * @brief
+ 120:../App/src/server_task.cpp ****  *
+ 121:../App/src/server_task.cpp ****  * <i>Imp Note:</i>
+ 122:../App/src/server_task.cpp ****  * 				Example taken from FreeRTOS-Plus TCP demo
+ 123:../App/src/server_task.cpp ****  */
+ 124:../App/src/server_task.cpp **** void ServerTask__ :: server_body( void *pvParameters )
+ 125:../App/src/server_task.cpp **** {
+ 126:../App/src/server_task.cpp **** 	/* Local variables */
+ 127:../App/src/server_task.cpp **** 	struct freertos_sockaddr xClient, xBindAddress;
+ 128:../App/src/server_task.cpp **** 	Socket_t xListeningSocket = NULL;
+ 129:../App/src/server_task.cpp **** 	Socket_t xConnectedSocket = NULL;
+ 130:../App/src/server_task.cpp **** 
+ 131:../App/src/server_task.cpp **** 	socklen_t xSize = sizeof( xClient );
+ 132:../App/src/server_task.cpp **** 	TickType_t xReceiveTimeOut = portMAX_DELAY;
+ 133:../App/src/server_task.cpp **** 	const BaseType_t xBacklog = MAX_CLIENTS;
+ 134:../App/src/server_task.cpp **** 
+ 135:../App/src/server_task.cpp **** 	while( FreeRTOS_IsNetworkUp() != pdTRUE )
+ 136:../App/src/server_task.cpp **** 	{
+ 137:../App/src/server_task.cpp **** 		/* Sleep, then check again */
+ 138:../App/src/server_task.cpp **** 		vTaskDelay( NETWORK_RETRY_DELAY );
+ 139:../App/src/server_task.cpp **** 	}
+ 140:../App/src/server_task.cpp **** 
+ 141:../App/src/server_task.cpp **** 	/* Create Test Client Task */
+ 142:../App/src/server_task.cpp **** 	ClientTask__ client( ipconfigIP_TASK_PRIORITY - 1, configMINIMAL_STACK_SIZE<<2 );
+ 143:../App/src/server_task.cpp **** 
+ 144:../App/src/server_task.cpp **** 	#ifdef USING_RAW_UDP_SERVER
+ 145:../App/src/server_task.cpp **** 	/* Create another server task */
+ 146:../App/src/server_task.cpp **** 	(void) RTOS_WRAPPER__::create( raw_udp_server, rus_task_name,
+ 147:../App/src/server_task.cpp **** 									configMINIMAL_STACK_SIZE<<1, NULL,
+ 148:../App/src/server_task.cpp **** 									ipconfigIP_TASK_PRIORITY - 1, NULL );
+ 149:../App/src/server_task.cpp **** 	#endif
+ 150:../App/src/server_task.cpp **** 
+ 151:../App/src/server_task.cpp **** 	/* Attempt to open the socket. */
+ 152:../App/src/server_task.cpp **** 	xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP )
+ 153:../App/src/server_task.cpp **** 	configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
+ 154:../App/src/server_task.cpp **** 
+ 155:../App/src/server_task.cpp **** 	/* Set a time out so accept() will just wait for a connection. */
+ 156:../App/src/server_task.cpp **** 	FreeRTOS_setsockopt( xListeningSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceive
+ 157:../App/src/server_task.cpp **** 
+ 158:../App/src/server_task.cpp **** 	/* Bind the socket to the port that the client task will send to,
+ 159:../App/src/server_task.cpp **** 	 * then listen for incoming connections. */
+ 160:../App/src/server_task.cpp **** 	xBindAddress.sin_port = INFINEON_HOST_SERVER_PORT;
+ 161:../App/src/server_task.cpp **** 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );
+ 162:../App/src/server_task.cpp **** 	FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
+ 163:../App/src/server_task.cpp **** 	FreeRTOS_listen( xListeningSocket, xBacklog );
+ 164:../App/src/server_task.cpp **** 
+ 165:../App/src/server_task.cpp **** 	/* Create task to receive data from client */
+ 166:../App/src/server_task.cpp **** 	for( ; ; )
+ 167:../App/src/server_task.cpp **** 	{
+ 168:../App/src/server_task.cpp **** 		/* Wait for a client to connect. */
+ 169:../App/src/server_task.cpp **** 		xConnectedSocket = FreeRTOS_accept( xListeningSocket, &xClient, &xSize );
+ 170:../App/src/server_task.cpp **** 		configASSERT( xConnectedSocket != FREERTOS_INVALID_SOCKET );
+ 171:../App/src/server_task.cpp **** 
+ 172:../App/src/server_task.cpp **** 		(void) RTOS_WRAPPER__::create( ServerTask__::server_handler_entry, gserver_handler_name, gserver_
+ 173:../App/src/server_task.cpp **** 										xConnectedSocket, gserver_handler_priority, NULL );
+ 174:../App/src/server_task.cpp **** 	}
+ 175:../App/src/server_task.cpp **** 
+ 176:../App/src/server_task.cpp **** 	/* Should never reach here */
+ 177:../App/src/server_task.cpp **** 	vTaskDelete( NULL );
+ 178:../App/src/server_task.cpp **** }
+ 179:../App/src/server_task.cpp **** 
+ 180:../App/src/server_task.cpp **** 
+ 181:../App/src/server_task.cpp **** /**
+ 182:../App/src/server_task.cpp ****  * @function
+ 183:../App/src/server_task.cpp ****  *
+ 184:../App/src/server_task.cpp ****  * @brief		Simple Echo server
+ 185:../App/src/server_task.cpp ****  *
+ 186:../App/src/server_task.cpp ****  * <i>Imp Note:</i>
+ 187:../App/src/server_task.cpp ****  */
+ 188:../App/src/server_task.cpp **** void ServerTask__ :: server_handler_body( void * pvParameters )
+ 189:../App/src/server_task.cpp **** {
+ 190:../App/src/server_task.cpp **** 	/* Local variables */
+ 191:../App/src/server_task.cpp **** 	Socket_t xConnectedSocket = NULL;
+ 192:../App/src/server_task.cpp **** 	uint8_t *pucRxBuffer = NULL;
+ 193:../App/src/server_task.cpp **** 	BaseType_t lBytes = 0;
+ 194:../App/src/server_task.cpp **** 	BaseType_t lSent = 0;
+ 195:../App/src/server_task.cpp **** 	BaseType_t lTotalSent = 0;
+ 196:../App/src/server_task.cpp **** 	constexpr TickType_t xReceiveTimeOut = pdMS_TO_TICKS( portMAX_DELAY );
+ 197:../App/src/server_task.cpp **** 	constexpr TickType_t xSendTimeOut = pdMS_TO_TICKS( 5000 );
+ 198:../App/src/server_task.cpp **** 	TickType_t xTimeOnShutdown = 0;
+ 199:../App/src/server_task.cpp **** 
+ 200:../App/src/server_task.cpp **** 	/* Get the client details */
+ 201:../App/src/server_task.cpp **** 	xConnectedSocket = (Socket_t) pvParameters;
+ 202:../App/src/server_task.cpp **** 
+ 203:../App/src/server_task.cpp **** 	/* Send Accept confirmation to client */
+ 204:../App/src/server_task.cpp **** 	FreeRTOS_send( xConnectedSocket, "Hello\r\n", sizeof("Hello\r\n"), 0 );
+ 205:../App/src/server_task.cpp **** 
+ 206:../App/src/server_task.cpp **** 	/* Attempt to create the buffer used to receive the string to be echoed
+ 207:../App/src/server_task.cpp **** 	 * back.  This could be avoided using a zero copy interface that just
+ 208:../App/src/server_task.cpp **** 	 * returned the same buffer. */
+ 209:../App/src/server_task.cpp **** 	pucRxBuffer = new uint8_t[ipconfigTCP_MSS];
+ 210:../App/src/server_task.cpp **** 	/* Check memory allocation for buffer validity */
+ 211:../App/src/server_task.cpp **** 	if( pucRxBuffer != NULL )
+ 212:../App/src/server_task.cpp **** 	{
+ 213:../App/src/server_task.cpp **** 		/* Set socket options for client */
+ 214:../App/src/server_task.cpp **** 		FreeRTOS_setsockopt( xConnectedSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiv
+ 215:../App/src/server_task.cpp **** 		FreeRTOS_setsockopt( xConnectedSocket, 0, FREERTOS_SO_SNDTIMEO, &xSendTimeOut, sizeof( xReceiveTi
+ 216:../App/src/server_task.cpp **** 
+ 217:../App/src/server_task.cpp **** 		/* Receive data from client */
+ 218:../App/src/server_task.cpp **** 		for( ; ; )
+ 219:../App/src/server_task.cpp **** 		{
+ 220:../App/src/server_task.cpp **** 			/* Zero out the receive array so there is NULL at the end of the string
+ 221:../App/src/server_task.cpp **** 				when it is printed out. */
+ 222:../App/src/server_task.cpp **** 			memset( pucRxBuffer, 0x00, ipconfigTCP_MSS );
+ 223:../App/src/server_task.cpp **** 
+ 224:../App/src/server_task.cpp **** 			/* Receive data on the socket. */
+ 225:../App/src/server_task.cpp **** 			lBytes = FreeRTOS_recv( xConnectedSocket, pucRxBuffer, ipconfigTCP_MSS, 0 );
+ 226:../App/src/server_task.cpp **** 
+ 227:../App/src/server_task.cpp **** 			/* If data was received, echo it back. */
+ 228:../App/src/server_task.cpp **** 			if( lBytes >= 0 )
+ 229:../App/src/server_task.cpp **** 			{
+ 230:../App/src/server_task.cpp **** 				lSent = 0;
+ 231:../App/src/server_task.cpp **** 				lTotalSent = 0;
+ 232:../App/src/server_task.cpp **** 
+ 233:../App/src/server_task.cpp **** 				/* Call send() until all the data has been sent. */
+ 234:../App/src/server_task.cpp **** 				while( ( lSent >= 0 ) && ( lTotalSent < lBytes ) )
+ 235:../App/src/server_task.cpp **** 				{
+ 236:../App/src/server_task.cpp **** 					lSent = FreeRTOS_send( xConnectedSocket, pucRxBuffer, lBytes - lTotalSent, 0 );
+ 237:../App/src/server_task.cpp **** 					lTotalSent += lSent;
+ 238:../App/src/server_task.cpp **** 				}
+ 239:../App/src/server_task.cpp **** 
+ 240:../App/src/server_task.cpp **** 				if( lSent < 0 )
+ 241:../App/src/server_task.cpp **** 				{
+ 242:../App/src/server_task.cpp **** 					/* Socket closed? */
+ 243:../App/src/server_task.cpp **** 					break;
+ 244:../App/src/server_task.cpp **** 				}
+ 245:../App/src/server_task.cpp **** 			}
+ 246:../App/src/server_task.cpp **** 			else
+ 247:../App/src/server_task.cpp **** 			{
+ 248:../App/src/server_task.cpp **** 				/* Socket closed? */
+ 249:../App/src/server_task.cpp **** 				break;
+ 250:../App/src/server_task.cpp **** 			}
+ 251:../App/src/server_task.cpp **** 		}
+ 252:../App/src/server_task.cpp **** 	}
+ 253:../App/src/server_task.cpp **** 
+ 254:../App/src/server_task.cpp **** 	/* Initiate a shutdown in case it has not already been initiated. */
+ 255:../App/src/server_task.cpp **** 	FreeRTOS_shutdown( xConnectedSocket, FREERTOS_SHUT_RDWR );
+ 256:../App/src/server_task.cpp **** 
+ 257:../App/src/server_task.cpp **** 	/* Wait for the shutdown to take effect, indicated by FreeRTOS_recv()
+ 258:../App/src/server_task.cpp **** 	 * returning an error. */
+ 259:../App/src/server_task.cpp **** 	xTimeOnShutdown = xTaskGetTickCount();
+ 260:../App/src/server_task.cpp **** 	do
+ 261:../App/src/server_task.cpp **** 	{
+ 262:../App/src/server_task.cpp **** 		if( FreeRTOS_recv( xConnectedSocket, pucRxBuffer, ipconfigTCP_MSS, 0 ) < 0 )
+ 263:../App/src/server_task.cpp **** 		{
+ 264:../App/src/server_task.cpp **** 			break;
+ 265:../App/src/server_task.cpp **** 		}
+ 266:../App/src/server_task.cpp **** 	} while( ( xTaskGetTickCount() - xTimeOnShutdown ) < tcpechoSHUTDOWN_DELAY );
+ 267:../App/src/server_task.cpp **** 
+ 268:../App/src/server_task.cpp **** 	/* Finished with the socket, buffer, the task. */
+ 269:../App/src/server_task.cpp **** 	delete[] pucRxBuffer;
+ 270:../App/src/server_task.cpp **** 	FreeRTOS_closesocket( xConnectedSocket );
+ 271:../App/src/server_task.cpp **** 
+ 272:../App/src/server_task.cpp **** 	vTaskDelete( NULL );
+ 273:../App/src/server_task.cpp **** }
+ 274:../App/src/server_task.cpp **** /*---------------------------------------------------------------------------*/
+ 275:../App/src/server_task.cpp **** 
+ 276:../App/src/server_task.cpp **** 
+ 277:../App/src/server_task.cpp **** #ifdef USING_RAW_UDP_SERVER
+ 278:../App/src/server_task.cpp **** /**
+ 279:../App/src/server_task.cpp ****  * @function
+ 280:../App/src/server_task.cpp ****  *
+ 281:../App/src/server_task.cpp ****  * @brief		Simple UDP Server
+ 282:../App/src/server_task.cpp ****  *
+ 283:../App/src/server_task.cpp ****  * <i>Imp Note:</i>
+ 284:../App/src/server_task.cpp ****  */
+ 285:../App/src/server_task.cpp **** void raw_udp_server( void * pvParameters )
+ 286:../App/src/server_task.cpp **** {
+  54              	 .loc 2 286 0
+  55              	 .cfi_startproc
+  56              	 
+  57              	 
+  58              	.LVL2:
+  59 0000 F0B5     	 push {r4,r5,r6,r7,lr}
+  60              	.LCFI1:
+  61              	 .cfi_def_cfa_offset 20
+  62              	 .cfi_offset 4,-20
+  63              	 .cfi_offset 5,-16
+  64              	 .cfi_offset 6,-12
+  65              	 .cfi_offset 7,-8
+  66              	 .cfi_offset 14,-4
+  67 0002 99B0     	 sub sp,sp,#100
+  68              	.LCFI2:
+  69              	 .cfi_def_cfa_offset 120
+  70              	.LVL3:
+  71              	.LBB35:
+ 287:../App/src/server_task.cpp **** 	/* Local variables */
+ 288:../App/src/server_task.cpp **** 	Socket_t xListeningSocket = NULL;
+ 289:../App/src/server_task.cpp **** 	struct freertos_sockaddr xClient, xServer;
+ 290:../App/src/server_task.cpp **** 	socklen_t xAddressLength;
+ 291:../App/src/server_task.cpp **** 
+ 292:../App/src/server_task.cpp **** 	unsigned long data_len = sizeof(struct xUDP_PACKET) + RAW_UDP_SERVER_DATA_LENGTH;
+ 293:../App/src/server_task.cpp **** 	char data[sizeof(struct xUDP_PACKET) + RAW_UDP_SERVER_DATA_LENGTH] = {};
+  72              	 .loc 2 293 0
+  73 0004 08A8     	 add r0,sp,#32
+  74              	.LVL4:
+  75 0006 0021     	 movs r1,#0
+  76 0008 3E22     	 movs r2,#62
+  77 000a FFF7FEFF 	 bl memset
+  78              	.LVL5:
+ 294:../App/src/server_task.cpp **** 
+ 295:../App/src/server_task.cpp **** 	/* Attempt to open the socket. */
+ 296:../App/src/server_task.cpp **** 	xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_RAW, FREERTOS_IPPROTO_UDP );
+  79              	 .loc 2 296 0
+  80 000e 0220     	 movs r0,#2
+  81 0010 0321     	 movs r1,#3
+  82 0012 1122     	 movs r2,#17
+  83 0014 FFF7FEFF 	 bl FreeRTOS_socket
+  84              	.LVL6:
+  85 0018 0646     	 mov r6,r0
+  86              	.LVL7:
+ 297:../App/src/server_task.cpp **** 	configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
+  87              	 .loc 2 297 0
+  88 001a B0F1FF3F 	 cmp r0,#-1
+  89 001e 08D1     	 bne .L4
+  90              	.LBB36:
+  91              	.LBB37:
+  92              	 .file 3 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * FreeRTOS Kernel V10.4.1
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * this software and associated documentation files (the "Software"), to deal in
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * the Software without restriction, including without limitation the rights to
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * the Software, and to permit persons to whom the Software is furnished to do so,
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * subject to the following conditions:
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * The above copyright notice and this permission notice shall be included in all
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * copies or substantial portions of the Software.
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * https://www.FreeRTOS.org
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * https://github.com/FreeRTOS
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * 1 tab == 4 spaces!
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  */
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** #ifndef PORTMACRO_H
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define PORTMACRO_H
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifdef __cplusplus
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         extern "C" {
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * Port specific definitions.
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * The settings in this file configure FreeRTOS correctly for the
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * given hardware and compiler.
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * These settings should not be altered.
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  *-----------------------------------------------------------
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  */
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Type definitions. */
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portCHAR          char
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portFLOAT         float
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDOUBLE        double
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portLONG          long
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSHORT         short
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSTACK_TYPE    uint32_t
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portBASE_TYPE     long
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef portSTACK_TYPE   StackType_t;
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef long             BaseType_t;
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     typedef unsigned long    UBaseType_t;
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #if ( configUSE_16_BIT_TICKS == 1 )
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         typedef uint16_t     TickType_t;
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portMAX_DELAY              ( TickType_t ) 0xffff
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #else
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         typedef uint32_t     TickType_t;
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portMAX_DELAY              ( TickType_t ) 0xffffffffUL
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * not need to be guarded with a critical section. */
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portTICK_TYPE_IS_ATOMIC    1
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Architecture specifics. */
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSTACK_GROWTH      ( -1 )
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portBYTE_ALIGNMENT    8
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDONT_DISCARD      __attribute__( ( used ) )
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Scheduler utilities. */
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portYIELD()                                 \
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {                                                   \
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Set a PendSV to request a context switch. */ \
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT; \
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****                                                         \
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Barriers are normally not required but do ensure the code is completely \
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****          * within the specified behaviour for the architecture. */ \
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "dsb" ::: "memory" );                     \
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "isb" );                                  \
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     }
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNVIC_INT_CTRL_REG     ( *( ( volatile uint32_t * ) 0xe000ed04 ) )
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNVIC_PENDSVSET_BIT    ( 1UL << 28UL )
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portEND_SWITCHING_ISR( xSwitchRequired )    if( xSwitchRequired != pdFALSE ) portYIELD(
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portYIELD_FROM_ISR( x )                     portEND_SWITCHING_ISR( x )
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Critical section management. */
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     extern void vPortEnterCritical( void );
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     extern void vPortExitCritical( void );
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portSET_INTERRUPT_MASK_FROM_ISR()         ulPortRaiseBASEPRI()
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x )    vPortSetBASEPRI( x )
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portDISABLE_INTERRUPTS()                  vPortRaiseBASEPRI()
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portENABLE_INTERRUPTS()                   vPortSetBASEPRI( 0 )
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portENTER_CRITICAL()                      vPortEnterCritical()
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portEXIT_CRITICAL()                       vPortExitCritical()
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Task function macros as described on the FreeRTOS.org WEB site.  These are
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * not necessary for to use this port.  They are defined so the common demo files
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****  * (which build with all the ports) will build. */
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParamete
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParamete
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Tickless idle/low power functionality. */
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef portSUPPRESS_TICKS_AND_SLEEP
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         extern void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime )    vPortSuppressTicksAndSleep( xE
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Architecture specific optimisations. */
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define configUSE_PORT_OPTIMISED_TASK_SELECTION    1
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Generic helper function. */
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __attribute__( ( always_inline ) ) static inline uint8_t ucPortCountLeadingZeros( uint32_t 
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             uint8_t ucReturn;
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             __asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) : "memory" );
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             return ucReturn;
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Check the configuration. */
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #if ( configMAX_PRIORITIES > 32 )
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             #error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIO
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #endif
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* Store/clear the ready priorities in a bit map. */
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities )    ( uxReadyPriorities )
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities )     ( uxReadyPriorities )
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    uxTopPriority = ( 3
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifdef configASSERT
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         void vPortValidateInterruptPriority( void );
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()    vPortValidateInterruptPriority()
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /* portNOP() is not required by this port. */
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portNOP()
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #define portINLINE              __inline
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #ifndef portFORCE_INLINE
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         #define portFORCE_INLINE    inline __attribute__( ( always_inline ) )
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     #endif
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         uint32_t ulCurrentInterrupt;
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         BaseType_t xReturn;
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         /* Obtain the number of the currently executing interrupt. */
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile ( "mrs %0, ipsr" : "=r" ( ulCurrentInterrupt )::"memory" );
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         if( ulCurrentInterrupt == 0 )
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             xReturn = pdFALSE;
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         else
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         {
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             xReturn = pdTRUE;
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         }
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         return xReturn;
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     }
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** /*-----------------------------------------------------------*/
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****     {
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         uint32_t ulNewBASEPRI;
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h **** 
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         __asm volatile
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         (
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	mov %0, %1												\n"\
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	msr basepri, %0											\n"\
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	isb														\n"\
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             "	dsb														\n"\
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****             : "=r" ( ulNewBASEPRI ) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/portable/GCC/ARM_CM4F\portmacro.h ****         );
+  93              	 .loc 3 204 0
+  94              	
+  95 0020 4FF01403 	 mov r3,#20
+  96 0024 83F31188 	 msr basepri,r3
+  97 0028 BFF36F8F 	 isb 
+  98 002c BFF34F8F 	 dsb 
+  99              	
+ 100              	
+ 101              	.LVL8:
+ 102              	 .thumb
+ 103              	.L5:
+ 104              	.LBE37:
+ 105              	.LBE36:
+ 106              	 .loc 2 297 0 discriminator 1
+ 107 0030 FEE7     	 b .L5
+ 108              	.L4:
+ 298:../App/src/server_task.cpp **** 
+ 299:../App/src/server_task.cpp **** 	/* Bind the socket to the port that the client task will send to,
+ 300:../App/src/server_task.cpp **** 	 * then listen for incoming connections. */
+ 301:../App/src/server_task.cpp **** 	xServer.sin_port = 6000;
+ 302:../App/src/server_task.cpp **** 	xServer.sin_port = FreeRTOS_htons( xServer.sin_port );
+ 109              	 .loc 2 302 0
+ 110 0032 47F21703 	 movw r3,#28695
+ 111 0036 ADF81A30 	 strh r3,[sp,#26]
+ 303:../App/src/server_task.cpp **** 	if( -1 == FreeRTOS_bind( xListeningSocket, &xServer, sizeof( xServer ) ) )
+ 112              	 .loc 2 303 0
+ 113 003a 06A9     	 add r1,sp,#24
+ 114 003c 0822     	 movs r2,#8
+ 115 003e FFF7FEFF 	 bl FreeRTOS_bind
+ 116              	.LVL9:
+ 117 0042 B0F1FF3F 	 cmp r0,#-1
+ 118 0046 03D1     	 bne .L6
+ 304:../App/src/server_task.cpp **** 	{
+ 305:../App/src/server_task.cpp **** 		FreeRTOS_closesocket( xListeningSocket );
+ 119              	 .loc 2 305 0
+ 120 0048 3046     	 mov r0,r6
+ 121 004a FFF7FEFF 	 bl FreeRTOS_closesocket
+ 122              	.LVL10:
+ 123              	.L7:
+ 303:../App/src/server_task.cpp **** 	if( -1 == FreeRTOS_bind( xListeningSocket, &xServer, sizeof( xServer ) ) )
+ 124              	 .loc 2 303 0 discriminator 2
+ 125 004e FEE7     	 b .L7
+ 126              	.L6:
+ 127              	.LBB38:
+ 128              	.LBB39:
+ 306:../App/src/server_task.cpp **** 		/* For debugging only */
+ 307:../App/src/server_task.cpp **** 		for( ; ; );
+ 308:../App/src/server_task.cpp **** 	}
+ 309:../App/src/server_task.cpp **** 
+ 310:../App/src/server_task.cpp **** 	/* Create task to receive data from client */
+ 311:../App/src/server_task.cpp **** 	for( ; ; )
+ 312:../App/src/server_task.cpp **** 	{
+ 313:../App/src/server_task.cpp **** 		/* Receive data from Client */
+ 314:../App/src/server_task.cpp **** 		FreeRTOS_recvfrom(	xListeningSocket, (data + sizeof(struct xUDP_PACKET)), RAW_UDP_SERVER_DATA_LEN
+ 315:../App/src/server_task.cpp **** 
+ 316:../App/src/server_task.cpp **** 		/* Update UDP data */
+ 317:../App/src/server_task.cpp **** 		char *pxIpSrcAddrOffset = ( char *) ( & (data[sizeof( MACAddress_t )]) );
+ 318:../App/src/server_task.cpp **** 		( void ) memcpy( ( void * ) pxIpSrcAddrOffset, ( const void * ) ( xDefaultPartUDPPacketHeader.ucB
+ 129              	 .loc 2 318 0 discriminator 1
+ 130 0050 144F     	 ldr r7,.L10
+ 131              	.L8:
+ 314:../App/src/server_task.cpp **** 
+ 132              	 .loc 2 314 0 discriminator 1
+ 133 0052 04AD     	 add r5,sp,#16
+ 134 0054 0095     	 str r5,[sp]
+ 135 0056 03AB     	 add r3,sp,#12
+ 136 0058 0193     	 str r3,[sp,#4]
+ 137 005a 3046     	 mov r0,r6
+ 138 005c 0DF14A01 	 add r1,sp,#74
+ 139 0060 1422     	 movs r2,#20
+ 140 0062 0023     	 movs r3,#0
+ 141 0064 FFF7FEFF 	 bl FreeRTOS_recvfrom
+ 142              	.LVL11:
+ 143              	 .loc 2 318 0 discriminator 1
+ 144 0068 3C46     	 mov r4,r7
+ 145 006a 0FCC     	 ldmia r4!,{r0,r1,r2,r3}
+ 146 006c CDF82600 	 str r0,[sp,#38]
+ 147 0070 CDF82A10 	 str r1,[sp,#42]
+ 148 0074 CDF82E20 	 str r2,[sp,#46]
+ 149 0078 CDF83230 	 str r3,[sp,#50]
+ 150 007c 03CC     	 ldmia r4!,{r0,r1}
+ 151 007e CDF83600 	 str r0,[sp,#54]
+ 152 0082 CDF83A10 	 str r1,[sp,#58]
+ 319:../App/src/server_task.cpp **** 
+ 320:../App/src/server_task.cpp **** 		FreeRTOS_sendto( xListeningSocket, data, data_len, 0, &xClient, xAddressLength );
+ 153              	 .loc 2 320 0 discriminator 1
+ 154 0086 0095     	 str r5,[sp]
+ 155 0088 039B     	 ldr r3,[sp,#12]
+ 156 008a 0193     	 str r3,[sp,#4]
+ 157 008c 3046     	 mov r0,r6
+ 158 008e 08A9     	 add r1,sp,#32
+ 159 0090 3E22     	 movs r2,#62
+ 160 0092 0023     	 movs r3,#0
+ 161 0094 FFF7FEFF 	 bl FreeRTOS_sendto
+ 162              	.LVL12:
+ 321:../App/src/server_task.cpp **** 		vTaskDelay(500);
+ 163              	 .loc 2 321 0 discriminator 1
+ 164 0098 4FF4FA70 	 mov r0,#500
+ 165 009c FFF7FEFF 	 bl vTaskDelay
+ 166              	.LVL13:
+ 167              	.LBE39:
+ 322:../App/src/server_task.cpp **** 	}
+ 168              	 .loc 2 322 0 discriminator 1
+ 169 00a0 D7E7     	 b .L8
+ 170              	.L11:
+ 171 00a2 00BF     	 .align 2
+ 172              	.L10:
+ 173 00a4 00000000 	 .word xDefaultPartUDPPacketHeader
+ 174              	.LBE38:
+ 175              	.LBE35:
+ 176              	 .cfi_endproc
+ 177              	.LFE75:
+ 179              	 .section .text._ZN12ServerTask__11server_bodyEPv,"ax",%progbits
+ 180              	 .align 2
+ 181              	 .global _ZN12ServerTask__11server_bodyEPv
+ 182              	 .thumb
+ 183              	 .thumb_func
+ 185              	_ZN12ServerTask__11server_bodyEPv:
+ 186              	.LFB73:
+ 125:../App/src/server_task.cpp **** 	/* Local variables */
+ 187              	 .loc 2 125 0
+ 188              	 .cfi_startproc
+ 189              	 
+ 190              	 
+ 191              	.LVL14:
+ 192 0000 70B5     	 push {r4,r5,r6,lr}
+ 193              	.LCFI3:
+ 194              	 .cfi_def_cfa_offset 16
+ 195              	 .cfi_offset 4,-16
+ 196              	 .cfi_offset 5,-12
+ 197              	 .cfi_offset 6,-8
+ 198              	 .cfi_offset 14,-4
+ 199 0002 88B0     	 sub sp,sp,#32
+ 200              	.LCFI4:
+ 201              	 .cfi_def_cfa_offset 48
+ 202              	.LVL15:
+ 203              	.LBB56:
+ 131:../App/src/server_task.cpp **** 	TickType_t xReceiveTimeOut = portMAX_DELAY;
+ 204              	 .loc 2 131 0
+ 205 0004 0823     	 movs r3,#8
+ 206 0006 0293     	 str r3,[sp,#8]
+ 132:../App/src/server_task.cpp **** 	const BaseType_t xBacklog = MAX_CLIENTS;
+ 207              	 .loc 2 132 0
+ 208 0008 4FF0FF33 	 mov r3,#-1
+ 209 000c 0393     	 str r3,[sp,#12]
+ 210              	.LVL16:
+ 138:../App/src/server_task.cpp **** 	}
+ 211              	 .loc 2 138 0
+ 212 000e 4FF4FA74 	 mov r4,#500
+ 135:../App/src/server_task.cpp **** 	{
+ 213              	 .loc 2 135 0
+ 214 0012 02E0     	 b .L13
+ 215              	.LVL17:
+ 216              	.L14:
+ 138:../App/src/server_task.cpp **** 	}
+ 217              	 .loc 2 138 0
+ 218 0014 2046     	 mov r0,r4
+ 219 0016 FFF7FEFF 	 bl vTaskDelay
+ 220              	.LVL18:
+ 221              	.L13:
+ 135:../App/src/server_task.cpp **** 	{
+ 222              	 .loc 2 135 0
+ 223 001a FFF7FEFF 	 bl FreeRTOS_IsNetworkUp
+ 224              	.LVL19:
+ 225 001e 0128     	 cmp r0,#1
+ 226 0020 F8D1     	 bne .L14
+ 227              	.LVL20:
+ 228              	.LBB57:
+ 229              	.LBB58:
+ 230              	.LBB59:
+ 231              	.LBB60:
+ 232              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc/rtos_wrappers.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /**************************************************************************************************
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @file	rtos_wrappers.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @brief	RTOS Wrappers API Header
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @version	1.0.0
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @date	10/27/2019
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @cond
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  **************************************************************************************************
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * Copyright (c) 2020, Hemant Sharma - All Rights Reserved
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * All rights reserved.
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * following conditions are met:
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * disclaimer.
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * disclaimer in the documentation and/or other materials provided with the distribution.
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * products derived from this software without specific prior written permission.
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN AN
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  **************************************************************************************************
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * *************************** Change history ********************************
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @endcond
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  */
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** #ifndef RTOS_WRAPPERS_H_
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** #define RTOS_WRAPPERS_H_
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** * Includes
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** *******************************************************************************/
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /* RTOS headers inclusion */
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** #include <FreeRTOS.h>
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** #include <semphr.h>
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** #include <timers.h>
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** * Preprocessor Constants
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** *******************************************************************************/
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** * Configuration Constants
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** *******************************************************************************/
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** * Macros
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** *******************************************************************************/
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** * Typedefs
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** *******************************************************************************/
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /**
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @brief
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  */
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** * Variables
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** *******************************************************************************/
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** * Function Prototypes
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** *******************************************************************************/
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /******************************************************************************
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  * @brief	Class for RTOS Wrappers
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  *
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h ****  ******************************************************************************/
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** class RTOS_WRAPPER__
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** {
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** /* Public Members */
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** public:
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 	/* Task creation function */
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 	static BaseType_t create( TaskFunction_t fp_task_code,
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 								const char * const p_name,
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 								const configSTACK_DEPTH_TYPE& stack_depth,
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 								void * const parameters, UBaseType_t priority,
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 								TaskHandle_t * const p_task_handle )
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 	{
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		/* Local Variables */
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		BaseType_t ret_status = pdTRUE;
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		/* Create Task */
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		ret_status = xTaskCreate( fp_task_code, p_name, stack_depth, parameters,
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 									priority, p_task_handle );
+ 233              	 .loc 4 106 0
+ 234 0022 0223     	 movs r3,#2
+ 235 0024 0093     	 str r3,[sp]
+ 236 0026 0023     	 movs r3,#0
+ 237 0028 0193     	 str r3,[sp,#4]
+ 238 002a 3348     	 ldr r0,.L25
+ 239 002c 3349     	 ldr r1,.L25+4
+ 240 002e 4FF4F072 	 mov r2,#480
+ 241 0032 FFF7FEFF 	 bl xTaskCreate
+ 242              	.LVL21:
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		/* Check return status */
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		if( ret_status != pdTRUE )
+ 243              	 .loc 4 108 0
+ 244 0036 0128     	 cmp r0,#1
+ 245 0038 03D0     	 beq .L15
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		{
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 			vTaskDelete( *p_task_handle );
+ 246              	 .loc 4 110 0
+ 247 003a 0023     	 movs r3,#0
+ 248 003c 1868     	 ldr r0,[r3]
+ 249              	.LVL22:
+ 250 003e FFF7FEFF 	 bl vTaskDelete
+ 251              	.LVL23:
+ 252              	.L15:
+ 253              	.LBE60:
+ 254              	.LBE59:
+ 255              	.LBE58:
+ 256              	.LBE57:
+ 148:../App/src/server_task.cpp **** 	#endif
+ 257              	 .loc 2 148 0
+ 258 0042 2F4B     	 ldr r3,.L25+8
+ 259              	.LBB61:
+ 260              	.LBB62:
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		/* Check return status */
+ 261              	 .loc 4 106 0
+ 262 0044 1968     	 ldr r1,[r3]
+ 263 0046 0223     	 movs r3,#2
+ 264 0048 0093     	 str r3,[sp]
+ 265 004a 0023     	 movs r3,#0
+ 266 004c 0193     	 str r3,[sp,#4]
+ 267 004e 2D48     	 ldr r0,.L25+12
+ 268 0050 F022     	 movs r2,#240
+ 269 0052 FFF7FEFF 	 bl xTaskCreate
+ 270              	.LVL24:
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		{
+ 271              	 .loc 4 108 0
+ 272 0056 0128     	 cmp r0,#1
+ 273 0058 03D0     	 beq .L16
+ 274              	 .loc 4 110 0
+ 275 005a 0023     	 movs r3,#0
+ 276 005c 1868     	 ldr r0,[r3]
+ 277              	.LVL25:
+ 278 005e FFF7FEFF 	 bl vTaskDelete
+ 279              	.LVL26:
+ 280              	.L16:
+ 281              	.LBE62:
+ 282              	.LBE61:
+ 152:../App/src/server_task.cpp **** 	configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
+ 283              	 .loc 2 152 0
+ 284 0062 0220     	 movs r0,#2
+ 285 0064 0121     	 movs r1,#1
+ 286 0066 0622     	 movs r2,#6
+ 287 0068 FFF7FEFF 	 bl FreeRTOS_socket
+ 288              	.LVL27:
+ 289 006c 0446     	 mov r4,r0
+ 290              	.LVL28:
+ 153:../App/src/server_task.cpp **** 
+ 291              	 .loc 2 153 0
+ 292 006e B0F1FF3F 	 cmp r0,#-1
+ 293 0072 08D1     	 bne .L17
+ 294              	.LBB63:
+ 295              	.LBB64:
+ 296              	 .loc 3 204 0
+ 297              	
+ 298 0074 4FF01403 	 mov r3,#20
+ 299 0078 83F31188 	 msr basepri,r3
+ 300 007c BFF36F8F 	 isb 
+ 301 0080 BFF34F8F 	 dsb 
+ 302              	
+ 303              	
+ 304              	.LVL29:
+ 305              	 .thumb
+ 306              	.L18:
+ 307              	.LBE64:
+ 308              	.LBE63:
+ 153:../App/src/server_task.cpp **** 
+ 309              	 .loc 2 153 0 discriminator 1
+ 310 0084 FEE7     	 b .L18
+ 311              	.L17:
+ 156:../App/src/server_task.cpp **** 
+ 312              	 .loc 2 156 0
+ 313 0086 0423     	 movs r3,#4
+ 314 0088 0093     	 str r3,[sp]
+ 315 008a 0021     	 movs r1,#0
+ 316 008c 0A46     	 mov r2,r1
+ 317 008e 03AB     	 add r3,sp,#12
+ 318 0090 FFF7FEFF 	 bl FreeRTOS_setsockopt
+ 319              	.LVL30:
+ 161:../App/src/server_task.cpp **** 	FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
+ 320              	 .loc 2 161 0
+ 321 0094 40F61743 	 movw r3,#3095
+ 322 0098 ADF81A30 	 strh r3,[sp,#26]
+ 162:../App/src/server_task.cpp **** 	FreeRTOS_listen( xListeningSocket, xBacklog );
+ 323              	 .loc 2 162 0
+ 324 009c 2046     	 mov r0,r4
+ 325 009e 06A9     	 add r1,sp,#24
+ 326 00a0 0822     	 movs r2,#8
+ 327 00a2 FFF7FEFF 	 bl FreeRTOS_bind
+ 328              	.LVL31:
+ 163:../App/src/server_task.cpp **** 
+ 329              	 .loc 2 163 0
+ 330 00a6 2046     	 mov r0,r4
+ 331 00a8 0221     	 movs r1,#2
+ 332 00aa FFF7FEFF 	 bl FreeRTOS_listen
+ 333              	.LVL32:
+ 334              	.LBB65:
+ 335              	.LBB66:
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		/* Check return status */
+ 336              	 .loc 4 106 0
+ 337 00ae 164E     	 ldr r6,.L25+16
+ 338 00b0 164D     	 ldr r5,.L25+20
+ 339              	.LVL33:
+ 340              	.L21:
+ 341              	.LBE66:
+ 342              	.LBE65:
+ 169:../App/src/server_task.cpp **** 		configASSERT( xConnectedSocket != FREERTOS_INVALID_SOCKET );
+ 343              	 .loc 2 169 0
+ 344 00b2 2046     	 mov r0,r4
+ 345 00b4 04A9     	 add r1,sp,#16
+ 346 00b6 02AA     	 add r2,sp,#8
+ 347 00b8 FFF7FEFF 	 bl FreeRTOS_accept
+ 348              	.LVL34:
+ 349 00bc 0346     	 mov r3,r0
+ 350              	.LVL35:
+ 170:../App/src/server_task.cpp **** 
+ 351              	 .loc 2 170 0
+ 352 00be B0F1FF3F 	 cmp r0,#-1
+ 353 00c2 08D1     	 bne .L19
+ 354              	.LBB68:
+ 355              	.LBB69:
+ 356              	 .loc 3 204 0
+ 357              	
+ 358 00c4 4FF01403 	 mov r3,#20
+ 359 00c8 83F31188 	 msr basepri,r3
+ 360 00cc BFF36F8F 	 isb 
+ 361 00d0 BFF34F8F 	 dsb 
+ 362              	
+ 363              	
+ 364              	.LVL36:
+ 365              	 .thumb
+ 366              	.L20:
+ 367              	.LBE69:
+ 368              	.LBE68:
+ 170:../App/src/server_task.cpp **** 
+ 369              	 .loc 2 170 0 discriminator 2
+ 370 00d4 FEE7     	 b .L20
+ 371              	.L19:
+ 372              	.LVL37:
+ 373              	.LBB70:
+ 374              	.LBB67:
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		/* Check return status */
+ 375              	 .loc 4 106 0
+ 376 00d6 0422     	 movs r2,#4
+ 377 00d8 0092     	 str r2,[sp]
+ 378 00da 0022     	 movs r2,#0
+ 379 00dc 0192     	 str r2,[sp,#4]
+ 380 00de 2846     	 mov r0,r5
+ 381              	.LVL38:
+ 382 00e0 3146     	 mov r1,r6
+ 383 00e2 F022     	 movs r2,#240
+ 384 00e4 FFF7FEFF 	 bl xTaskCreate
+ 385              	.LVL39:
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\rtos_wrappers.h **** 		{
+ 386              	 .loc 4 108 0
+ 387 00e8 0128     	 cmp r0,#1
+ 388 00ea E2D0     	 beq .L21
+ 389              	 .loc 4 110 0
+ 390 00ec 0023     	 movs r3,#0
+ 391 00ee 1868     	 ldr r0,[r3]
+ 392              	.LVL40:
+ 393 00f0 FFF7FEFF 	 bl vTaskDelete
+ 394              	.LVL41:
+ 395 00f4 DDE7     	 b .L21
+ 396              	.L26:
+ 397 00f6 00BF     	 .align 2
+ 398              	.L25:
+ 399 00f8 00000000 	 .word _ZN12ClientTask__12client_entryEPv
+ 400 00fc 00000000 	 .word .LC0
+ 401 0100 00000000 	 .word .LANCHOR0
+ 402 0104 00000000 	 .word raw_udp_server
+ 403 0108 0C000000 	 .word .LC1
+ 404 010c 00000000 	 .word _ZN12ServerTask__20server_handler_entryEPv
+ 405              	.LBE67:
+ 406              	.LBE70:
+ 407              	.LBE56:
+ 408              	 .cfi_endproc
+ 409              	.LFE73:
+ 411              	 .section .text._ZN12ServerTask__19server_handler_bodyEPv,"ax",%progbits
+ 412              	 .align 2
+ 413              	 .global _ZN12ServerTask__19server_handler_bodyEPv
+ 414              	 .thumb
+ 415              	 .thumb_func
+ 417              	_ZN12ServerTask__19server_handler_bodyEPv:
+ 418              	.LFB74:
+ 189:../App/src/server_task.cpp **** 	/* Local variables */
+ 419              	 .loc 2 189 0
+ 420              	 .cfi_startproc
+ 421              	 
+ 422              	 
+ 423              	.LVL42:
+ 424 0000 2DE9F043 	 push {r4,r5,r6,r7,r8,r9,lr}
+ 425              	.LCFI5:
+ 426              	 .cfi_def_cfa_offset 28
+ 427              	 .cfi_offset 4,-28
+ 428              	 .cfi_offset 5,-24
+ 429              	 .cfi_offset 6,-20
+ 430              	 .cfi_offset 7,-16
+ 431              	 .cfi_offset 8,-12
+ 432              	 .cfi_offset 9,-8
+ 433              	 .cfi_offset 14,-4
+ 434 0004 85B0     	 sub sp,sp,#20
+ 435              	.LCFI6:
+ 436              	 .cfi_def_cfa_offset 48
+ 437 0006 0F46     	 mov r7,r1
+ 438              	.LVL43:
+ 439              	.LBB71:
+ 196:../App/src/server_task.cpp **** 	constexpr TickType_t xSendTimeOut = pdMS_TO_TICKS( 5000 );
+ 440              	 .loc 2 196 0
+ 441 0008 324B     	 ldr r3,.L38
+ 442 000a 0293     	 str r3,[sp,#8]
+ 197:../App/src/server_task.cpp **** 	TickType_t xTimeOnShutdown = 0;
+ 443              	 .loc 2 197 0
+ 444 000c 41F28833 	 movw r3,#5000
+ 445 0010 0393     	 str r3,[sp,#12]
+ 446              	.LVL44:
+ 204:../App/src/server_task.cpp **** 
+ 447              	 .loc 2 204 0
+ 448 0012 0846     	 mov r0,r1
+ 449              	.LVL45:
+ 450 0014 3049     	 ldr r1,.L38+4
+ 451              	.LVL46:
+ 452 0016 0822     	 movs r2,#8
+ 453 0018 0023     	 movs r3,#0
+ 454 001a FFF7FEFF 	 bl FreeRTOS_send
+ 455              	.LVL47:
+ 456              	.LBB72:
+ 457              	.LBB73:
+ 458              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc/dri_mem.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Feel free to use this Code at your own risk for your own purposes.
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Title:		Memory Header file
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Filename:		dri_mem.h
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Author:		HS
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Origin Date:	10/04/2019
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Version:		1.0.0
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Notes:
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /** @file:	dri_mem.h
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *  @brief:	This file contains memory allocation operator wrappers for FreeRTOS
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *  		environment
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #ifndef DRI_MEM_H_
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #define DRI_MEM_H_
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Includes
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #include <FreeRTOS.h>
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Preprocessor Constants
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Configuration Constants
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Macros
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Typedefs
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Variables
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** *******************************************************************************/
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /******************************************************************************
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** * Function Prototypes
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *******************************************************************************/
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #ifdef __cplusplus
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** extern "C" {
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #endif
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** int memcmp( const void *, const void *, size_t );
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void *memcpy( void *, const void *, size_t );
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void *memmove( void *, const void *, size_t );
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void *memset( void *, int, size_t );
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void *malloc( size_t size );
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void free( void * p_arg );
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void *realloc( void * p_arg, size_t size );
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void *calloc( size_t nmemb , size_t size );
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 219:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 220:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 221:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 222:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 223:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 224:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 225:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 226:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 227:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 228:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 229:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 230:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 231:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** void *memalign( size_t alignment, size_t size );
+ 232:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 233:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 234:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 235:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 236:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 237:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 238:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 239:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 240:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 241:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 242:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 243:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 244:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 245:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 246:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 247:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 248:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 249:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 250:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** int strcmp( const char *, const char * );
+ 251:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 252:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 253:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 254:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 255:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 256:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 257:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 258:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 259:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 260:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 261:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 262:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 263:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 264:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 265:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 266:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 267:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 268:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 269:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** int strncmp( const char *, const char *, size_t );
+ 270:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 271:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 272:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 273:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 274:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 275:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 276:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 278:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 279:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 280:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 281:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 282:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 283:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 284:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 285:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 286:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 287:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 288:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** char * strcpy( char *__restrict, const char *__restrict );
+ 289:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 290:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 291:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 292:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 293:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 294:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 295:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 296:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 297:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 298:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 299:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 300:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 301:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 302:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 303:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 304:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 305:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 306:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 307:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** char *strncpy( char *, const char *, size_t );
+ 308:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 309:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 310:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 311:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function
+ 312:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 313:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief
+ 314:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 315:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]
+ 316:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 317:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]
+ 318:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 319:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return
+ 320:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 321:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 322:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 323:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 324:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 325:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 326:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** size_t strlen( const char * );
+ 327:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 328:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 329:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #ifdef __cplusplus
+ 330:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** }
+ 331:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #endif	/* extern "C" linkage */
+ 332:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 333:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 334:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** #ifdef __cplusplus
+ 335:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 336:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 337:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function	Operator overloading for new
+ 338:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 339:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief		This function is a C++ wrapper for portmalloc from FreeRTOS
+ 340:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 341:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]	Size of data
+ 342:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 343:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]	Memory allocated address
+ 344:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 345:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return  	Memory allocated for variables address
+ 346:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 347:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 348:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				These kind of wrappers can be used for any RTOS which provide
+ 349:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				memory allocation in C standard
+ 350:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 351:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 352:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 353:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 354:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** inline void * operator new( size_t size )
+ 355:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** {
+ 356:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 	return pvPortMalloc( size );
+ 357:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** }
+ 358:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 359:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 360:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 361:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function	Operator overloading for new with array of elements
+ 362:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 363:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief		This function is a C++ wrapper for portmalloc from FreeRTOS
+ 364:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 365:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]	Size of data and array
+ 366:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 367:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]	Memory allocated address
+ 368:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 369:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return  	Memory allocated for variables address
+ 370:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 371:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 372:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				These kind of wrappers can be used for any RTOS which provide
+ 373:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				memory allocation in C standard
+ 374:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 375:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 376:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 377:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 378:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** inline void * operator new[]( size_t size )
+ 379:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** {
+ 380:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 	return pvPortMalloc( size );
+ 459              	 .loc 5 380 0
+ 460 001e 4FF49160 	 mov r0,#1160
+ 461 0022 FFF7FEFF 	 bl pvPortMalloc
+ 462              	.LVL48:
+ 463              	.LBE73:
+ 464              	.LBE72:
+ 211:../App/src/server_task.cpp **** 	{
+ 465              	 .loc 2 211 0
+ 466 0026 0646     	 mov r6,r0
+ 467 0028 68B3     	 cbz r0,.L28
+ 214:../App/src/server_task.cpp **** 		FreeRTOS_setsockopt( xConnectedSocket, 0, FREERTOS_SO_SNDTIMEO, &xSendTimeOut, sizeof( xReceiveTi
+ 468              	 .loc 2 214 0
+ 469 002a 0424     	 movs r4,#4
+ 470 002c 0094     	 str r4,[sp]
+ 471 002e 3846     	 mov r0,r7
+ 472 0030 0021     	 movs r1,#0
+ 473 0032 0A46     	 mov r2,r1
+ 474 0034 02AB     	 add r3,sp,#8
+ 475 0036 FFF7FEFF 	 bl FreeRTOS_setsockopt
+ 476              	.LVL49:
+ 215:../App/src/server_task.cpp **** 
+ 477              	 .loc 2 215 0
+ 478 003a 0094     	 str r4,[sp]
+ 479 003c 3846     	 mov r0,r7
+ 480 003e 0021     	 movs r1,#0
+ 481 0040 0122     	 movs r2,#1
+ 482 0042 03AB     	 add r3,sp,#12
+ 483 0044 FFF7FEFF 	 bl FreeRTOS_setsockopt
+ 484              	.LVL50:
+ 222:../App/src/server_task.cpp **** 
+ 485              	 .loc 2 222 0
+ 486 0048 4FF49169 	 mov r9,#1160
+ 487 004c 4FF00008 	 mov r8,#0
+ 488              	.LVL51:
+ 489              	.L34:
+ 490 0050 3046     	 mov r0,r6
+ 491 0052 4146     	 mov r1,r8
+ 492 0054 4A46     	 mov r2,r9
+ 493 0056 FFF7FEFF 	 bl memset
+ 494              	.LVL52:
+ 225:../App/src/server_task.cpp **** 
+ 495              	 .loc 2 225 0
+ 496 005a 3846     	 mov r0,r7
+ 497 005c 3146     	 mov r1,r6
+ 498 005e 4A46     	 mov r2,r9
+ 499 0060 4346     	 mov r3,r8
+ 500 0062 FFF7FEFF 	 bl FreeRTOS_recv
+ 501              	.LVL53:
+ 228:../App/src/server_task.cpp **** 			{
+ 502              	 .loc 2 228 0
+ 503 0066 051E     	 subs r5,r0,#0
+ 504 0068 0DDB     	 blt .L28
+ 505              	.LVL54:
+ 234:../App/src/server_task.cpp **** 				{
+ 506              	 .loc 2 234 0
+ 507 006a F1DD     	 ble .L34
+ 508 006c 4446     	 mov r4,r8
+ 509              	.LVL55:
+ 510              	.L30:
+ 236:../App/src/server_task.cpp **** 					lTotalSent += lSent;
+ 511              	 .loc 2 236 0
+ 512 006e 3846     	 mov r0,r7
+ 513 0070 3146     	 mov r1,r6
+ 514 0072 2A1B     	 subs r2,r5,r4
+ 515 0074 4346     	 mov r3,r8
+ 516 0076 FFF7FEFF 	 bl FreeRTOS_send
+ 517              	.LVL56:
+ 237:../App/src/server_task.cpp **** 				}
+ 518              	 .loc 2 237 0
+ 519 007a 0444     	 add r4,r4,r0
+ 520              	.LVL57:
+ 234:../App/src/server_task.cpp **** 				{
+ 521              	 .loc 2 234 0
+ 522 007c 0028     	 cmp r0,#0
+ 523 007e 02DB     	 blt .L28
+ 234:../App/src/server_task.cpp **** 				{
+ 524              	 .loc 2 234 0 is_stmt 0 discriminator 1
+ 525 0080 A542     	 cmp r5,r4
+ 526 0082 F4DC     	 bgt .L30
+ 527 0084 E4E7     	 b .L34
+ 528              	.LVL58:
+ 529              	.L28:
+ 255:../App/src/server_task.cpp **** 
+ 530              	 .loc 2 255 0 is_stmt 1
+ 531 0086 3846     	 mov r0,r7
+ 532 0088 0221     	 movs r1,#2
+ 533 008a FFF7FEFF 	 bl FreeRTOS_shutdown
+ 534              	.LVL59:
+ 259:../App/src/server_task.cpp **** 	do
+ 535              	 .loc 2 259 0
+ 536 008e FFF7FEFF 	 bl xTaskGetTickCount
+ 537              	.LVL60:
+ 538 0092 8146     	 mov r9,r0
+ 539              	.LVL61:
+ 262:../App/src/server_task.cpp **** 		{
+ 540              	 .loc 2 262 0
+ 541 0094 4FF49165 	 mov r5,#1160
+ 542 0098 0024     	 movs r4,#0
+ 260:../App/src/server_task.cpp **** 	{
+ 543              	 .loc 2 260 0
+ 544 009a 41F28738 	 movw r8,#4999
+ 545              	.LVL62:
+ 546              	.L32:
+ 262:../App/src/server_task.cpp **** 		{
+ 547              	 .loc 2 262 0
+ 548 009e 3846     	 mov r0,r7
+ 549 00a0 3146     	 mov r1,r6
+ 550 00a2 2A46     	 mov r2,r5
+ 551 00a4 2346     	 mov r3,r4
+ 552 00a6 FFF7FEFF 	 bl FreeRTOS_recv
+ 553              	.LVL63:
+ 554 00aa 0028     	 cmp r0,#0
+ 555 00ac 05DB     	 blt .L31
+ 266:../App/src/server_task.cpp **** 
+ 556              	 .loc 2 266 0
+ 557 00ae FFF7FEFF 	 bl xTaskGetTickCount
+ 558              	.LVL64:
+ 559 00b2 C9EB0000 	 rsb r0,r9,r0
+ 260:../App/src/server_task.cpp **** 	{
+ 560              	 .loc 2 260 0
+ 561 00b6 4045     	 cmp r0,r8
+ 562 00b8 F1D9     	 bls .L32
+ 563              	.L31:
+ 269:../App/src/server_task.cpp **** 	FreeRTOS_closesocket( xConnectedSocket );
+ 564              	 .loc 2 269 0
+ 565 00ba 16B1     	 cbz r6,.L33
+ 566              	.LVL65:
+ 567              	.LBB74:
+ 568              	.LBB75:
+ 381:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** }
+ 382:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 383:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 384:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 385:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function	operator overloading for delete
+ 386:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 387:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief		This function deallocates previously allocated memory from heap
+ 388:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 389:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]	Memory address
+ 390:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 391:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]	NA
+ 392:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 393:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return  	NA
+ 394:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 395:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 396:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				These kind of wrappers can be used for any RTOS which provide
+ 397:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				memory allocation in C standard
+ 398:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 399:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 400:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 401:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 402:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** inline void operator delete( void * p_arg )
+ 403:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** {
+ 404:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 	vPortFree( p_arg );
+ 405:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** }
+ 406:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 407:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 
+ 408:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** /**
+ 409:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @function	operator overloading for delete with array
+ 410:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 411:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @brief		This function deallocates previously allocated memory from heap
+ 412:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 413:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[in]	Memory address
+ 414:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 415:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @param[out]	NA
+ 416:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 417:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * @return  	NA
+ 418:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 419:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * \par<b>Description:</b><br>
+ 420:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				These kind of wrappers can be used for any RTOS which provide
+ 421:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * 				memory allocation in C standard
+ 422:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 423:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  * <i>Imp Note:</i>
+ 424:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  *
+ 425:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h ****  */
+ 426:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** inline void operator delete[]( void * p_arg )
+ 427:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** {
+ 428:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/MEM/inc\dri_mem.h **** 	vPortFree( p_arg );
+ 569              	 .loc 5 428 0
+ 570 00bc 3046     	 mov r0,r6
+ 571 00be FFF7FEFF 	 bl vPortFree
+ 572              	.LVL66:
+ 573              	.L33:
+ 574              	.LBE75:
+ 575              	.LBE74:
+ 270:../App/src/server_task.cpp **** 
+ 576              	 .loc 2 270 0
+ 577 00c2 3846     	 mov r0,r7
+ 578 00c4 FFF7FEFF 	 bl FreeRTOS_closesocket
+ 579              	.LVL67:
+ 272:../App/src/server_task.cpp **** }
+ 580              	 .loc 2 272 0
+ 581 00c8 0020     	 movs r0,#0
+ 582 00ca FFF7FEFF 	 bl vTaskDelete
+ 583              	.LVL68:
+ 584              	.LBE71:
+ 273:../App/src/server_task.cpp **** /*---------------------------------------------------------------------------*/
+ 585              	 .loc 2 273 0
+ 586 00ce 05B0     	 add sp,sp,#20
+ 587              	.LCFI7:
+ 588              	 .cfi_def_cfa_offset 28
+ 589              	 
+ 590 00d0 BDE8F083 	 pop {r4,r5,r6,r7,r8,r9,pc}
+ 591              	.LVL69:
+ 592              	.L39:
+ 593              	 .align 2
+ 594              	.L38:
+ 595 00d4 36894100 	 .word 4294966
+ 596 00d8 1C000000 	 .word .LC2
+ 597              	 .cfi_endproc
+ 598              	.LFE74:
+ 600              	 .section .text._ZN12ServerTask__20server_handler_entryEPv,"axG",%progbits,_ZN12ServerTask__20server_handler_entryEPv,comdat
+ 601              	 .align 2
+ 602              	 .weak _ZN12ServerTask__20server_handler_entryEPv
+ 603              	 .thumb
+ 604              	 .thumb_func
+ 606              	_ZN12ServerTask__20server_handler_entryEPv:
+ 607              	.LFB27:
+ 608              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc/server_task.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /**************************************************************************************************
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * @file	server_task.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * @brief	Server Task Header
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * @version
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * @date	01/18/2020
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * @cond
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  **************************************************************************************************
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * Copyright (c) 2020, Hemant Sharma - All Rights Reserved
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * All rights reserved.
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * following conditions are met:
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * disclaimer.
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * disclaimer in the documentation and/or other materials provided with the distribution.
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * products derived from this software without specific prior written permission.
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN AN
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  **************************************************************************************************
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * *************************** Change history ********************************
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * @endcond
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  */
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #ifndef SERVER_TASK_H_
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define SERVER_TASK_H_
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** * Includes
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** *******************************************************************************/
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #include <rtos_wrappers.h>
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #include <dri_mem.h>
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /* Include FreeRTOS-Plus TCP/IP files */
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #include <FreeRTOS_IP.h>
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #include <FreeRTOS_Sockets.h>
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** * Preprocessor Constants
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** *******************************************************************************/
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** * Configuration Constants
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** *******************************************************************************/
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define INFINEON_HOST_SERVER_IP_ADDRESS0			192
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define INFINEON_HOST_SERVER_IP_ADDRESS1			168
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define INFINEON_HOST_SERVER_IP_ADDRESS2			1
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define INFINEON_HOST_SERVER_IP_ADDRESS3			9
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define INFINEON_HOST_SERVER_IP_ADDRESS				"192.168.1.9"
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define INFINEON_HOST_SERVER_PORT					5900
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** * Macros
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** *******************************************************************************/
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /* The maximum time to wait for a closing socket to close. */
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** #define tcpechoSHUTDOWN_DELAY	( pdMS_TO_TICKS( 5000 ) )
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** * Typedefs
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** *******************************************************************************/
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** * Function Prototypes
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** *******************************************************************************/
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** * Variables
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** *******************************************************************************/
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /******************************************************************************
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  * @brief	Class for ServerTask__ Instance
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  *
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h ****  ******************************************************************************/
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** class ServerTask__
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** {
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /* public members */
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** public:
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	/** Constructors and Destructors */
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	explicit ServerTask__( const UBaseType_t& uxPriority, const configSTACK_DEPTH_TYPE& usStackDepth )
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	{
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 		(void) RTOS_WRAPPER__::create( ServerTask__::server_entry,
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 										xtask_name, usStackDepth, NULL,
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 										uxPriority, xhandle );
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	}
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	ServerTask__() = delete;
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	ServerTask__( const ServerTask__& ) = delete;
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	ServerTask__ operator=( const ServerTask__& ) = delete;
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	virtual ~ServerTask__()
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	{
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 		/* Add definition for Destructor */
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 		RTOS_WRAPPER__::destroy( xhandle );
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	}
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	/******* API Member functions *******/
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	/**
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * @function
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * @brief
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * @param[in]
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * @param[out]
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * @return
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * \par<b>Description:</b><br>
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * <i>Imp Note:</i>
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 */
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** /* private members */
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** private:
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	/** Data Members **/
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	const char * const xtask_name = "ServerTask";
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	TaskHandle_t * xhandle = nullptr;
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	/******* Private Member Functions *******/
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	static void server_entry( void * pvParameters )
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	{
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 		/* Pass the control to server body */
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 		((ServerTask__ *) pvParameters)->server_body( pvParameters );
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	}
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	/**
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * @function	server_body
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * @brief		This function contains server body which waits for connection
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * 				and create a handler task for particular client
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 * <i>Imp Note:</i>
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 *
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	 */
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	void server_body( void *pvParameters );
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	static void server_handler_entry( void * pvParameters )
+ 609              	 .loc 6 166 0
+ 610              	 .cfi_startproc
+ 611              	 
+ 612              	 
+ 613              	.LVL70:
+ 614 0000 08B5     	 push {r3,lr}
+ 615              	.LCFI8:
+ 616              	 .cfi_def_cfa_offset 8
+ 617              	 .cfi_offset 3,-8
+ 618              	 .cfi_offset 14,-4
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 	{
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 		/* Pass the control to server handler body */
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/App/inc\server_task.h **** 		((ServerTask__ *) pvParameters)->server_handler_body( pvParameters );
+ 619              	 .loc 6 169 0
+ 620 0002 0146     	 mov r1,r0
+ 621 0004 FFF7FEFF 	 bl _ZN12ServerTask__19server_handler_bodyEPv
+ 622              	.LVL71:
+ 623 0008 08BD     	 pop {r3,pc}
+ 624              	 .cfi_endproc
+ 625              	.LFE27:
+ 627              	 .global rus_task_name
+ 628 000a 00BF     	 .section .data.rus_task_name,"aw",%progbits
+ 629              	 .align 2
+ 630              	 .set .LANCHOR0,.+0
+ 633              	rus_task_name:
+ 634 0000 24000000 	 .word .LC3
+ 635              	 .section .rodata.str1.4,"aMS",%progbits,1
+ 636              	 .align 2
+ 637              	.LC0:
+ 638 0000 436C6965 	 .ascii "ClientTask\000"
+ 638      6E745461 
+ 638      736B00
+ 639 000b 00       	 .space 1
+ 640              	.LC1:
+ 641 000c 53657276 	 .ascii "ServerHandler\000"
+ 641      65724861 
+ 641      6E646C65 
+ 641      7200
+ 642 001a 0000     	 .space 2
+ 643              	.LC2:
+ 644 001c 48656C6C 	 .ascii "Hello\015\012\000"
+ 644      6F0D0A00 
+ 645              	.LC3:
+ 646 0024 52415720 	 .ascii "RAW UDP Server\000"
+ 646      55445020 
+ 646      53657276 
+ 646      657200
+ 647 0033 00       	 .text
+ 648              	.Letext0:
+ 649              	 .file 7 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\lib\\gcc\\arm-none-eabi\\4.9.3\\include\\stddef.h"
+ 650              	 .file 8 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 651              	 .file 9 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 652              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/projdefs.h"
+ 653              	 .file 11 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/list.h"
+ 654              	 .file 12 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/task.h"
+ 655              	 .file 13 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP.h"
+ 656              	 .file 14 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/event_groups.h"
+ 657              	 .file 15 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_Sockets.h"
+ 658              	 .file 16 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_IP_Private.h"
+ 659              	 .file 17 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_Stream_Buffer.h"
+ 660              	 .file 18 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS-Plus-TCP/include/FreeRTOS_TCP_WIN.h"
+ 661              	 .file 19 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/FreeRTOS/Source/include/portable.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 server_task.cpp
+    {standard input}:19     .text._ZN12ClientTask__12client_entryEPv:00000000 $t
+    {standard input}:24     .text._ZN12ClientTask__12client_entryEPv:00000000 _ZN12ClientTask__12client_entryEPv
+    {standard input}:46     .text.raw_udp_server:00000000 $t
+    {standard input}:51     .text.raw_udp_server:00000000 raw_udp_server
+    {standard input}:173    .text.raw_udp_server:000000a4 $d
+    {standard input}:180    .text._ZN12ServerTask__11server_bodyEPv:00000000 $t
+    {standard input}:185    .text._ZN12ServerTask__11server_bodyEPv:00000000 _ZN12ServerTask__11server_bodyEPv
+    {standard input}:399    .text._ZN12ServerTask__11server_bodyEPv:000000f8 $d
+    {standard input}:606    .text._ZN12ServerTask__20server_handler_entryEPv:00000000 _ZN12ServerTask__20server_handler_entryEPv
+    {standard input}:412    .text._ZN12ServerTask__19server_handler_bodyEPv:00000000 $t
+    {standard input}:417    .text._ZN12ServerTask__19server_handler_bodyEPv:00000000 _ZN12ServerTask__19server_handler_bodyEPv
+    {standard input}:595    .text._ZN12ServerTask__19server_handler_bodyEPv:000000d4 $d
+    {standard input}:601    .text._ZN12ServerTask__20server_handler_entryEPv:00000000 $t
+    {standard input}:633    .data.rus_task_name:00000000 rus_task_name
+    {standard input}:629    .data.rus_task_name:00000000 $d
+    {standard input}:636    .rodata.str1.4:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.e7c5b1e8b8fe0dcc15cf6d98a7950411
+                           .group:00000000 wm4.stddef.h.39.499c3e455b0ee3cbd031c0eac4c946b3
+                           .group:00000000 wm4.stdint.h.4.659be5aa44c4ab4eb7c7cc2b24d8ceee
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.FreeRTOSConfig.h.30.aa43eb1cb33228d5c7e359a94d48589b
+                           .group:00000000 wm4.projdefs.h.28.d6a7c9061b707820f2fcf4c2ff5d9f24
+                           .group:00000000 wm4.portmacro.h.30.2ddc2eaf2e032c76c597fb78c4365041
+                           .group:00000000 wm4.portable.h.63.e9cc508c3850f44ce542149380c67812
+                           .group:00000000 wm4.mpu_wrappers.h.28.163fb40577cf8d1578015ea3f2ff4cdb
+                           .group:00000000 wm4.FreeRTOS.h.67.9945f39eea4ddeb224c0782392206292
+                           .group:00000000 wm4.list.h.57.02ec67e07eacffe5ca7cfb7326896236
+                           .group:00000000 wm4.task.h.47.2d3fe49a094b8ec1e3e6aac441e8db21
+                           .group:00000000 wm4.queue.h.66.45d4a3cf5de24cde7e732f8dad25383c
+                           .group:00000000 wm4.semphr.h.38.96f44691bfa19eb833944d3a35b81e54
+                           .group:00000000 wm4.timers.h.29.025d268d6baf57298309e7b498ee1cc7
+                           .group:00000000 wm4.FreeRTOSIPConfig.h.37.3f9c1db988571ff1f3dec4c7e54978d6
+                           .group:00000000 wm4.FreeRTOS_errno_TCP.h.27.708877b341d0e6bcb4ba112b2ad8082a
+                           .group:00000000 wm4.FreeRTOSIPConfigDefaults.h.41.f972b11d9b1eba5383080cfaef1fd740
+                           .group:00000000 wm4.IPTraceMacroDefaults.h.31.69642530b5a79c93e762c9b09ac0d1d5
+                           .group:00000000 wm4.FreeRTOS_IP.h.59.3f5e36f6612bd0c66747c6093da47335
+                           .group:00000000 wm4.FreeRTOS_IP.h.179.e5077063e624bc5d3f02542470d6ea94
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.1ee1144430bedaab1a14c7b57a6c8384
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.e57d9a24f6f3b6eaa274e44743a335a7
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.ef1f74da16cdd7cc7d09e79a2291769d
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.bfd00fa34c523ce50423876e66a2d374
+                           .group:00000000 wm4.FreeRTOS_Sockets.h.58.61d472da32c0e0f5bc49c368f15d0ac5
+                           .group:00000000 wm4.server_task.h.62.a18afe77128d9ae78235bb5d09bd58ff
+                           .group:00000000 wm4.FreeRTOS_TCP_WIN.h.32.f3cfab69924f28284deb16cc1a30fb93
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.52.551f932b14473cea139893dda31b3fa0
+                           .group:00000000 wm4.FreeRTOS_IP_Private.h.328.b5788f8d626a4cf16b8282f9399f3f55
+
+UNDEFINED SYMBOLS
+_ZN12ClientTask__11client_bodyEPv
+memset
+FreeRTOS_socket
+FreeRTOS_bind
+FreeRTOS_closesocket
+FreeRTOS_recvfrom
+FreeRTOS_sendto
+vTaskDelay
+xDefaultPartUDPPacketHeader
+FreeRTOS_IsNetworkUp
+xTaskCreate
+vTaskDelete
+FreeRTOS_setsockopt
+FreeRTOS_listen
+FreeRTOS_accept
+FreeRTOS_send
+pvPortMalloc
+FreeRTOS_recv
+FreeRTOS_shutdown
+xTaskGetTickCount
+vPortFree

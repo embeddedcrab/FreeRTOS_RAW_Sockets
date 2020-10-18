@@ -1,0 +1,335 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "dri_scu_conf.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.SCU_Trap_Handler,"ax",%progbits
+  19              	 .align 2
+  20              	 .global SCU_Trap_Handler
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	SCU_Trap_Handler:
+  25              	.LFB192:
+  26              	 .file 1 "../Driver/SCU/cfg/src/dri_scu_conf.c"
+   1:../Driver/SCU/cfg/src/dri_scu_conf.c **** /*****************************************************************************
+   2:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Copyright (c) 2019 - Hemant Sharma - All Rights Reserved
+   3:../Driver/SCU/cfg/src/dri_scu_conf.c **** *
+   4:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Feel free to use this Code at your own risk for your own purposes.
+   5:../Driver/SCU/cfg/src/dri_scu_conf.c **** *
+   6:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+   7:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+   8:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Title:		SCU Configuration Source
+   9:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Filename:		dri_scu_conf.c
+  10:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Author:		HS
+  11:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Origin Date:	02/23/2020
+  12:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Version:		1.0.0
+  13:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Notes:
+  14:../Driver/SCU/cfg/src/dri_scu_conf.c **** *
+  15:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Change History
+  16:../Driver/SCU/cfg/src/dri_scu_conf.c **** * --------------
+  17:../Driver/SCU/cfg/src/dri_scu_conf.c **** *
+  18:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+  19:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  20:../Driver/SCU/cfg/src/dri_scu_conf.c **** /** @file:	dri_scu_conf.c
+  21:../Driver/SCU/cfg/src/dri_scu_conf.c ****  *  @brief:	This source file contains configuration function definitions for SCU
+  22:../Driver/SCU/cfg/src/dri_scu_conf.c ****  */
+  23:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  24:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  25:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+  26:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Includes
+  27:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+  28:../Driver/SCU/cfg/src/dri_scu_conf.c **** #include <dri_scu.h>
+  29:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  30:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  31:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+  32:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Preprocessor Constants
+  33:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+  34:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  35:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  36:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+  37:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Configuration Constants
+  38:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+  39:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  40:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  41:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+  42:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Macros
+  43:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+  44:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  45:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  46:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+  47:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Typedefs
+  48:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+  49:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  50:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  51:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+  52:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Variables
+  53:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+  54:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  55:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  56:../Driver/SCU/cfg/src/dri_scu_conf.c **** /*****************************************************************************/
+  57:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  58:../Driver/SCU/cfg/src/dri_scu_conf.c **** /* Callback handler for user */
+  59:../Driver/SCU/cfg/src/dri_scu_conf.c **** #if (SCU_CALLBACK_HANDLER_USED == 1U)
+  60:../Driver/SCU/cfg/src/dri_scu_conf.c **** extern void SCU_callback_handler( void );
+  61:../Driver/SCU/cfg/src/dri_scu_conf.c **** #endif
+  62:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  63:../Driver/SCU/cfg/src/dri_scu_conf.c **** /* Trap Hanlder for SCU Trap Events */
+  64:../Driver/SCU/cfg/src/dri_scu_conf.c **** void SCU_Trap_Handler( void );
+  65:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  66:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  67:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  68:../Driver/SCU/cfg/src/dri_scu_conf.c **** /** SCU Configurations **/
+  69:../Driver/SCU/cfg/src/dri_scu_conf.c **** tStSCU_InterruptConfiguartion SCU_InterruptConfiguration =
+  70:../Driver/SCU/cfg/src/dri_scu_conf.c **** {
+  71:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.irq = { .irq_num = SCU_0_IRQn, .irq_priority = 40 }
+  72:../Driver/SCU/cfg/src/dri_scu_conf.c **** };
+  73:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  74:../Driver/SCU/cfg/src/dri_scu_conf.c **** #if (USING_WATCHDOG == 1U)
+  75:../Driver/SCU/cfg/src/dri_scu_conf.c **** XMC_WDT_CONFIG_t SCU_WDT_Configuration =
+  76:../Driver/SCU/cfg/src/dri_scu_conf.c **** {
+  77:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.window_upper_bound = 243902,	/* ~1s (so LED Flasher can authenticate
+  78:../Driver/SCU/cfg/src/dri_scu_conf.c **** 								functioning of system, Fwdt = Fofi/100 = 24MHz/100 */
+  79:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.window_lower_bound = 0,	/* 0s, making range of 0 - ~1s */
+  80:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.prewarn_mode = 1,
+  81:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.run_in_debug_mode = 0,
+  82:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.service_pulse_width = 0
+  83:../Driver/SCU/cfg/src/dri_scu_conf.c **** };
+  84:../Driver/SCU/cfg/src/dri_scu_conf.c **** #endif	/* USING_WATCHDOG */
+  85:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+  86:../Driver/SCU/cfg/src/dri_scu_conf.c **** tStSCU_GlobalConfiguartion SCU_GlobalConfiguration =
+  87:../Driver/SCU/cfg/src/dri_scu_conf.c **** {
+  88:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.p_isr_config = &SCU_InterruptConfiguration,
+  89:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.traps = XMC_SCU_TRAP_OSC_WDG |
+  90:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			XMC_SCU_TRAP_VCO_LOCK |
+  91:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			XMC_SCU_TRAP_USB_VCO_LOCK |
+  92:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			XMC_SCU_TRAP_ULP_WDG |
+  93:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			XMC_SCU_TRAP_PER_BRIDGE0 |
+  94:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			XMC_SCU_TRAP_PER_BRIDGE1
+  95:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			#if (USING_BROWN_OUT_DETECT == 1U)
+  96:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			| XMC_SCU_TRAP_BROWNOUT,
+  97:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			#else
+  98:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			,
+  99:../Driver/SCU/cfg/src/dri_scu_conf.c **** 			#endif
+ 100:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.trap_handler = &SCU_Trap_Handler,
+ 101:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.nmi_request = XMC_SCU_NMIREQ_WDT_WARN |
+ 102:../Driver/SCU/cfg/src/dri_scu_conf.c **** 					XMC_SCU_NMIREQ_ERU0_0 |
+ 103:../Driver/SCU/cfg/src/dri_scu_conf.c **** 					XMC_SCU_NMIREQ_ERU0_1 |
+ 104:../Driver/SCU/cfg/src/dri_scu_conf.c **** 					XMC_SCU_NMIREQ_ERU0_2 |
+ 105:../Driver/SCU/cfg/src/dri_scu_conf.c **** 					XMC_SCU_NMIREQ_ERU0_3,
+ 106:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 107:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#if (USING_WATCHDOG == 1U)
+ 108:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.p_wdt_config = &SCU_WDT_Configuration,
+ 109:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.wdt_clock_div = 100,
+ 110:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.wdt_servie_pulse_width = 16,/* (SPW + 1) */
+ 111:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.events = XMC_SCU_INTERRUPT_EVENT_WDT_WARN,
+ 112:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.wdt_clock = XMC_SCU_CLOCK_WDTCLKSRC_OFI,
+ 113:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.wdt_mode = XMC_WDT_MODE_PREWARNING,
+ 114:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#endif
+ 115:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#if (USING_EXTERNAL_CLOCK_OUTPUT == 1U)
+ 116:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.external_output_clock = XMC_SCU_CLOCK_EXTOUTCLKSRC_PLL,/* Clock division also needed */
+ 117:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#endif
+ 118:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#if (USING_BROWN_OUT_DETECT == 1U)
+ 119:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.threshold = 0x7D,/* VADC33V = (VDDP/LSB33V) + 1, where VDDP=2.8V and LSB33V=22.5mV */
+ 120:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.interval = 255
+ 121:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#endif
+ 122:../Driver/SCU/cfg/src/dri_scu_conf.c **** };
+ 123:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 124:../Driver/SCU/cfg/src/dri_scu_conf.c **** tStSCU_Control SCU_Control;
+ 125:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 126:../Driver/SCU/cfg/src/dri_scu_conf.c **** #if (SCU_CALLBACK_HANDLER_USED == 1U)
+ 127:../Driver/SCU/cfg/src/dri_scu_conf.c **** tStSCU_Callbacks SCU_Callbacks =
+ 128:../Driver/SCU/cfg/src/dri_scu_conf.c **** {
+ 129:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.fp_callback = SCU_callback_handler
+ 130:../Driver/SCU/cfg/src/dri_scu_conf.c **** };
+ 131:../Driver/SCU/cfg/src/dri_scu_conf.c **** #endif
+ 132:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 133:../Driver/SCU/cfg/src/dri_scu_conf.c **** tStSCU SCU =
+ 134:../Driver/SCU/cfg/src/dri_scu_conf.c **** {
+ 135:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.p_module_config = &SCU_GlobalConfiguration,
+ 136:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	.p_control = &SCU_Control
+ 137:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#if (SCU_CALLBACK_HANDLER_USED == 1U)
+ 138:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	,.p_callback = &SCU_Callbacks
+ 139:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	#endif
+ 140:../Driver/SCU/cfg/src/dri_scu_conf.c **** };
+ 141:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 142:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 143:../Driver/SCU/cfg/src/dri_scu_conf.c **** /******************************************************************************
+ 144:../Driver/SCU/cfg/src/dri_scu_conf.c **** * Function Definitions
+ 145:../Driver/SCU/cfg/src/dri_scu_conf.c **** *******************************************************************************/
+ 146:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 147:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 148:../Driver/SCU/cfg/src/dri_scu_conf.c **** void SCU_Interrupt_Handler( void )
+ 149:../Driver/SCU/cfg/src/dri_scu_conf.c **** {
+ 150:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	XMC_SCU_IRQHandler( 0 );
+ 151:../Driver/SCU/cfg/src/dri_scu_conf.c **** }
+ 152:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 153:../Driver/SCU/cfg/src/dri_scu_conf.c **** 
+ 154:../Driver/SCU/cfg/src/dri_scu_conf.c **** /* Trap Handler for SCU Traps */
+ 155:../Driver/SCU/cfg/src/dri_scu_conf.c **** void SCU_Trap_Handler( void )
+ 156:../Driver/SCU/cfg/src/dri_scu_conf.c **** {
+  27              	 .loc 1 156 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+ 157:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	/* TODO: Debug and Understand first */
+ 158:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	__asm("NOP");
+  32              	 .loc 1 158 0
+  33              	
+  34 0000 00BF     	 NOP
+  35              	
+  36              	 .thumb
+  37 0002 7047     	 bx lr
+  38              	 .cfi_endproc
+  39              	.LFE192:
+  41              	 .section .text.SCU_0_IRQHandler,"ax",%progbits
+  42              	 .align 2
+  43              	 .global SCU_0_IRQHandler
+  44              	 .thumb
+  45              	 .thumb_func
+  47              	SCU_0_IRQHandler:
+  48              	.LFB191:
+ 149:../Driver/SCU/cfg/src/dri_scu_conf.c **** 	XMC_SCU_IRQHandler( 0 );
+  49              	 .loc 1 149 0
+  50              	 .cfi_startproc
+  51              	 
+  52              	 
+  53 0000 08B5     	 push {r3,lr}
+  54              	.LCFI0:
+  55              	 .cfi_def_cfa_offset 8
+  56              	 .cfi_offset 3,-8
+  57              	 .cfi_offset 14,-4
+ 150:../Driver/SCU/cfg/src/dri_scu_conf.c **** }
+  58              	 .loc 1 150 0
+  59 0002 0020     	 movs r0,#0
+  60 0004 FFF7FEFF 	 bl XMC_SCU_IRQHandler
+  61              	.LVL0:
+  62 0008 08BD     	 pop {r3,pc}
+  63              	 .cfi_endproc
+  64              	.LFE191:
+  66              	 .global SCU
+  67              	 .global SCU_Callbacks
+  68              	 .comm SCU_Control,4,4
+  69              	 .global SCU_GlobalConfiguration
+  70              	 .global SCU_WDT_Configuration
+  71              	 .global SCU_InterruptConfiguration
+  72 000a 00BF     	 .section .data.SCU_Callbacks,"aw",%progbits
+  73              	 .align 2
+  76              	SCU_Callbacks:
+  77 0000 00000000 	 .word SCU_callback_handler
+  78              	 .section .data.SCU_WDT_Configuration,"aw",%progbits
+  79              	 .align 2
+  82              	SCU_WDT_Configuration:
+  83 0000 BEB80300 	 .word 243902
+  84 0004 00000000 	 .word 0
+  85 0008 02       	 .byte 2
+  86 0009 00       	 .byte 0
+  87 000a 0000     	 .space 2
+  88              	 .section .data.SCU_InterruptConfiguration,"aw",%progbits
+  89              	 .align 2
+  92              	SCU_InterruptConfiguration:
+  93 0000 00       	 .byte 0
+  94 0001 28       	 .byte 40
+  95 0002 0000     	 .section .data.SCU_GlobalConfiguration,"aw",%progbits
+  96              	 .align 2
+  99              	SCU_GlobalConfiguration:
+ 100 0000 00000000 	 .word SCU_InterruptConfiguration
+ 101 0004 ED010000 	 .word 493
+ 102 0008 00000000 	 .word SCU_Trap_Handler
+ 103 000c 01000F00 	 .word 983041
+ 104 0010 01000000 	 .word 1
+ 105 0014 00000000 	 .word SCU_WDT_Configuration
+ 106 0018 64000000 	 .word 100
+ 107 001c 10       	 .byte 16
+ 108 001d 000000   	 .space 3
+ 109 0020 00000000 	 .word 0
+ 110 0024 02       	 .byte 2
+ 111 0025 7D       	 .byte 125
+ 112 0026 FF       	 .byte -1
+ 113 0027 00       	 .space 1
+ 114              	 .section .data.SCU,"aw",%progbits
+ 115              	 .align 2
+ 118              	SCU:
+ 119 0000 00000000 	 .word SCU_GlobalConfiguration
+ 120 0004 00000000 	 .word SCU_Control
+ 121 0008 00000000 	 .word SCU_Callbacks
+ 122              	 .text
+ 123              	.Letext0:
+ 124              	 .file 2 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 125              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 126              	 .file 4 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_scu.h"
+ 127              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc4_scu.h"
+ 128              	 .file 6 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_wdt.h"
+ 129              	 .file 7 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/inc/dri_types.h"
+ 130              	 .file 8 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Driver/SCU/cfg/inc/dri_scu_types.h"
+ 131              	 .file 9 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+ 132              	 .file 10 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+ 133              	 .file 11 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 dri_scu_conf.c
+    {standard input}:19     .text.SCU_Trap_Handler:00000000 $t
+    {standard input}:24     .text.SCU_Trap_Handler:00000000 SCU_Trap_Handler
+    {standard input}:42     .text.SCU_0_IRQHandler:00000000 $t
+    {standard input}:47     .text.SCU_0_IRQHandler:00000000 SCU_0_IRQHandler
+    {standard input}:118    .data.SCU:00000000 SCU
+    {standard input}:76     .data.SCU_Callbacks:00000000 SCU_Callbacks
+                            *COM*:00000004 SCU_Control
+    {standard input}:99     .data.SCU_GlobalConfiguration:00000000 SCU_GlobalConfiguration
+    {standard input}:82     .data.SCU_WDT_Configuration:00000000 SCU_WDT_Configuration
+    {standard input}:92     .data.SCU_InterruptConfiguration:00000000 SCU_InterruptConfiguration
+    {standard input}:73     .data.SCU_Callbacks:00000000 $d
+    {standard input}:79     .data.SCU_WDT_Configuration:00000000 $d
+    {standard input}:89     .data.SCU_InterruptConfiguration:00000000 $d
+    {standard input}:96     .data.SCU_GlobalConfiguration:00000000 $d
+    {standard input}:115    .data.SCU:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+                           .group:00000000 wm4.xmc4_scu.h.106.b7d8d773976d331f6820948fe093a27d
+                           .group:00000000 wm4.dri_scu_conf.h.21.447831c60738f37a7a045a7ec569f015
+                           .group:00000000 wm4.xmc_gpio.h.51.99a4c0bd520ffa931ac6d8600dce89c4
+                           .group:00000000 wm4.xmc4_gpio_map.h.74.66e9110cf801b78826ef5354da51c32f
+                           .group:00000000 wm4.xmc4_gpio.h.79.ce6c49508b5a7769c66e7e3c21dcdfe4
+                           .group:00000000 wm4.dri_types.h.39.161f94b021468f2f6263340b954bb37f
+
+UNDEFINED SYMBOLS
+XMC_SCU_IRQHandler
+SCU_callback_handler

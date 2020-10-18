@@ -1,0 +1,1009 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .eabi_attribute 28,1
+   5              	 .fpu fpv4-sp-d16
+   6              	 .eabi_attribute 23,1
+   7              	 .eabi_attribute 24,1
+   8              	 .eabi_attribute 25,1
+   9              	 .eabi_attribute 26,1
+  10              	 .eabi_attribute 30,1
+  11              	 .eabi_attribute 34,1
+  12              	 .eabi_attribute 18,4
+  13              	 .thumb
+  14              	 .file "xmc_common.c"
+  15              	 .text
+  16              	.Ltext0:
+  17              	 .cfi_sections .debug_frame
+  18              	 .section .text.XMC_LIST_Init,"ax",%progbits
+  19              	 .align 2
+  20              	 .global XMC_LIST_Init
+  21              	 .thumb
+  22              	 .thumb_func
+  24              	XMC_LIST_Init:
+  25              	.LFB135:
+  26              	 .file 1 "../Libraries/XMCLib/src/xmc_common.c"
+   1:../Libraries/XMCLib/src/xmc_common.c **** /**
+   2:../Libraries/XMCLib/src/xmc_common.c ****  * @file xmc_common.c
+   3:../Libraries/XMCLib/src/xmc_common.c ****  * @date 2017-02-25
+   4:../Libraries/XMCLib/src/xmc_common.c ****  *
+   5:../Libraries/XMCLib/src/xmc_common.c ****  * @cond
+   6:../Libraries/XMCLib/src/xmc_common.c ****  **************************************************************************************************
+   7:../Libraries/XMCLib/src/xmc_common.c ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:../Libraries/XMCLib/src/xmc_common.c ****  *
+   9:../Libraries/XMCLib/src/xmc_common.c ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:../Libraries/XMCLib/src/xmc_common.c ****  * All rights reserved.                        
+  11:../Libraries/XMCLib/src/xmc_common.c ****  *                                             
+  12:../Libraries/XMCLib/src/xmc_common.c ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:../Libraries/XMCLib/src/xmc_common.c ****  * following conditions are met:   
+  14:../Libraries/XMCLib/src/xmc_common.c ****  *                                                                              
+  15:../Libraries/XMCLib/src/xmc_common.c ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:../Libraries/XMCLib/src/xmc_common.c ****  * disclaimer.                        
+  17:../Libraries/XMCLib/src/xmc_common.c ****  * 
+  18:../Libraries/XMCLib/src/xmc_common.c ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:../Libraries/XMCLib/src/xmc_common.c ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:../Libraries/XMCLib/src/xmc_common.c ****  * 
+  21:../Libraries/XMCLib/src/xmc_common.c ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:../Libraries/XMCLib/src/xmc_common.c ****  * products derived from this software without specific prior written permission.                  
+  23:../Libraries/XMCLib/src/xmc_common.c ****  *                                                                              
+  24:../Libraries/XMCLib/src/xmc_common.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:../Libraries/XMCLib/src/xmc_common.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:../Libraries/XMCLib/src/xmc_common.c ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:../Libraries/XMCLib/src/xmc_common.c ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:../Libraries/XMCLib/src/xmc_common.c ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:../Libraries/XMCLib/src/xmc_common.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:../Libraries/XMCLib/src/xmc_common.c ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:../Libraries/XMCLib/src/xmc_common.c ****  *                                                                              
+  32:../Libraries/XMCLib/src/xmc_common.c ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:../Libraries/XMCLib/src/xmc_common.c ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:../Libraries/XMCLib/src/xmc_common.c ****  **************************************************************************************************
+  35:../Libraries/XMCLib/src/xmc_common.c ****  *
+  36:../Libraries/XMCLib/src/xmc_common.c ****  * Change History
+  37:../Libraries/XMCLib/src/xmc_common.c ****  * --------------
+  38:../Libraries/XMCLib/src/xmc_common.c ****  *
+  39:../Libraries/XMCLib/src/xmc_common.c ****  * 2015-02-20:
+  40:../Libraries/XMCLib/src/xmc_common.c ****  *     - Initial <br>
+  41:../Libraries/XMCLib/src/xmc_common.c ****  *      
+  42:../Libraries/XMCLib/src/xmc_common.c ****  * 2017-02-25:
+  43:../Libraries/XMCLib/src/xmc_common.c ****  *     - Remove the need to define XMC_USER_ASSERT_FUNCTION
+  44:../Libraries/XMCLib/src/xmc_common.c ****  *     - XMC_AssertHandler fixed compilation warnings
+  45:../Libraries/XMCLib/src/xmc_common.c ****  *
+  46:../Libraries/XMCLib/src/xmc_common.c ****  * @endcond 
+  47:../Libraries/XMCLib/src/xmc_common.c ****  *
+  48:../Libraries/XMCLib/src/xmc_common.c ****  */
+  49:../Libraries/XMCLib/src/xmc_common.c **** 
+  50:../Libraries/XMCLib/src/xmc_common.c **** #include "xmc_common.h"
+  51:../Libraries/XMCLib/src/xmc_common.c **** 
+  52:../Libraries/XMCLib/src/xmc_common.c **** /*******************************************************************************
+  53:../Libraries/XMCLib/src/xmc_common.c ****  * DATA STRUCTURES
+  54:../Libraries/XMCLib/src/xmc_common.c ****  *******************************************************************************/
+  55:../Libraries/XMCLib/src/xmc_common.c **** struct list
+  56:../Libraries/XMCLib/src/xmc_common.c **** {
+  57:../Libraries/XMCLib/src/xmc_common.c ****   struct list *next;
+  58:../Libraries/XMCLib/src/xmc_common.c **** };
+  59:../Libraries/XMCLib/src/xmc_common.c **** 
+  60:../Libraries/XMCLib/src/xmc_common.c **** /*******************************************************************************
+  61:../Libraries/XMCLib/src/xmc_common.c ****  * API IMPLEMENTATION
+  62:../Libraries/XMCLib/src/xmc_common.c ****  *******************************************************************************/
+  63:../Libraries/XMCLib/src/xmc_common.c **** #if defined(XMC_ASSERT_ENABLE)
+  64:../Libraries/XMCLib/src/xmc_common.c **** __WEAK void XMC_AssertHandler(const char *const msg, const char *const file, uint32_t line)
+  65:../Libraries/XMCLib/src/xmc_common.c **** {
+  66:../Libraries/XMCLib/src/xmc_common.c ****   XMC_UNUSED_ARG(msg);
+  67:../Libraries/XMCLib/src/xmc_common.c ****   XMC_UNUSED_ARG(file);
+  68:../Libraries/XMCLib/src/xmc_common.c ****   XMC_UNUSED_ARG(line);
+  69:../Libraries/XMCLib/src/xmc_common.c **** 
+  70:../Libraries/XMCLib/src/xmc_common.c ****   while(1)
+  71:../Libraries/XMCLib/src/xmc_common.c ****   {
+  72:../Libraries/XMCLib/src/xmc_common.c ****     /* Endless loop */
+  73:../Libraries/XMCLib/src/xmc_common.c ****   }
+  74:../Libraries/XMCLib/src/xmc_common.c **** }
+  75:../Libraries/XMCLib/src/xmc_common.c **** #endif
+  76:../Libraries/XMCLib/src/xmc_common.c **** 
+  77:../Libraries/XMCLib/src/xmc_common.c **** void XMC_LIST_Init(XMC_LIST_t *list)
+  78:../Libraries/XMCLib/src/xmc_common.c **** {
+  27              	 .loc 1 78 0
+  28              	 .cfi_startproc
+  29              	 
+  30              	 
+  31              	 
+  32              	.LVL0:
+  79:../Libraries/XMCLib/src/xmc_common.c ****   *list = NULL;
+  33              	 .loc 1 79 0
+  34 0000 0023     	 movs r3,#0
+  35 0002 0360     	 str r3,[r0]
+  36 0004 7047     	 bx lr
+  37              	 .cfi_endproc
+  38              	.LFE135:
+  40 0006 00BF     	 .section .text.XMC_LIST_GetHead,"ax",%progbits
+  41              	 .align 2
+  42              	 .global XMC_LIST_GetHead
+  43              	 .thumb
+  44              	 .thumb_func
+  46              	XMC_LIST_GetHead:
+  47              	.LFB136:
+  80:../Libraries/XMCLib/src/xmc_common.c **** }
+  81:../Libraries/XMCLib/src/xmc_common.c **** 
+  82:../Libraries/XMCLib/src/xmc_common.c **** void *XMC_LIST_GetHead(XMC_LIST_t *list)
+  83:../Libraries/XMCLib/src/xmc_common.c **** {
+  48              	 .loc 1 83 0
+  49              	 .cfi_startproc
+  50              	 
+  51              	 
+  52              	 
+  53              	.LVL1:
+  84:../Libraries/XMCLib/src/xmc_common.c ****   return *list;
+  85:../Libraries/XMCLib/src/xmc_common.c **** }
+  54              	 .loc 1 85 0
+  55 0000 0068     	 ldr r0,[r0]
+  56              	.LVL2:
+  57 0002 7047     	 bx lr
+  58              	 .cfi_endproc
+  59              	.LFE136:
+  61              	 .section .text.XMC_LIST_GetTail,"ax",%progbits
+  62              	 .align 2
+  63              	 .global XMC_LIST_GetTail
+  64              	 .thumb
+  65              	 .thumb_func
+  67              	XMC_LIST_GetTail:
+  68              	.LFB137:
+  86:../Libraries/XMCLib/src/xmc_common.c **** 
+  87:../Libraries/XMCLib/src/xmc_common.c **** void *XMC_LIST_GetTail(XMC_LIST_t *list)
+  88:../Libraries/XMCLib/src/xmc_common.c **** {
+  69              	 .loc 1 88 0
+  70              	 .cfi_startproc
+  71              	 
+  72              	 
+  73              	 
+  74              	.LVL3:
+  89:../Libraries/XMCLib/src/xmc_common.c ****   struct list *tail;
+  90:../Libraries/XMCLib/src/xmc_common.c ****   
+  91:../Libraries/XMCLib/src/xmc_common.c ****   if (*list == NULL) 
+  75              	 .loc 1 91 0
+  76 0000 0068     	 ldr r0,[r0]
+  77              	.LVL4:
+  78 0002 08B9     	 cbnz r0,.L5
+  79 0004 7047     	 bx lr
+  80              	.LVL5:
+  81              	.L6:
+  92:../Libraries/XMCLib/src/xmc_common.c ****   {
+  93:../Libraries/XMCLib/src/xmc_common.c ****     tail = NULL;
+  94:../Libraries/XMCLib/src/xmc_common.c ****   }
+  95:../Libraries/XMCLib/src/xmc_common.c ****   else
+  96:../Libraries/XMCLib/src/xmc_common.c ****   {
+  97:../Libraries/XMCLib/src/xmc_common.c ****     for (tail = (struct list *)*list; tail->next != NULL; tail = tail->next)
+  82              	 .loc 1 97 0
+  83 0006 1846     	 mov r0,r3
+  84              	.LVL6:
+  85              	.L5:
+  86              	 .loc 1 97 0 is_stmt 0 discriminator 1
+  87 0008 0368     	 ldr r3,[r0]
+  88 000a 002B     	 cmp r3,#0
+  89 000c FBD1     	 bne .L6
+  98:../Libraries/XMCLib/src/xmc_common.c ****     {
+  99:../Libraries/XMCLib/src/xmc_common.c ****       /* Loop through the list */
+ 100:../Libraries/XMCLib/src/xmc_common.c ****     }  
+ 101:../Libraries/XMCLib/src/xmc_common.c ****   }
+ 102:../Libraries/XMCLib/src/xmc_common.c ****   
+ 103:../Libraries/XMCLib/src/xmc_common.c ****   return tail;    
+ 104:../Libraries/XMCLib/src/xmc_common.c **** }
+  90              	 .loc 1 104 0 is_stmt 1
+  91 000e 7047     	 bx lr
+  92              	 .cfi_endproc
+  93              	.LFE137:
+  95              	 .section .text.XMC_LIST_Add,"ax",%progbits
+  96              	 .align 2
+  97              	 .global XMC_LIST_Add
+  98              	 .thumb
+  99              	 .thumb_func
+ 101              	XMC_LIST_Add:
+ 102              	.LFB138:
+ 105:../Libraries/XMCLib/src/xmc_common.c **** 
+ 106:../Libraries/XMCLib/src/xmc_common.c **** void XMC_LIST_Add(XMC_LIST_t *list, void *item)
+ 107:../Libraries/XMCLib/src/xmc_common.c **** {
+ 103              	 .loc 1 107 0
+ 104              	 .cfi_startproc
+ 105              	 
+ 106              	 
+ 107              	.LVL7:
+ 108 0000 38B5     	 push {r3,r4,r5,lr}
+ 109              	.LCFI0:
+ 110              	 .cfi_def_cfa_offset 16
+ 111              	 .cfi_offset 3,-16
+ 112              	 .cfi_offset 4,-12
+ 113              	 .cfi_offset 5,-8
+ 114              	 .cfi_offset 14,-4
+ 115 0002 0546     	 mov r5,r0
+ 116 0004 0C46     	 mov r4,r1
+ 108:../Libraries/XMCLib/src/xmc_common.c ****   struct list *tail;
+ 109:../Libraries/XMCLib/src/xmc_common.c ****   
+ 110:../Libraries/XMCLib/src/xmc_common.c ****   ((struct list *)item)->next = NULL;
+ 117              	 .loc 1 110 0
+ 118 0006 0023     	 movs r3,#0
+ 119 0008 0B60     	 str r3,[r1]
+ 111:../Libraries/XMCLib/src/xmc_common.c ****   tail = (struct list *)XMC_LIST_GetTail(list);
+ 120              	 .loc 1 111 0
+ 121 000a FFF7FEFF 	 bl XMC_LIST_GetTail
+ 122              	.LVL8:
+ 112:../Libraries/XMCLib/src/xmc_common.c ****   
+ 113:../Libraries/XMCLib/src/xmc_common.c ****   if (tail == NULL) 
+ 123              	 .loc 1 113 0
+ 124 000e 08B9     	 cbnz r0,.L8
+ 114:../Libraries/XMCLib/src/xmc_common.c ****   {
+ 115:../Libraries/XMCLib/src/xmc_common.c ****     *list = item;
+ 125              	 .loc 1 115 0
+ 126 0010 2C60     	 str r4,[r5]
+ 127 0012 38BD     	 pop {r3,r4,r5,pc}
+ 128              	.LVL9:
+ 129              	.L8:
+ 116:../Libraries/XMCLib/src/xmc_common.c ****   } 
+ 117:../Libraries/XMCLib/src/xmc_common.c ****   else 
+ 118:../Libraries/XMCLib/src/xmc_common.c ****   {
+ 119:../Libraries/XMCLib/src/xmc_common.c ****     tail->next = (struct list *)item;
+ 130              	 .loc 1 119 0
+ 131 0014 0460     	 str r4,[r0]
+ 132 0016 38BD     	 pop {r3,r4,r5,pc}
+ 133              	 .cfi_endproc
+ 134              	.LFE138:
+ 136              	 .section .text.XMC_LIST_Remove,"ax",%progbits
+ 137              	 .align 2
+ 138              	 .global XMC_LIST_Remove
+ 139              	 .thumb
+ 140              	 .thumb_func
+ 142              	XMC_LIST_Remove:
+ 143              	.LFB139:
+ 120:../Libraries/XMCLib/src/xmc_common.c ****   }
+ 121:../Libraries/XMCLib/src/xmc_common.c **** }
+ 122:../Libraries/XMCLib/src/xmc_common.c **** 
+ 123:../Libraries/XMCLib/src/xmc_common.c **** void XMC_LIST_Remove(XMC_LIST_t *list, void *item)
+ 124:../Libraries/XMCLib/src/xmc_common.c **** {
+ 144              	 .loc 1 124 0
+ 145              	 .cfi_startproc
+ 146              	 
+ 147              	 
+ 148              	 
+ 149              	.LVL10:
+ 125:../Libraries/XMCLib/src/xmc_common.c ****   struct list *right, *left;
+ 126:../Libraries/XMCLib/src/xmc_common.c ****   
+ 127:../Libraries/XMCLib/src/xmc_common.c ****   if (*list != NULL) 
+ 150              	 .loc 1 127 0
+ 151 0000 0268     	 ldr r2,[r0]
+ 152 0002 9AB1     	 cbz r2,.L11
+ 153              	.LVL11:
+ 128:../Libraries/XMCLib/src/xmc_common.c ****   {
+ 129:../Libraries/XMCLib/src/xmc_common.c ****     left = NULL;
+ 130:../Libraries/XMCLib/src/xmc_common.c ****     for(right = (struct list *)*list; right != NULL; right = right->next)
+ 131:../Libraries/XMCLib/src/xmc_common.c ****     {
+ 132:../Libraries/XMCLib/src/xmc_common.c ****       if(right == item) 
+ 154              	 .loc 1 132 0 discriminator 1
+ 155 0004 8A42     	 cmp r2,r1
+ 156 0006 0ED1     	 bne .L14
+ 157 0008 03E0     	 b .L13
+ 158              	.LVL12:
+ 159              	.L17:
+ 160              	 .loc 1 132 0 is_stmt 0
+ 161 000a 9942     	 cmp r1,r3
+ 162 000c 0AD1     	 bne .L18
+ 133:../Libraries/XMCLib/src/xmc_common.c ****       {
+ 134:../Libraries/XMCLib/src/xmc_common.c ****         if(left == NULL) 
+ 163              	 .loc 1 134 0 is_stmt 1
+ 164 000e 22B9     	 cbnz r2,.L15
+ 130:../Libraries/XMCLib/src/xmc_common.c ****     {
+ 165              	 .loc 1 130 0
+ 166 0010 1946     	 mov r1,r3
+ 167              	.LVL13:
+ 168              	.L13:
+ 135:../Libraries/XMCLib/src/xmc_common.c ****         {
+ 136:../Libraries/XMCLib/src/xmc_common.c ****           /* First on list */
+ 137:../Libraries/XMCLib/src/xmc_common.c ****           *list = right->next;
+ 169              	 .loc 1 137 0
+ 170 0012 0B68     	 ldr r3,[r1]
+ 171 0014 0360     	 str r3,[r0]
+ 172 0016 0B46     	 mov r3,r1
+ 173 0018 01E0     	 b .L16
+ 174              	.LVL14:
+ 175              	.L15:
+ 138:../Libraries/XMCLib/src/xmc_common.c ****         } 
+ 139:../Libraries/XMCLib/src/xmc_common.c ****         else 
+ 140:../Libraries/XMCLib/src/xmc_common.c ****         {
+ 141:../Libraries/XMCLib/src/xmc_common.c ****           /* Not first on list */
+ 142:../Libraries/XMCLib/src/xmc_common.c ****           left->next = right->next;
+ 176              	 .loc 1 142 0
+ 177 001a 1968     	 ldr r1,[r3]
+ 178              	.LVL15:
+ 179 001c 1160     	 str r1,[r2]
+ 180              	.LVL16:
+ 181              	.L16:
+ 143:../Libraries/XMCLib/src/xmc_common.c ****         }
+ 144:../Libraries/XMCLib/src/xmc_common.c ****         right->next = NULL;
+ 182              	 .loc 1 144 0
+ 183 001e 0022     	 movs r2,#0
+ 184 0020 1A60     	 str r2,[r3]
+ 145:../Libraries/XMCLib/src/xmc_common.c ****         break;
+ 185              	 .loc 1 145 0
+ 186 0022 7047     	 bx lr
+ 187              	.LVL17:
+ 188              	.L18:
+ 130:../Libraries/XMCLib/src/xmc_common.c ****     {
+ 189              	 .loc 1 130 0
+ 190 0024 1A46     	 mov r2,r3
+ 191              	.LVL18:
+ 192              	.L14:
+ 130:../Libraries/XMCLib/src/xmc_common.c ****     {
+ 193              	 .loc 1 130 0 is_stmt 0 discriminator 2
+ 194 0026 1368     	 ldr r3,[r2]
+ 195              	.LVL19:
+ 196 0028 002B     	 cmp r3,#0
+ 197 002a EED1     	 bne .L17
+ 198              	.LVL20:
+ 199              	.L11:
+ 200 002c 7047     	 bx lr
+ 201              	 .cfi_endproc
+ 202              	.LFE139:
+ 204              	 .section .text.XMC_LIST_Insert,"ax",%progbits
+ 205              	 .align 2
+ 206              	 .global XMC_LIST_Insert
+ 207              	 .thumb
+ 208              	 .thumb_func
+ 210              	XMC_LIST_Insert:
+ 211              	.LFB140:
+ 146:../Libraries/XMCLib/src/xmc_common.c ****       }
+ 147:../Libraries/XMCLib/src/xmc_common.c ****       left = right;
+ 148:../Libraries/XMCLib/src/xmc_common.c ****     }
+ 149:../Libraries/XMCLib/src/xmc_common.c ****   }
+ 150:../Libraries/XMCLib/src/xmc_common.c **** }
+ 151:../Libraries/XMCLib/src/xmc_common.c **** 
+ 152:../Libraries/XMCLib/src/xmc_common.c **** void XMC_LIST_Insert(XMC_LIST_t *list, void *prev_item, void *new_item)
+ 153:../Libraries/XMCLib/src/xmc_common.c **** {
+ 212              	 .loc 1 153 0 is_stmt 1
+ 213              	 .cfi_startproc
+ 214              	 
+ 215              	 
+ 216              	 
+ 217              	.LVL21:
+ 154:../Libraries/XMCLib/src/xmc_common.c ****   if (prev_item == NULL) 
+ 218              	 .loc 1 154 0
+ 219 0000 0B46     	 mov r3,r1
+ 220 0002 19B9     	 cbnz r1,.L20
+ 155:../Libraries/XMCLib/src/xmc_common.c ****   {
+ 156:../Libraries/XMCLib/src/xmc_common.c **** 	((struct list *)new_item)->next = (struct list *)*list;
+ 221              	 .loc 1 156 0
+ 222 0004 0368     	 ldr r3,[r0]
+ 223 0006 1360     	 str r3,[r2]
+ 157:../Libraries/XMCLib/src/xmc_common.c **** 	*list = new_item;
+ 224              	 .loc 1 157 0
+ 225 0008 0260     	 str r2,[r0]
+ 226 000a 7047     	 bx lr
+ 227              	.L20:
+ 158:../Libraries/XMCLib/src/xmc_common.c ****   } 
+ 159:../Libraries/XMCLib/src/xmc_common.c ****   else 
+ 160:../Libraries/XMCLib/src/xmc_common.c ****   {
+ 161:../Libraries/XMCLib/src/xmc_common.c ****     ((struct list *)new_item)->next = ((struct list *)prev_item)->next;
+ 228              	 .loc 1 161 0
+ 229 000c 0968     	 ldr r1,[r1]
+ 230              	.LVL22:
+ 231 000e 1160     	 str r1,[r2]
+ 162:../Libraries/XMCLib/src/xmc_common.c ****     ((struct list *)prev_item)->next = (struct list *)new_item;
+ 232              	 .loc 1 162 0
+ 233 0010 1A60     	 str r2,[r3]
+ 234 0012 7047     	 bx lr
+ 235              	 .cfi_endproc
+ 236              	.LFE140:
+ 238              	 .section .text.XMC_PRIOARRAY_Init,"ax",%progbits
+ 239              	 .align 2
+ 240              	 .global XMC_PRIOARRAY_Init
+ 241              	 .thumb
+ 242              	 .thumb_func
+ 244              	XMC_PRIOARRAY_Init:
+ 245              	.LFB141:
+ 163:../Libraries/XMCLib/src/xmc_common.c ****   }
+ 164:../Libraries/XMCLib/src/xmc_common.c **** }
+ 165:../Libraries/XMCLib/src/xmc_common.c **** 
+ 166:../Libraries/XMCLib/src/xmc_common.c **** void XMC_PRIOARRAY_Init(XMC_PRIOARRAY_t *prioarray)
+ 167:../Libraries/XMCLib/src/xmc_common.c **** {
+ 246              	 .loc 1 167 0
+ 247              	 .cfi_startproc
+ 248              	 
+ 249              	 
+ 250              	 
+ 251              	.LVL23:
+ 252 0000 10B4     	 push {r4}
+ 253              	.LCFI1:
+ 254              	 .cfi_def_cfa_offset 4
+ 255              	 .cfi_offset 4,-4
+ 168:../Libraries/XMCLib/src/xmc_common.c ****   XMC_ASSERT("XMC_PRIOARRAY_Init: NULL pointer", prioarray != NULL);
+ 169:../Libraries/XMCLib/src/xmc_common.c **** 
+ 170:../Libraries/XMCLib/src/xmc_common.c ****   /* Initialize head, next points to tail, previous to NULL and the priority is MININT */
+ 171:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[prioarray->size].next = prioarray->size + 1;
+ 256              	 .loc 1 171 0
+ 257 0002 0368     	 ldr r3,[r0]
+ 258 0004 4268     	 ldr r2,[r0,#4]
+ 259 0006 03EB4301 	 add r1,r3,r3,lsl#1
+ 260 000a 02EB8102 	 add r2,r2,r1,lsl#2
+ 261 000e 0133     	 adds r3,r3,#1
+ 262 0010 9360     	 str r3,[r2,#8]
+ 172:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[prioarray->size].previous = -1;
+ 263              	 .loc 1 172 0
+ 264 0012 0368     	 ldr r3,[r0]
+ 265 0014 4268     	 ldr r2,[r0,#4]
+ 266 0016 03EB4303 	 add r3,r3,r3,lsl#1
+ 267 001a 02EB8303 	 add r3,r2,r3,lsl#2
+ 268 001e 4FF0FF31 	 mov r1,#-1
+ 269 0022 5960     	 str r1,[r3,#4]
+ 173:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[prioarray->size].priority = INT32_MAX;
+ 270              	 .loc 1 173 0
+ 271 0024 0368     	 ldr r3,[r0]
+ 272 0026 4268     	 ldr r2,[r0,#4]
+ 273 0028 03EB4303 	 add r3,r3,r3,lsl#1
+ 274 002c 6FF00044 	 mvn r4,#-2147483648
+ 275 0030 42F82340 	 str r4,[r2,r3,lsl#2]
+ 174:../Libraries/XMCLib/src/xmc_common.c **** 
+ 175:../Libraries/XMCLib/src/xmc_common.c ****   /* Initialize tail, next points to NULL, previous is the head and the priority is MAXINT */
+ 176:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[prioarray->size + 1].next = -1;
+ 276              	 .loc 1 176 0
+ 277 0034 0368     	 ldr r3,[r0]
+ 278 0036 0133     	 adds r3,r3,#1
+ 279 0038 4268     	 ldr r2,[r0,#4]
+ 280 003a 03EB4303 	 add r3,r3,r3,lsl#1
+ 281 003e 02EB8303 	 add r3,r2,r3,lsl#2
+ 282 0042 9960     	 str r1,[r3,#8]
+ 177:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[prioarray->size + 1].previous = prioarray->size;
+ 283              	 .loc 1 177 0
+ 284 0044 0168     	 ldr r1,[r0]
+ 285 0046 4B1C     	 adds r3,r1,#1
+ 286 0048 4268     	 ldr r2,[r0,#4]
+ 287 004a 03EB4303 	 add r3,r3,r3,lsl#1
+ 288 004e 02EB8303 	 add r3,r2,r3,lsl#2
+ 289 0052 5960     	 str r1,[r3,#4]
+ 178:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[prioarray->size + 1].priority = INT32_MIN;
+ 290              	 .loc 1 178 0
+ 291 0054 0368     	 ldr r3,[r0]
+ 292 0056 0133     	 adds r3,r3,#1
+ 293 0058 4268     	 ldr r2,[r0,#4]
+ 294 005a 03EB4303 	 add r3,r3,r3,lsl#1
+ 295 005e 4FF00041 	 mov r1,#-2147483648
+ 296 0062 42F82310 	 str r1,[r2,r3,lsl#2]
+ 179:../Libraries/XMCLib/src/xmc_common.c **** 
+ 180:../Libraries/XMCLib/src/xmc_common.c **** }
+ 297              	 .loc 1 180 0
+ 298 0066 5DF8044B 	 ldr r4,[sp],#4
+ 299              	.LCFI2:
+ 300              	 .cfi_restore 4
+ 301              	 .cfi_def_cfa_offset 0
+ 302 006a 7047     	 bx lr
+ 303              	 .cfi_endproc
+ 304              	.LFE141:
+ 306              	 .section .text.XMC_PRIOARRAY_Add,"ax",%progbits
+ 307              	 .align 2
+ 308              	 .global XMC_PRIOARRAY_Add
+ 309              	 .thumb
+ 310              	 .thumb_func
+ 312              	XMC_PRIOARRAY_Add:
+ 313              	.LFB142:
+ 181:../Libraries/XMCLib/src/xmc_common.c **** 
+ 182:../Libraries/XMCLib/src/xmc_common.c **** void XMC_PRIOARRAY_Add(XMC_PRIOARRAY_t *prioarray, int32_t item, int32_t priority)
+ 183:../Libraries/XMCLib/src/xmc_common.c **** {
+ 314              	 .loc 1 183 0
+ 315              	 .cfi_startproc
+ 316              	 
+ 317              	 
+ 318              	 
+ 319              	.LVL24:
+ 320 0000 F0B4     	 push {r4,r5,r6,r7}
+ 321              	.LCFI3:
+ 322              	 .cfi_def_cfa_offset 16
+ 323              	 .cfi_offset 4,-16
+ 324              	 .cfi_offset 5,-12
+ 325              	 .cfi_offset 6,-8
+ 326              	 .cfi_offset 7,-4
+ 327              	.LVL25:
+ 328              	.LBB8:
+ 329              	.LBB9:
+ 330              	 .file 2 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc/xmc_common.h"
+   1:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /**
+   2:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @file xmc_common.h
+   3:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @date 2017-08-03
+   4:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+   5:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @cond
+   6:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   *************************************************************************************************
+   7:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * XMClib v2.1.18 - XMC Peripheral Driver Library 
+   8:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+   9:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * Copyright (c) 2015-2018, Infineon Technologies AG
+  10:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * All rights reserved.                        
+  11:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *                                             
+  12:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * following conditions are met:   
+  14:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *                                                                              
+  15:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * disclaimer.                        
+  17:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 
+  18:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 
+  21:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * products derived from this software without specific prior written permission.                  
+  23:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *                                                                              
+  24:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *                                                                              
+  32:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  **************************************************************************************************
+  35:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  36:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * Change History
+  37:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * --------------
+  38:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  39:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 2015-06-20:
+  40:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Initial
+  41:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Brief section updated
+  42:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Added XMC_LIB_VERSION macro
+  43:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  44:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 2016-02-26:
+  45:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Updated XMC_LIB_VERSION macro to v2.1.6
+  46:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *      
+  47:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 2016-05-30:
+  48:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Updated XMC_LIB_VERSION macro to v2.1.8
+  49:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  50:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 2016-11-18:
+  51:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Updated XMC_LIB_VERSION macro to v2.1.10
+  52:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Changed type of size in XMC_PRIOARRAY_t to fix compilation warnings
+  53:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  54:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 2017-04-04:
+  55:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Updated XMC_LIB_VERSION macro to v2.1.12
+  56:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  57:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 2017-06-24:
+  58:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Updated XMC_LIB_VERSION macro to v2.1.14
+  59:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  60:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * 2017-08-03:
+  61:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Updated XMC_LIB_VERSION macro to v2.1.16
+  62:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *     - Added __RAM_FUNC macro
+  63:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  64:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @endcond 
+  65:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+  66:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+  67:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+  68:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #ifndef XMC_COMMON_H
+  69:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_COMMON_H
+  70:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+  71:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #include <stddef.h>
+  72:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #include <stdint.h>
+  73:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #include <stdbool.h>
+  74:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #include <string.h>
+  75:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+  76:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #include "xmc_device.h"
+  77:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+  78:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /**
+  79:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @addtogroup XMClib XMC Peripheral Library
+  80:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @{
+  81:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+  82:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+  83:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /**
+  84:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @addtogroup COMMON
+  85:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @brief Common APIs to all peripherals for XMC microcontroller family 
+  86:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * @{
+  87:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+  88:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+  89:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /**************************************************************************************************
+  90:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * MACROS
+  91:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  **************************************************************************************************
+  92:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_LIB_MAJOR_VERSION	(2U)
+  93:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_LIB_MINOR_VERSION	(1U)
+  94:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_LIB_PATCH_VERSION	(18U)
+  95:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  
+  96:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_LIB_VERSION         ((XMC_LIB_MAJOR_VERSION << 16U) + (XMC_LIB_MINOR_VERSION << 8U) + X
+  97:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+  98:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /* Define WEAK attribute */
+  99:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #if !defined(__WEAK)
+ 100:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #if defined ( __CC_ARM )
+ 101:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __WEAK __attribute__ ((weak))
+ 102:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+ 103:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __WEAK __attribute__ ((weak))
+ 104:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined ( __ICCARM__ )
+ 105:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __WEAK __weak
+ 106:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined ( __GNUC__ )
+ 107:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __WEAK __attribute__ ((weak))
+ 108:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined ( __TASKING__ )
+ 109:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __WEAK __attribute__ ((weak))
+ 110:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #endif
+ 111:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #endif
+ 112:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 113:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #if !defined(__RAM_FUNC)
+ 114:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #if defined ( __CC_ARM )
+ 115:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** // http://www.keil.com/support/docs/3723.htm
+ 116:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __RAM_FUNC __attribute__((section("RAMCODESECTION")))
+ 117:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+ 118:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __RAM_FUNC __attribute__((section("RAMCODESECTION")))
+ 119:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined ( __ICCARM__ )
+ 120:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** // https://www.iar.com/support/tech-notes/linker/controlling-placement-of-the-section-where-__ramfu
+ 121:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __RAM_FUNC __ramfunc
+ 122:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined ( __GNUC__ )
+ 123:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __RAM_FUNC __attribute__((section(".ram_code"), long_call))
+ 124:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #elif defined ( __TASKING__ )
+ 125:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define __RAM_FUNC __attribute__((section(".ram_code")))
+ 126:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #endif
+ 127:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #endif
+ 128:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 129:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #ifdef XMC_ASSERT_ENABLE
+ 130:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  #define XMC_ASSERT(msg, exp) { if(!(exp)) {XMC_AssertHandler(msg, __FILE__, __LINE__);} }
+ 131:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #else
+ 132:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  #define XMC_ASSERT(msg, exp) { ; }
+ 133:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #endif
+ 134:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 135:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #ifdef XMC_DEBUG_ENABLE
+ 136:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  #include <stdio.h>
+ 137:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  #define XMC_DEBUG(...) { printf(__VA_ARGS__); }
+ 138:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #else
+ 139:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  #define XMC_DEBUG(...) { ; }
+ 140:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #endif
+ 141:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 142:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_UNUSED_ARG(x) (void)x
+ 143:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 144:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_STRUCT_INIT(m) memset(&m, 0, sizeof(m))
+ 145:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 146:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_PRIOARRAY_DEF(name, size) \
+ 147:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** XMC_PRIOARRAY_ITEM_t prioarray_m_##name[size + 2]; \
+ 148:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** XMC_PRIOARRAY_t prioarray_def_##name = {(size), (prioarray_m_##name)};
+ 149:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 150:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #define XMC_PRIOARRAY(name) \
+ 151:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** &prioarray_def_##name
+ 152:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 153:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /**************************************************************************************************
+ 154:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * DATA STRUCTURES
+ 155:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  **************************************************************************************************
+ 156:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 157:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 158:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 159:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** typedef struct XMC_DRIVER_VERSION 
+ 160:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** {
+ 161:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   uint8_t major;
+ 162:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   uint8_t minor;
+ 163:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   uint8_t patch;
+ 164:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** } XMC_DRIVER_VERSION_t;
+ 165:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 166:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 167:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 168:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 169:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** typedef void *XMC_LIST_t;
+ 170:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 171:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 172:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 173:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 174:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** typedef struct XMC_PRIOARRAY_ITEM
+ 175:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** {
+ 176:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   int32_t priority;
+ 177:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   int32_t previous;
+ 178:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   int32_t next;
+ 179:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** } XMC_PRIOARRAY_ITEM_t;
+ 180:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 181:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 182:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 183:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 184:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** typedef struct XMC_PRIOARRAY
+ 185:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** {
+ 186:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   int32_t size;
+ 187:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   XMC_PRIOARRAY_ITEM_t *items;
+ 188:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** } XMC_PRIOARRAY_t;
+ 189:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 190:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /**************************************************************************************************
+ 191:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  * API PROTOTYPES
+ 192:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  **************************************************************************************************
+ 193:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 194:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #ifdef __cplusplus
+ 195:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** extern "C" {
+ 196:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** #endif
+ 197:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 198:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 199:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 200:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 201:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_AssertHandler(const char *const msg, const char *const file, uint32_t line);
+ 202:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 203:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 204:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 205:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 206:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_LIST_Init(XMC_LIST_t *list);
+ 207:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 208:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 209:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 210:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 211:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_LIST_Add(XMC_LIST_t *list, void *const item);
+ 212:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 213:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 214:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 215:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 216:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_LIST_Remove(XMC_LIST_t *list, void *const item);
+ 217:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 218:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 219:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 220:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 221:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** uint32_t XMC_LIST_GetLength(XMC_LIST_t *list);
+ 222:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 223:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 224:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 225:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 226:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void *XMC_LIST_GetHead(XMC_LIST_t *list);
+ 227:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 228:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 229:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 230:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 231:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void *XMC_LIST_GetTail(XMC_LIST_t *list);
+ 232:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 233:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 234:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 235:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 236:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_LIST_Insert(XMC_LIST_t *list, void *prev_item, void *new_item);
+ 237:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 238:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 239:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 240:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 241:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_PRIOARRAY_Init(XMC_PRIOARRAY_t *prioarray);
+ 242:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 243:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 244:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 245:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 246:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_PRIOARRAY_Add(XMC_PRIOARRAY_t *prioarray, int32_t item, int32_t priority);
+ 247:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 248:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 249:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 250:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 251:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** void XMC_PRIOARRAY_Remove(XMC_PRIOARRAY_t *prioarray, int32_t item);
+ 252:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 253:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 254:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 255:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 256:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** __STATIC_INLINE int32_t XMC_PRIOARRAY_GetHead(XMC_PRIOARRAY_t *prioarray)
+ 257:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** {
+ 258:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   XMC_ASSERT("XMC_PRIOARRAY_Init: NULL pointer", prioarray != NULL);
+ 259:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   return prioarray->items[prioarray->size].next;
+ 331              	 .loc 2 259 0
+ 332 0002 4668     	 ldr r6,[r0,#4]
+ 333 0004 0368     	 ldr r3,[r0]
+ 334 0006 03EB4303 	 add r3,r3,r3,lsl#1
+ 335 000a 06EB8303 	 add r3,r6,r3,lsl#2
+ 336 000e 9C68     	 ldr r4,[r3,#8]
+ 337              	.LVL26:
+ 338              	.LBE9:
+ 339              	.LBE8:
+ 340              	.LBB10:
+ 341              	.LBB11:
+ 260:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** }
+ 261:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 262:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 263:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 264:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 265:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** __STATIC_INLINE int32_t XMC_PRIOARRAY_GetTail(XMC_PRIOARRAY_t *prioarray)
+ 266:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** {
+ 267:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   XMC_ASSERT("XMC_PRIOARRAY_Init: NULL pointer", prioarray != NULL);
+ 268:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   return prioarray->items[prioarray->size + 1].previous;
+ 269:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** }
+ 270:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 271:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 272:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 273:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 274:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** __STATIC_INLINE int32_t XMC_PRIOARRAY_GetItemPriority(XMC_PRIOARRAY_t *prioarray, int32_t item)
+ 275:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** {
+ 276:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   XMC_ASSERT("XMC_PRIOARRAY_GetItemPriority: item out of range", (item >= 0) && (item < prioarray->
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   return prioarray->items[item].priority;
+ 342              	 .loc 2 277 0
+ 343 0010 04EB4405 	 add r5,r4,r4,lsl#1
+ 344 0014 AD00     	 lsls r5,r5,#2
+ 345 0016 2F46     	 mov r7,r5
+ 346 0018 7319     	 adds r3,r6,r5
+ 347              	.LBE11:
+ 348              	.LBE10:
+ 184:../Libraries/XMCLib/src/xmc_common.c ****   int32_t next;
+ 185:../Libraries/XMCLib/src/xmc_common.c ****   int32_t previous;
+ 186:../Libraries/XMCLib/src/xmc_common.c **** 
+ 187:../Libraries/XMCLib/src/xmc_common.c ****   XMC_ASSERT("XMC_PRIOARRAY_Add: item out of range", (item >= 0) && (item < prioarray->size));
+ 188:../Libraries/XMCLib/src/xmc_common.c ****   
+ 189:../Libraries/XMCLib/src/xmc_common.c ****   next = XMC_PRIOARRAY_GetHead(prioarray);
+ 190:../Libraries/XMCLib/src/xmc_common.c ****   while (XMC_PRIOARRAY_GetItemPriority(prioarray, next) > priority)
+ 349              	 .loc 1 190 0
+ 350 001a 7559     	 ldr r5,[r6,r5]
+ 351 001c AA42     	 cmp r2,r5
+ 352 001e 09DA     	 bge .L25
+ 353              	.LVL27:
+ 354              	.L27:
+ 355              	.LBB13:
+ 356              	.LBB14:
+ 278:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** }
+ 279:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** 
+ 280:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** /*
+ 281:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  *
+ 282:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****  */
+ 283:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** __STATIC_INLINE int32_t XMC_PRIOARRAY_GetItemNext(XMC_PRIOARRAY_t *prioarray, int32_t item)
+ 284:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** {
+ 285:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   XMC_ASSERT("XMC_PRIOARRAY_GetItemNext: item out of range", (item >= 0) && (item < prioarray->size
+ 286:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h ****   return prioarray->items[item].next;
+ 357              	 .loc 2 286 0
+ 358 0020 9C68     	 ldr r4,[r3,#8]
+ 359              	.LBE14:
+ 360              	.LBE13:
+ 361              	.LBB15:
+ 362              	.LBB12:
+ 277:E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/XMCLib/inc\xmc_common.h **** }
+ 363              	 .loc 2 277 0
+ 364 0022 04EB4405 	 add r5,r4,r4,lsl#1
+ 365 0026 AB00     	 lsls r3,r5,#2
+ 366              	.LVL28:
+ 367 0028 1F46     	 mov r7,r3
+ 368 002a 3344     	 add r3,r3,r6
+ 369              	.LBE12:
+ 370              	.LBE15:
+ 371              	 .loc 1 190 0
+ 372 002c 56F82550 	 ldr r5,[r6,r5,lsl#2]
+ 373 0030 AA42     	 cmp r2,r5
+ 374 0032 F5DB     	 blt .L27
+ 375              	.LVL29:
+ 376              	.L25:
+ 191:../Libraries/XMCLib/src/xmc_common.c ****   {
+ 192:../Libraries/XMCLib/src/xmc_common.c ****     next = XMC_PRIOARRAY_GetItemNext(prioarray, next);
+ 193:../Libraries/XMCLib/src/xmc_common.c ****   }
+ 194:../Libraries/XMCLib/src/xmc_common.c **** 
+ 195:../Libraries/XMCLib/src/xmc_common.c ****   previous = prioarray->items[next].previous;
+ 377              	 .loc 1 195 0
+ 378 0034 5B68     	 ldr r3,[r3,#4]
+ 379              	.LVL30:
+ 196:../Libraries/XMCLib/src/xmc_common.c **** 
+ 197:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[item].next = next;
+ 380              	 .loc 1 197 0
+ 381 0036 01EB4105 	 add r5,r1,r1,lsl#1
+ 382 003a AD00     	 lsls r5,r5,#2
+ 383 003c 2E44     	 add r6,r6,r5
+ 384 003e B460     	 str r4,[r6,#8]
+ 198:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[item].previous = previous;
+ 385              	 .loc 1 198 0
+ 386 0040 4468     	 ldr r4,[r0,#4]
+ 387              	.LVL31:
+ 388 0042 2C44     	 add r4,r4,r5
+ 389 0044 6360     	 str r3,[r4,#4]
+ 390              	.LVL32:
+ 199:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[item].priority = priority;
+ 391              	 .loc 1 199 0
+ 392 0046 4468     	 ldr r4,[r0,#4]
+ 393 0048 6251     	 str r2,[r4,r5]
+ 200:../Libraries/XMCLib/src/xmc_common.c **** 
+ 201:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[previous].next = item;
+ 394              	 .loc 1 201 0
+ 395 004a 4268     	 ldr r2,[r0,#4]
+ 396              	.LVL33:
+ 397 004c 03EB4303 	 add r3,r3,r3,lsl#1
+ 398              	.LVL34:
+ 399 0050 02EB8303 	 add r3,r2,r3,lsl#2
+ 400 0054 9960     	 str r1,[r3,#8]
+ 401              	.LVL35:
+ 202:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[next].previous = item;
+ 402              	 .loc 1 202 0
+ 403 0056 4368     	 ldr r3,[r0,#4]
+ 404 0058 1F44     	 add r7,r7,r3
+ 405 005a 7960     	 str r1,[r7,#4]
+ 203:../Libraries/XMCLib/src/xmc_common.c **** }
+ 406              	 .loc 1 203 0
+ 407 005c F0BC     	 pop {r4,r5,r6,r7}
+ 408              	.LCFI4:
+ 409              	 .cfi_restore 7
+ 410              	 .cfi_restore 6
+ 411              	 .cfi_restore 5
+ 412              	 .cfi_restore 4
+ 413              	 .cfi_def_cfa_offset 0
+ 414 005e 7047     	 bx lr
+ 415              	 .cfi_endproc
+ 416              	.LFE142:
+ 418              	 .section .text.XMC_PRIOARRAY_Remove,"ax",%progbits
+ 419              	 .align 2
+ 420              	 .global XMC_PRIOARRAY_Remove
+ 421              	 .thumb
+ 422              	 .thumb_func
+ 424              	XMC_PRIOARRAY_Remove:
+ 425              	.LFB143:
+ 204:../Libraries/XMCLib/src/xmc_common.c **** 
+ 205:../Libraries/XMCLib/src/xmc_common.c **** void XMC_PRIOARRAY_Remove(XMC_PRIOARRAY_t *prioarray, int32_t item)
+ 206:../Libraries/XMCLib/src/xmc_common.c **** {
+ 426              	 .loc 1 206 0
+ 427              	 .cfi_startproc
+ 428              	 
+ 429              	 
+ 430              	 
+ 431              	.LVL36:
+ 432 0000 10B4     	 push {r4}
+ 433              	.LCFI5:
+ 434              	 .cfi_def_cfa_offset 4
+ 435              	 .cfi_offset 4,-4
+ 207:../Libraries/XMCLib/src/xmc_common.c ****   int32_t next;
+ 208:../Libraries/XMCLib/src/xmc_common.c ****   int32_t previous;
+ 209:../Libraries/XMCLib/src/xmc_common.c **** 
+ 210:../Libraries/XMCLib/src/xmc_common.c ****   XMC_ASSERT("XMC_PRIOARRAY_Add: item out of range", (item >= 0) && (item < prioarray->size));
+ 211:../Libraries/XMCLib/src/xmc_common.c ****   
+ 212:../Libraries/XMCLib/src/xmc_common.c ****   next = prioarray->items[item].next;
+ 436              	 .loc 1 212 0
+ 437 0002 4268     	 ldr r2,[r0,#4]
+ 438 0004 01EB4101 	 add r1,r1,r1,lsl#1
+ 439              	.LVL37:
+ 440 0008 02EB8101 	 add r1,r2,r1,lsl#2
+ 441 000c 8B68     	 ldr r3,[r1,#8]
+ 442              	.LVL38:
+ 213:../Libraries/XMCLib/src/xmc_common.c ****   previous = prioarray->items[item].previous;
+ 443              	 .loc 1 213 0
+ 444 000e 4968     	 ldr r1,[r1,#4]
+ 445              	.LVL39:
+ 214:../Libraries/XMCLib/src/xmc_common.c **** 
+ 215:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[previous].next = next;
+ 446              	 .loc 1 215 0
+ 447 0010 01EB4104 	 add r4,r1,r1,lsl#1
+ 448 0014 02EB8402 	 add r2,r2,r4,lsl#2
+ 449 0018 9360     	 str r3,[r2,#8]
+ 216:../Libraries/XMCLib/src/xmc_common.c ****   prioarray->items[next].previous = previous;
+ 450              	 .loc 1 216 0
+ 451 001a 4268     	 ldr r2,[r0,#4]
+ 452 001c 03EB4303 	 add r3,r3,r3,lsl#1
+ 453              	.LVL40:
+ 454 0020 02EB8303 	 add r3,r2,r3,lsl#2
+ 455 0024 5960     	 str r1,[r3,#4]
+ 217:../Libraries/XMCLib/src/xmc_common.c **** }
+ 456              	 .loc 1 217 0
+ 457 0026 5DF8044B 	 ldr r4,[sp],#4
+ 458              	.LCFI6:
+ 459              	 .cfi_restore 4
+ 460              	 .cfi_def_cfa_offset 0
+ 461 002a 7047     	 bx lr
+ 462              	 .cfi_endproc
+ 463              	.LFE143:
+ 465              	 .text
+ 466              	.Letext0:
+ 467              	 .file 3 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 468              	 .file 4 "e:\\embedded\\dave_4-4-2_64bit_2018-02-23\\dave-ide-4.4.2-64bit\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 469              	 .file 5 "E:/Embedded/Projects/XMC4500/Ethernet_CAN_XMC4500/Libraries/CMSIS/Include/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_common.c
+    {standard input}:19     .text.XMC_LIST_Init:00000000 $t
+    {standard input}:24     .text.XMC_LIST_Init:00000000 XMC_LIST_Init
+    {standard input}:41     .text.XMC_LIST_GetHead:00000000 $t
+    {standard input}:46     .text.XMC_LIST_GetHead:00000000 XMC_LIST_GetHead
+    {standard input}:62     .text.XMC_LIST_GetTail:00000000 $t
+    {standard input}:67     .text.XMC_LIST_GetTail:00000000 XMC_LIST_GetTail
+    {standard input}:96     .text.XMC_LIST_Add:00000000 $t
+    {standard input}:101    .text.XMC_LIST_Add:00000000 XMC_LIST_Add
+    {standard input}:137    .text.XMC_LIST_Remove:00000000 $t
+    {standard input}:142    .text.XMC_LIST_Remove:00000000 XMC_LIST_Remove
+    {standard input}:205    .text.XMC_LIST_Insert:00000000 $t
+    {standard input}:210    .text.XMC_LIST_Insert:00000000 XMC_LIST_Insert
+    {standard input}:239    .text.XMC_PRIOARRAY_Init:00000000 $t
+    {standard input}:244    .text.XMC_PRIOARRAY_Init:00000000 XMC_PRIOARRAY_Init
+    {standard input}:307    .text.XMC_PRIOARRAY_Add:00000000 $t
+    {standard input}:312    .text.XMC_PRIOARRAY_Add:00000000 XMC_PRIOARRAY_Add
+    {standard input}:419    .text.XMC_PRIOARRAY_Remove:00000000 $t
+    {standard input}:424    .text.XMC_PRIOARRAY_Remove:00000000 XMC_PRIOARRAY_Remove
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.3466fc6a3db32493c997d085de4c7a28
+                           .group:00000000 wm4.stddef.h.39.c744ceb84abf2f8351653f0e2622da1c
+                           .group:00000000 wm4.features.h.22.bee0aee4a3878f51861c775df98fa3ea
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.ca9f32a61b410c270a48d1161ca2c217
+                           .group:00000000 wm4.stdint.h.22.f4a337c398d8b6d821a97202448bc0d0
+                           .group:00000000 wm4.stdbool.h.29.1c9ee6859ce8145f7838a4f2549ccec2
+                           .group:00000000 wm4.newlib.h.8.fe7d912fc917043c98742c35eddd8cff
+                           .group:00000000 wm4.config.h.216.aad1ef7bee4fb69981cb38ce62f84d9c
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.cdefs.h.47.4002528de975c0fcce6c551c15d87b8c
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.xmc_device.h.61.ba2d082e12f51240746cffdd60d42b81
+                           .group:00000000 wm4.XMC4500.h.55.9aa45b9b5790506b2dcb963e4e7adeaf
+                           .group:00000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:00000000 wm4.core_cm4.h.66.e4ff136c4a17abc46741866f64f8e729
+                           .group:00000000 wm4.cmsis_gcc.h.26.48aa5dfcc4adf36b323cf9dbe32c793a
+                           .group:00000000 wm4.core_cm4.h.174.824e0532337e90525b645435b961cc25
+                           .group:00000000 wm4.mpu_armv7.h.32.7da498ea6f18d3b74a42202d7c1d394e
+                           .group:00000000 wm4.system_XMC4500.h.42.99124977c10ca8844a71949adbeabd70
+                           .group:00000000 wm4.XMC4500.h.208.b340195df97f067735c4c769ba59985a
+                           .group:00000000 wm4.xmc_device.h.1460.8860499b404961ffcfbb8d1fefcb2146
+                           .group:00000000 wm4.xmc_common.h.92.bbcf261068c7c74d7033b80d0dbf155c
+
+NO UNDEFINED SYMBOLS
